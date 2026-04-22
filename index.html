@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>MarcanoTech 3D — Fabricación Digital de Precisión</title>
+<title>MarcanoTech — Fabricación Digital de Precisión</title>
 <meta name="description" content="Diseño, impresión 3D y fabricación digital de precisión. Productos personalizados, kits RC, decoración y más. Buenos Aires, Argentina.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
@@ -917,7 +917,7 @@ footer {
     <li><a href="#proceso">Proceso</a></li>
     <li><a href="#productos">Productos</a></li>
     <li><a href="#guias">Guías</a></li>
-    <li><a href="#contacto" class="nav-cta">Cotizar</a></li>
+    <li><a href="#contacto" class="nav-cta" onclick="openCotizar();return false;">Cotizar</a></li>
   </ul>
   <div class="nav-hamburger" id="hamburger" onclick="toggleMenu()">
     <span></span><span></span><span></span>
@@ -931,7 +931,7 @@ footer {
   <a href="#proceso" onclick="toggleMenu()">Proceso</a>
   <a href="#productos" onclick="toggleMenu()">Productos</a>
   <a href="#guias" onclick="toggleMenu()">Guías</a>
-  <a href="#contacto" onclick="toggleMenu()" style="color:var(--ferrari)">Cotizar</a>
+  <a href="#" onclick="toggleMenu();openCotizar();return false;" style="color:var(--ferrari)">Cotizar</a>
 </div>
 
 <!-- ══ HERO ══ -->
@@ -1097,7 +1097,7 @@ footer {
           </div>
         </div>
         <div class="product-body">
-          <div class="product-name">Carrocería RC 1:10 Formula</div>
+          <div class="product-name">Carrocería RC 1:10 Formula 1</div>
           <div class="product-desc">Carrocería impresa en PETG de alta resistencia. Compatible con chasis estándar 257mm. Acabado profesional.</div>
           <div class="product-footer">
             <a href="https://www.mercadolibre.com.ar" target="_blank" class="product-cta">Ver en ML</a>
@@ -1115,8 +1115,8 @@ footer {
           </div>
         </div>
         <div class="product-body">
-          <div class="product-name">Llavero personalizado 3D</div>
-          <div class="product-desc">Diseño a pedido. Nombre, logo, forma o figura. Impreso en PLA Silk con acabado satinado premium.</div>
+          <div class="product-name">Organizador de escritorio</div>
+          <div class="product-desc">Sistema modular de compartimentos para organizar herramientas, cables y accesorios. Impreso en PETG resistente, diseño limpio y funcional.</div>
           <div class="product-footer">
             <a href="https://www.mercadolibre.com.ar" target="_blank" class="product-cta">Ver en ML</a>
             <span class="product-ml">🛒 MercadoLibre</span>
@@ -1128,13 +1128,13 @@ footer {
         <div class="product-img">
           <div class="product-tag">Decoración</div>
           <div class="product-img-placeholder">
-            <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+            <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z"/></svg>
             <span>Foto próximamente</span>
           </div>
         </div>
         <div class="product-body">
-          <div class="product-name">Organizador de escritorio</div>
-          <div class="product-desc">Sistema modular para organizar cables, herramientas y accesorios. Diseño limpio y funcional para el espacio de trabajo.</div>
+          <div class="product-name">Jarrón de mesa</div>
+          <div class="product-desc">Diseño geométrico moderno impreso en PLA Matte. Pieza decorativa única para interiores, con acabado suave y opaco. Disponible en múltiples colores.</div>
           <div class="product-footer">
             <a href="https://www.mercadolibre.com.ar" target="_blank" class="product-cta">Ver en ML</a>
             <span class="product-ml">🛒 MercadoLibre</span>
@@ -1154,17 +1154,21 @@ footer {
         <div class="section-label">Inventario activo</div>
         <h2 class="section-title">MATERIALES</h2>
         <p class="section-sub">Más de 15 filamentos en stock permanente. Seleccionamos materiales de calidad para cada aplicación.</p>
-        <div class="materials-chips">
-          <span class="chip highlight">PLA Matte</span>
-          <span class="chip highlight">PETG Pro</span>
-          <span class="chip">TPU 95A</span>
-          <span class="chip">PLA Silk</span>
-          <span class="chip">ABS</span>
-          <span class="chip">ASA</span>
-          <span class="chip">PLA-CF</span>
-          <span class="chip">Rapid PETG</span>
-          <span class="chip">TPU 85A</span>
-          <span class="chip">PLA Wood</span>
+        <div class="materials-chips" id="mat-chips">
+          <span class="chip highlight" onclick="showMatInfo('pla')">PLA / PLA+</span>
+          <span class="chip" onclick="showMatInfo('petg')">PETG</span>
+          <span class="chip" onclick="showMatInfo('tpu')">TPU Flexible</span>
+          <span class="chip" onclick="showMatInfo('abs')">ABS</span>
+          <span class="chip" onclick="showMatInfo('asa')">ASA</span>
+          <span class="chip" onclick="showMatInfo('placf')">PLA-CF</span>
+          <span class="chip" onclick="showMatInfo('plamatte')">PLA Matte</span>
+          <span class="chip" onclick="showMatInfo('plasilk')">PLA Silk</span>
+        </div>
+        <!-- Info panel -->
+        <div id="mat-info-panel" style="margin-top:20px;background:rgba(255,255,255,0.07);border:1px solid rgba(255,255,255,0.12);border-left:3px solid var(--ferrari);border-radius:10px;padding:18px 20px;font-size:13px;line-height:1.6;min-height:80px;transition:all 0.3s">
+          <div id="mat-info-content" style="color:rgba(255,255,255,0.8)">
+            👆 Tocá cualquier material para ver sus especificaciones técnicas.
+          </div>
         </div>
       </div>
       <div class="materials-visual">
@@ -1282,13 +1286,13 @@ footer {
     </div>
     <div class="guides-grid reveal">
 
-      <div class="guide-card">
+      <a href="guia-materiales.html" style="display:block;color:inherit;text-decoration:none"><div class="guide-card">
         <div class="guide-header"></div>
         <div class="guide-body">
           <div class="guide-category">Materiales</div>
-          <div class="guide-title">PLA vs PETG vs TPU: ¿cuál usar en cada caso?</div>
+          <a href="guia-materiales.html" style="color:inherit"><div class="guide-title">PLA vs PETG vs TPU: ¿cuál usar en cada caso?</div></a>
           <div class="guide-desc">Comparativa técnica completa de los materiales más usados en impresión FDM.</div>
-          <div class="guide-footer">
+          <a href="guia-materiales.html" style="display:contents"><div class="guide-footer">
             <span class="guide-level">⬤ Principiante</span>
             <div class="guide-arrow">
               <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5"><polyline points="9 18 15 12 9 6"/></svg>
@@ -1312,11 +1316,11 @@ footer {
         </div>
       </div>
 
-      <div class="guide-card">
+      <a href="guia-diseno-3d.html" style="display:block;color:inherit;text-decoration:none"><div class="guide-card">
         <div class="guide-header" style="background:#8b5cf6"></div>
         <div class="guide-body">
           <div class="guide-category">Diseño 3D</div>
-          <div class="guide-title">Tolerancias en impresión 3D: la guía definitiva</div>
+          <a href="guia-diseno-3d.html" style="color:inherit"><div class="guide-title">Tolerancias en impresión 3D: la guía definitiva</div></a>
           <div class="guide-desc">Cómo diseñar piezas que encajen perfectamente la primera vez. Valores reales, probados.</div>
           <div class="guide-footer">
             <span class="guide-level">⬤⬤⬤ Avanzado</span>
@@ -1338,11 +1342,11 @@ footer {
       <h2 class="cta-title">HAGAMOS<br><span style="color:var(--ferrari)">ALGO</span><br>JUNTOS</h2>
       <p class="cta-sub">Tenés una idea, un proyecto o una necesidad. Nosotros tenemos la tecnología y la experiencia para hacerlo realidad.</p>
       <div class="cta-options">
-        <a href="https://wa.me/5491100000000?text=Hola%20MarcanoTech%203D%2C%20quiero%20hacer%20una%20consulta" target="_blank" class="cta-whatsapp">
+        <a href="https://wa.me/5491123468533?text=Hola%20MarcanoTech%2C%20quiero%20hacer%20una%20consulta" target="_blank" class="cta-whatsapp">
           <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 0 1-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 0 1-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 0 1 2.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0 0 12.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 0 0 5.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 0 0-3.48-8.413Z"/></svg>
           WhatsApp
         </a>
-        <a href="mailto:contacto@marcanotech.com" class="cta-email">
+        <a href="mailto:info@marcanotech.com" class="cta-email">
           <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
           Email
         </a>
@@ -1365,7 +1369,7 @@ footer {
           <li><a href="#contacto">Contacto</a></li>
           <li><a href="https://app.marcanotech.com" target="_blank">Dashboard ↗</a></li>
         </ul>
-        <div class="footer-copy">© 2026 MarcanoTech 3D · Buenos Aires · <span id="site-version" style="color:var(--ferrari)">v1.0</span></div>
+        <div class="footer-copy">© 2026 MarcanoTech · Buenos Aires · <span id="site-version" style="color:var(--ferrari)">v1.0</span></div>
       </div>
     </div>
   </div>
@@ -1407,6 +1411,236 @@ function toggleMenu() {
   document.body.style.overflow =
     document.getElementById('mobile-menu').classList.contains('open') ? 'hidden' : '';
 }
+
+// ── Material info data ──
+const MAT_DATA = {
+  pla: {
+    name: 'PLA / PLA+ / PLA Pro',
+    color: '#34d399',
+    specs: [
+      ['Temp. boquilla', '190–220 °C'],
+      ['Temp. cama', '25–60 °C'],
+      ['Velocidad', '60–150 mm/s'],
+      ['Ventilador', '100%'],
+      ['Dificultad', '⭐ Fácil'],
+    ],
+    desc: 'El material más popular para impresión 3D. Derivado de recursos renovables (maíz, caña). Excelente acabado superficial, fácil de imprimir y disponible en la mayor variedad de colores. El PLA+ y PLA Pro ofrecen mayor tenacidad y resistencia mecánica manteniendo la facilidad de impresión. Ideal para prototipos, decoración, modelos RC y objetos de interior.',
+    usos: 'Decoración · Figuras · Modelos RC · Prototipos · Llaveros · Accesorios'
+  },
+  petg: {
+    name: 'PETG / PETG Pro / Rapid PETG',
+    color: '#4a7fd4',
+    specs: [
+      ['Temp. boquilla', '230–250 °C'],
+      ['Temp. cama', '70–85 °C'],
+      ['Velocidad', '40–200 mm/s'],
+      ['Ventilador', '30–50%'],
+      ['Dificultad', '⭐⭐ Moderada'],
+    ],
+    desc: 'Combina la facilidad de impresión del PLA con la resistencia mecánica y térmica del ABS. Excelente adhesión entre capas, resistente a la humedad y a impactos. Soporta hasta 75–80 °C sin deformarse. El Rapid PETG permite velocidades de hasta 600 mm/s. Muy usado en piezas funcionales, chasis RC y componentes técnicos.',
+    usos: 'Piezas funcionales · Chasis RC · Exterior · Soporte de cargas · Contenedores'
+  },
+  tpu: {
+    name: 'TPU 85A / 90A / 95A / 98A',
+    color: '#fbbf24',
+    specs: [
+      ['Temp. boquilla', '190–230 °C'],
+      ['Temp. cama', '25–60 °C'],
+      ['Velocidad', '20–60 mm/s'],
+      ['Ventilador', '50–100%'],
+      ['Dificultad', '⭐⭐ Moderada'],
+    ],
+    desc: 'Material flexible y elástico. La dureza Shore A indica su rigidez: 85A es muy blando y flexible, 95A es semi-rígido ideal para uso general RC. Excelente resistencia a la abrasión y a los químicos. Requiere velocidades bajas para evitar atascos. Perfecto para neumáticos, amortiguadores, protectores y piezas que deben absorber impactos.',
+    usos: 'Neumáticos RC · Amortiguadores · Protectores · Sellos · Gripper'
+  },
+  abs: {
+    name: 'ABS',
+    color: '#f97316',
+    specs: [
+      ['Temp. boquilla', '230–260 °C'],
+      ['Temp. cama', '90–110 °C'],
+      ['Velocidad', '40–80 mm/s'],
+      ['Ventilador', '0–20%'],
+      ['Dificultad', '⭐⭐⭐ Avanzada'],
+    ],
+    desc: 'Material técnico con alta resistencia mecánica y térmica. Soporta temperaturas hasta 95–100 °C. Requiere cámara cerrada y cama caliente para evitar warping. Puede alisarse con acetona para obtener superficies perfectas. Genera vapores durante la impresión — requiere buena ventilación. Reemplazado en muchas aplicaciones por ASA o PETG.',
+    usos: 'Prototipos industriales · Piezas bajo capó · Carcasas técnicas · Aplicaciones mecánicas'
+  },
+  asa: {
+    name: 'ASA',
+    color: '#e01a00',
+    specs: [
+      ['Temp. boquilla', '245–260 °C'],
+      ['Temp. cama', '90–110 °C'],
+      ['Velocidad', '40–60 mm/s'],
+      ['Ventilador', '10–25%'],
+      ['Dificultad', '⭐⭐⭐ Avanzada'],
+    ],
+    desc: 'Similar al ABS pero con resistencia superior a los rayos UV y a la intemperie. Ideal para piezas de exterior que deben soportar sol, lluvia y temperatura. Menos warping que el ABS. Acabado mate robusto. Se puede alisar con acetona. La opción recomendada para cualquier pieza que permanezca al exterior o reciba luz solar directa.',
+    usos: 'Exterior · Señalización · Automoción · Piezas bajo luz UV · Jardín'
+  },
+  placf: {
+    name: 'PLA-CF / PETG-CF (Fibra de Carbono)',
+    color: '#9eaab8',
+    specs: [
+      ['Temp. boquilla', '200–230 °C'],
+      ['Temp. cama', '45–60 °C'],
+      ['Velocidad', '40–80 mm/s'],
+      ['Ventilador', '100%'],
+      ['Dificultad', '⭐⭐ Moderada'],
+    ],
+    desc: 'PLA o PETG reforzado con micro-partículas de fibra de carbono. Mayor rigidez, menor peso y excelente relación resistencia/peso. Aspecto oscuro característico con ligero efecto metálico. Requiere boquilla de acero endurecido (desgasta las de latón). Muy usado en piezas estructurales ligeras, brazos de drones y componentes de precisión.',
+    usos: 'Piezas estructurales · Drones · Prototipos ligeros · Componentes de precisión'
+  },
+  plamatte: {
+    name: 'PLA Matte',
+    color: '#8b5cf6',
+    specs: [
+      ['Temp. boquilla', '190–220 °C'],
+      ['Temp. cama', '25–60 °C'],
+      ['Velocidad', '60–150 mm/s'],
+      ['Ventilador', '100%'],
+      ['Dificultad', '⭐ Fácil'],
+    ],
+    desc: 'Variante del PLA con aditivos que producen un acabado opaco y suave al tacto. Oculta las líneas de capa mejor que el PLA estándar, resultando en un acabado más estético sin posprocesado. Los colores son más suaves y "pastel". Ideal para figuras, decoración y piezas donde la apariencia final es prioritaria.',
+    usos: 'Figuras · Decoración · Modelos de exhibición · Diseño industrial'
+  },
+  plasilk: {
+    name: 'PLA Silk / Seda',
+    color: '#fbbf24',
+    specs: [
+      ['Temp. boquilla', '195–230 °C'],
+      ['Temp. cama', '25–60 °C'],
+      ['Velocidad', '40–80 mm/s'],
+      ['Ventilador', '100%'],
+      ['Dificultad', '⭐ Fácil'],
+    ],
+    desc: 'PLA con aditivos que producen un acabado brillante, sedoso y con efecto metálico o perlado. Muy llamativo visualmente. Las variantes bicolor y multicolor crean efectos de degradado únicos durante la impresión. No recomendado para piezas funcionales de alta carga. El material preferido para regalos, trofeos y piezas decorativas premium.',
+    usos: 'Regalos premium · Trofeos · Decoración · Cosplay · Joyería impresa'
+  }
+};
+
+function showMatInfo(key) {
+  const data = MAT_DATA[key]; if(!data) return;
+  // Update chip active state
+  document.querySelectorAll('#mat-chips .chip').forEach(c => {
+    c.classList.remove('highlight');
+    if(c.textContent.trim() === document.querySelector(`[onclick="showMatInfo('${key}')"]`)?.textContent.trim()) {
+      c.classList.add('highlight');
+    }
+  });
+  document.querySelector(`[onclick="showMatInfo('${key}')"]`)?.classList.add('highlight');
+  // Build specs table
+  const specsHtml = data.specs.map(([k,v]) =>
+    `<span style="color:rgba(255,255,255,0.5);font-size:11px">${k}:</span> <strong style="color:#fff">${v}</strong>`
+  ).join(' &nbsp;|&nbsp; ');
+  document.getElementById('mat-info-content').innerHTML = `
+    <div style="font-weight:700;color:#fff;margin-bottom:8px;font-size:14px">${data.name}</div>
+    <div style="font-size:11px;margin-bottom:10px;padding:6px 10px;background:rgba(0,0,0,0.3);border-radius:6px;flex-wrap:wrap;display:flex;gap:8px">${specsHtml}</div>
+    <div style="color:rgba(255,255,255,0.75);margin-bottom:8px;font-size:13px;line-height:1.6">${data.desc}</div>
+    <div style="font-size:11px;color:rgba(255,255,255,0.4);font-style:italic">Usos típicos: ${data.usos}</div>`;
+  document.getElementById('mat-info-panel').style.borderLeftColor = data.color;
+}
+
+// ── Cotizar modal ──
+function openCotizar() {
+  const m = document.getElementById('modal-cotizar');
+  m.style.display = 'flex';
+  document.body.style.overflow = 'hidden';
+}
+function closeCotizar() {
+  document.getElementById('modal-cotizar').style.display = 'none';
+  document.body.style.overflow = '';
+}
+function submitCotizacion(e) {
+  e.preventDefault();
+  const titulo = document.getElementById('cot-titulo').value.trim();
+  const desc = document.getElementById('cot-desc').value.trim();
+  const wa = document.getElementById('cot-wa').value.trim();
+  const email = document.getElementById('cot-email').value.trim();
+  const ciudad = document.getElementById('cot-ciudad').value.trim();
+  const prov = document.getElementById('cot-prov').value.trim();
+  if(!titulo||!desc){ alert('Completá título y descripción'); return; }
+  // Send via WhatsApp
+  const msg = `*Nueva Cotización — MarcanoTech*
+
+*Título:* ${titulo}
+*Descripción:* ${desc}
+*Ubicación:* ${ciudad} ${prov}
+*Contacto:* ${wa||email||'Sin datos'}`;
+  window.open(`https://wa.me/5491123468533?text=${encodeURIComponent(msg)}`, '_blank');
+  closeCotizar();
+}
 </script>
+<!-- ══ MODAL COTIZAR ══ -->
+<div id="modal-cotizar" style="display:none;position:fixed;inset:0;z-index:200;align-items:center;justify-content:center;padding:16px">
+  <div onclick="closeCotizar()" style="position:absolute;inset:0;background:rgba(0,0,0,0.85);backdrop-filter:blur(8px)"></div>
+  <div style="position:relative;background:#111116;border:1px solid rgba(255,255,255,0.1);border-top:3px solid #e01a00;border-radius:16px;width:100%;max-width:480px;max-height:92vh;overflow-y:auto;padding:28px 28px 24px">
+    <!-- Close -->
+    <button onclick="closeCotizar()" style="position:absolute;top:16px;right:16px;background:none;border:none;color:#8a8a96;font-size:20px;cursor:pointer;line-height:1">✕</button>
+    <div style="font-family:'Bebas Neue',sans-serif;font-size:22px;letter-spacing:1px;color:#f4f4f6;margin-bottom:4px">Nueva Cotización de Impresión 3D</div>
+    <div style="font-size:12px;color:#505058;margin-bottom:24px;font-family:'DM Mono',monospace">Te respondemos por WhatsApp en menos de 24hs</div>
+    <form onsubmit="submitCotizacion(event)">
+      <!-- Título -->
+      <div style="margin-bottom:16px">
+        <label style="font-size:12px;font-weight:600;color:#f4f4f6;display:block;margin-bottom:6px">Título <span style="color:#e01a00">*</span></label>
+        <input id="cot-titulo" type="text" placeholder="Ej: Necesito 50 llaveros personalizados" required
+          style="width:100%;padding:10px 14px;background:#161618;border:1px solid rgba(255,255,255,0.1);border-radius:8px;color:#f4f4f6;font-family:'DM Sans',sans-serif;font-size:13px;outline:none;transition:border-color 0.2s"
+          onfocus="this.style.borderColor='#e01a00'" onblur="this.style.borderColor='rgba(255,255,255,0.1)'">
+      </div>
+      <!-- Descripción -->
+      <div style="margin-bottom:16px">
+        <label style="font-size:12px;font-weight:600;color:#f4f4f6;display:block;margin-bottom:6px">Descripción <span style="color:#e01a00">*</span></label>
+        <textarea id="cot-desc" rows="4" placeholder="Describí lo que necesitás: material, cantidad, tamaño, color, uso, etc." required
+          style="width:100%;padding:10px 14px;background:#161618;border:1px solid rgba(255,255,255,0.1);border-radius:8px;color:#f4f4f6;font-family:'DM Sans',sans-serif;font-size:13px;outline:none;resize:vertical;transition:border-color 0.2s"
+          onfocus="this.style.borderColor='#e01a00'" onblur="this.style.borderColor='rgba(255,255,255,0.1)'"></textarea>
+      </div>
+      <!-- Ciudad + Provincia -->
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:16px">
+        <div>
+          <label style="font-size:12px;font-weight:600;color:#f4f4f6;display:block;margin-bottom:6px">Ciudad</label>
+          <input id="cot-ciudad" type="text" placeholder="Ej: Buenos Aires"
+            style="width:100%;padding:10px 14px;background:#161618;border:1px solid rgba(255,255,255,0.1);border-radius:8px;color:#f4f4f6;font-family:'DM Sans',sans-serif;font-size:13px;outline:none"
+            onfocus="this.style.borderColor='#e01a00'" onblur="this.style.borderColor='rgba(255,255,255,0.1)'">
+        </div>
+        <div>
+          <label style="font-size:12px;font-weight:600;color:#f4f4f6;display:block;margin-bottom:6px">Provincia</label>
+          <input id="cot-prov" type="text" placeholder="Ej: CABA"
+            style="width:100%;padding:10px 14px;background:#161618;border:1px solid rgba(255,255,255,0.1);border-radius:8px;color:#f4f4f6;font-family:'DM Sans',sans-serif;font-size:13px;outline:none"
+            onfocus="this.style.borderColor='#e01a00'" onblur="this.style.borderColor='rgba(255,255,255,0.1)'">
+        </div>
+      </div>
+      <!-- Contacto -->
+      <div style="background:rgba(224,26,0,0.06);border:1px solid rgba(224,26,0,0.2);border-radius:8px;padding:12px 14px;margin-bottom:16px">
+        <div style="font-size:11px;color:#e01a00;margin-bottom:10px;display:flex;align-items:center;gap:6px">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 13a19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 3.48 2h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L7.91 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+          Datos de contacto (solo se revelan al aceptar una cotización)
+        </div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
+          <div>
+            <label style="font-size:11px;color:#8a8a96;display:block;margin-bottom:4px">WhatsApp / Teléfono</label>
+            <input id="cot-wa" type="tel" placeholder="+54 11..."
+              style="width:100%;padding:8px 12px;background:#0d0d0f;border:1px solid rgba(255,255,255,0.08);border-radius:6px;color:#f4f4f6;font-family:'DM Sans',sans-serif;font-size:12px;outline:none">
+          </div>
+          <div>
+            <label style="font-size:11px;color:#8a8a96;display:block;margin-bottom:4px">Email</label>
+            <input id="cot-email" type="email" placeholder="tu@email.com"
+              style="width:100%;padding:8px 12px;background:#0d0d0f;border:1px solid rgba(255,255,255,0.08);border-radius:6px;color:#f4f4f6;font-family:'DM Sans',sans-serif;font-size:12px;outline:none">
+          </div>
+        </div>
+      </div>
+      <!-- Submit -->
+      <button type="submit"
+        style="width:100%;padding:13px;background:#e01a00;color:#fff;border:none;border-radius:8px;font-family:'DM Sans',sans-serif;font-size:14px;font-weight:700;cursor:pointer;transition:background 0.2s;letter-spacing:0.3px"
+        onmouseover="this.style.background='#c01500'" onmouseout="this.style.background='#e01a00'">
+        Publicar solicitud vía WhatsApp
+      </button>
+      <div style="text-align:center;margin-top:10px;font-size:11px;color:#505058;font-family:'DM Mono',monospace">
+        Se abrirá WhatsApp con tu solicitud lista para enviar
+      </div>
+    </form>
+  </div>
+</div>
+
 </body>
 </html>
