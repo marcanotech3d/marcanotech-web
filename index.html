@@ -1,0 +1,1443 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MarcanoTech 3D — Fabricación Digital de Precisión</title>
+<meta name="description" content="Diseño, impresión 3D y fabricación digital de precisión. Productos personalizados, kits RC, decoración y más. Buenos Aires, Argentina.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+/* ══════════════════════════════════════════════
+   TOKENS
+══════════════════════════════════════════════ */
+:root {
+  --black:   #000000;
+  --dark1:   #0a0a0c;
+  --dark2:   #111116;
+  --dark3:   #18181e;
+  --navy:    #1a3a6b;
+  --navy-l:  #4a7fd4;
+  --ferrari: #e01a00;
+  --silver:  #9eaab8;
+  --white:   #f4f4f6;
+  --font-display: 'Bebas Neue', sans-serif;
+  --font-body:    'DM Sans', sans-serif;
+  --font-mono:    'DM Mono', monospace;
+}
+
+/* ══════════════════════════════════════════════
+   RESET + BASE
+══════════════════════════════════════════════ */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+body {
+  font-family: var(--font-body);
+  background: var(--black);
+  color: var(--white);
+  overflow-x: hidden;
+  cursor: default;
+}
+a { text-decoration: none; color: inherit; }
+img { max-width: 100%; display: block; }
+
+/* ══════════════════════════════════════════════
+   CUSTOM CURSOR
+══════════════════════════════════════════════ */
+.cursor {
+  width: 8px; height: 8px;
+  background: var(--ferrari);
+  border-radius: 50%;
+  position: fixed; top: 0; left: 0;
+  pointer-events: none; z-index: 9999;
+  transition: transform 0.15s ease;
+  mix-blend-mode: difference;
+}
+.cursor-ring {
+  width: 32px; height: 32px;
+  border: 1px solid rgba(224,26,0,0.5);
+  border-radius: 50%;
+  position: fixed; top: 0; left: 0;
+  pointer-events: none; z-index: 9998;
+  transition: transform 0.08s ease, width 0.2s, height 0.2s, border-color 0.2s;
+}
+
+/* ══════════════════════════════════════════════
+   NAV
+══════════════════════════════════════════════ */
+nav {
+  position: fixed; top: 0; left: 0; right: 0;
+  z-index: 100;
+  padding: 0 48px;
+  height: 72px;
+  display: flex; align-items: center; justify-content: space-between;
+  background: rgba(0,0,0,0.8);
+  backdrop-filter: blur(16px);
+  border-bottom: 1px solid rgba(255,255,255,0.05);
+  transition: background 0.3s;
+}
+.nav-logo {
+  display: flex; align-items: center; gap: 12px;
+}
+.nav-logo-icon {
+  width: 36px; height: 36px;
+}
+.nav-logo-text {
+  font-family: var(--font-display);
+  font-size: 22px;
+  letter-spacing: 1px;
+  color: var(--white);
+}
+.nav-logo-text span { color: var(--ferrari); }
+.nav-links {
+  display: flex; gap: 36px; align-items: center;
+  list-style: none;
+}
+.nav-links a {
+  font-size: 13px;
+  font-weight: 500;
+  letter-spacing: 0.5px;
+  color: var(--silver);
+  transition: color 0.2s;
+  position: relative;
+}
+.nav-links a::after {
+  content: '';
+  position: absolute; bottom: -4px; left: 0; right: 0;
+  height: 1.5px; background: var(--ferrari);
+  transform: scaleX(0); transform-origin: left;
+  transition: transform 0.25s ease;
+}
+.nav-links a:hover { color: var(--white); }
+.nav-links a:hover::after { transform: scaleX(1); }
+.nav-cta {
+  background: var(--ferrari);
+  color: #fff !important;
+  padding: 8px 20px;
+  border-radius: 6px;
+  font-weight: 600 !important;
+  font-size: 13px !important;
+  transition: background 0.2s, transform 0.15s !important;
+}
+.nav-cta:hover { background: #c01500 !important; transform: translateY(-1px); }
+.nav-cta::after { display: none !important; }
+.nav-hamburger {
+  display: none;
+  flex-direction: column; gap: 5px; cursor: pointer; padding: 4px;
+}
+.nav-hamburger span {
+  width: 24px; height: 2px; background: var(--white); border-radius: 2px;
+  transition: all 0.25s;
+}
+
+/* ══════════════════════════════════════════════
+   HERO
+══════════════════════════════════════════════ */
+.hero {
+  min-height: 100vh;
+  display: grid;
+  place-items: center;
+  position: relative;
+  overflow: hidden;
+  padding: 120px 48px 80px;
+}
+
+/* Animated grid background */
+.hero-grid {
+  position: absolute; inset: 0;
+  background-image:
+    linear-gradient(rgba(26,58,107,0.08) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(26,58,107,0.08) 1px, transparent 1px);
+  background-size: 60px 60px;
+  animation: gridPan 20s linear infinite;
+}
+@keyframes gridPan {
+  0% { transform: translate(0,0); }
+  100% { transform: translate(60px, 60px); }
+}
+
+/* Red glow top left */
+.hero-glow-1 {
+  position: absolute;
+  width: 600px; height: 600px;
+  background: radial-gradient(circle, rgba(224,26,0,0.12) 0%, transparent 70%);
+  top: -200px; left: -100px;
+  pointer-events: none;
+}
+/* Navy glow bottom right */
+.hero-glow-2 {
+  position: absolute;
+  width: 800px; height: 800px;
+  background: radial-gradient(circle, rgba(26,58,107,0.15) 0%, transparent 70%);
+  bottom: -300px; right: -200px;
+  pointer-events: none;
+}
+
+.hero-content {
+  position: relative; z-index: 2;
+  max-width: 900px;
+  text-align: center;
+}
+.hero-badge {
+  display: inline-flex; align-items: center; gap: 8px;
+  background: rgba(224,26,0,0.1);
+  border: 1px solid rgba(224,26,0,0.3);
+  padding: 6px 16px; border-radius: 100px;
+  font-size: 11px; font-family: var(--font-mono);
+  color: var(--ferrari); letter-spacing: 2px;
+  text-transform: uppercase; margin-bottom: 32px;
+  animation: fadeUp 0.8s ease both;
+}
+.hero-badge::before {
+  content: '';
+  width: 6px; height: 6px;
+  background: var(--ferrari);
+  border-radius: 50%;
+  animation: pulse 2s infinite;
+}
+@keyframes pulse {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.5; transform: scale(0.7); }
+}
+
+.hero-title {
+  font-family: var(--font-display);
+  font-size: clamp(64px, 10vw, 140px);
+  line-height: 0.9;
+  letter-spacing: 2px;
+  margin-bottom: 8px;
+  animation: fadeUp 0.8s 0.1s ease both;
+}
+.hero-title .line-1 { color: var(--white); display: block; }
+.hero-title .line-2 { color: var(--ferrari); display: block; }
+.hero-title .line-3 { color: var(--navy-l); display: block; }
+
+.hero-sub {
+  font-size: clamp(15px, 2vw, 18px);
+  color: var(--silver);
+  max-width: 560px;
+  margin: 28px auto 44px;
+  line-height: 1.7;
+  font-weight: 300;
+  animation: fadeUp 0.8s 0.2s ease both;
+}
+
+.hero-actions {
+  display: flex; gap: 16px; justify-content: center; flex-wrap: wrap;
+  animation: fadeUp 0.8s 0.3s ease both;
+}
+.btn-primary {
+  background: var(--ferrari);
+  color: #fff;
+  padding: 14px 32px;
+  border-radius: 8px;
+  font-size: 14px; font-weight: 600;
+  letter-spacing: 0.5px;
+  border: none; cursor: pointer;
+  transition: background 0.2s, transform 0.15s, box-shadow 0.2s;
+  box-shadow: 0 4px 20px rgba(224,26,0,0.3);
+}
+.btn-primary:hover {
+  background: #c01500;
+  transform: translateY(-2px);
+  box-shadow: 0 8px 32px rgba(224,26,0,0.4);
+}
+.btn-secondary {
+  background: transparent;
+  color: var(--white);
+  padding: 14px 32px;
+  border-radius: 8px;
+  font-size: 14px; font-weight: 500;
+  border: 1px solid rgba(255,255,255,0.2);
+  cursor: pointer;
+  transition: border-color 0.2s, background 0.2s, transform 0.15s;
+}
+.btn-secondary:hover {
+  border-color: var(--navy-l);
+  background: rgba(26,58,107,0.15);
+  transform: translateY(-2px);
+}
+
+.hero-stats {
+  display: flex; gap: 48px; justify-content: center;
+  margin-top: 72px; flex-wrap: wrap;
+  animation: fadeUp 0.8s 0.4s ease both;
+}
+.stat {
+  text-align: center;
+  position: relative;
+}
+.stat::after {
+  content: '';
+  position: absolute; right: -24px; top: 20%; bottom: 20%;
+  width: 1px; background: rgba(255,255,255,0.1);
+}
+.stat:last-child::after { display: none; }
+.stat-num {
+  font-family: var(--font-display);
+  font-size: 48px; color: var(--white);
+  line-height: 1;
+}
+.stat-num span { color: var(--ferrari); }
+.stat-label {
+  font-size: 11px; color: var(--silver);
+  letter-spacing: 2px; text-transform: uppercase;
+  margin-top: 6px; font-family: var(--font-mono);
+}
+
+/* Scroll indicator */
+.scroll-hint {
+  position: absolute; bottom: 32px; left: 50%; transform: translateX(-50%);
+  display: flex; flex-direction: column; align-items: center; gap: 8px;
+  animation: fadeUp 1s 0.8s ease both;
+}
+.scroll-hint span {
+  font-size: 10px; color: var(--silver); letter-spacing: 2px;
+  text-transform: uppercase; font-family: var(--font-mono);
+}
+.scroll-line {
+  width: 1px; height: 48px;
+  background: linear-gradient(to bottom, var(--ferrari), transparent);
+  animation: scrollAnim 2s infinite;
+}
+@keyframes scrollAnim {
+  0% { transform: scaleY(0); transform-origin: top; opacity: 1; }
+  50% { transform: scaleY(1); transform-origin: top; opacity: 1; }
+  100% { transform: scaleY(1); transform-origin: bottom; opacity: 0; }
+}
+
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(24px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* ══════════════════════════════════════════════
+   SECTION BASE
+══════════════════════════════════════════════ */
+section { padding: 100px 48px; }
+.container { max-width: 1200px; margin: 0 auto; }
+
+.section-label {
+  font-family: var(--font-mono);
+  font-size: 11px; letter-spacing: 3px;
+  text-transform: uppercase;
+  color: var(--ferrari);
+  margin-bottom: 16px;
+  display: flex; align-items: center; gap: 12px;
+}
+.section-label::before {
+  content: '';
+  width: 32px; height: 1.5px;
+  background: var(--ferrari);
+}
+.section-title {
+  font-family: var(--font-display);
+  font-size: clamp(40px, 5vw, 72px);
+  line-height: 1;
+  letter-spacing: 1px;
+  margin-bottom: 20px;
+}
+.section-sub {
+  font-size: 16px; color: var(--silver);
+  font-weight: 300; line-height: 1.7;
+  max-width: 560px;
+}
+
+/* Reveal animation */
+.reveal {
+  opacity: 0;
+  transform: translateY(32px);
+  transition: opacity 0.7s ease, transform 0.7s ease;
+}
+.reveal.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* ══════════════════════════════════════════════
+   SERVICES — Dark section
+══════════════════════════════════════════════ */
+#servicios { background: var(--dark1); }
+
+.services-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 2px;
+  margin-top: 64px;
+  border: 1px solid rgba(255,255,255,0.06);
+  border-radius: 16px;
+  overflow: hidden;
+}
+.service-card {
+  background: var(--dark2);
+  padding: 40px 36px;
+  position: relative;
+  overflow: hidden;
+  transition: background 0.25s;
+  cursor: default;
+}
+.service-card::before {
+  content: '';
+  position: absolute; top: 0; left: 0; right: 0;
+  height: 2px;
+  background: var(--ferrari);
+  transform: scaleX(0); transform-origin: left;
+  transition: transform 0.3s ease;
+}
+.service-card:hover { background: var(--dark3); }
+.service-card:hover::before { transform: scaleX(1); }
+.service-icon {
+  width: 48px; height: 48px;
+  background: rgba(26,58,107,0.2);
+  border: 1px solid rgba(74,127,212,0.3);
+  border-radius: 12px;
+  display: flex; align-items: center; justify-content: center;
+  margin-bottom: 24px;
+  transition: background 0.25s, border-color 0.25s;
+}
+.service-card:hover .service-icon {
+  background: rgba(224,26,0,0.1);
+  border-color: rgba(224,26,0,0.3);
+}
+.service-icon svg { width: 22px; height: 22px; }
+.service-name {
+  font-size: 18px; font-weight: 700;
+  color: var(--white); margin-bottom: 12px;
+  letter-spacing: -0.3px;
+}
+.service-desc {
+  font-size: 14px; color: var(--silver);
+  line-height: 1.7; font-weight: 300;
+}
+.service-num {
+  position: absolute; top: 36px; right: 36px;
+  font-family: var(--font-display);
+  font-size: 72px; color: rgba(255,255,255,0.03);
+  line-height: 1; pointer-events: none;
+  transition: color 0.25s;
+}
+.service-card:hover .service-num { color: rgba(224,26,0,0.06); }
+
+/* ══════════════════════════════════════════════
+   PROCESO — Light section
+══════════════════════════════════════════════ */
+#proceso {
+  background: var(--white);
+  color: var(--dark1);
+}
+#proceso .section-title { color: var(--dark1); }
+#proceso .section-sub { color: #555; }
+
+.process-steps {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 0;
+  margin-top: 64px;
+  position: relative;
+}
+.process-steps::before {
+  content: '';
+  position: absolute;
+  top: 32px; left: 10%; right: 10%;
+  height: 1px;
+  background: linear-gradient(to right, transparent, var(--ferrari), var(--navy), transparent);
+  z-index: 0;
+}
+.step {
+  text-align: center;
+  padding: 0 24px;
+  position: relative; z-index: 1;
+}
+.step-num {
+  width: 64px; height: 64px;
+  background: var(--dark1);
+  border: 2px solid var(--ferrari);
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  margin: 0 auto 24px;
+  font-family: var(--font-display);
+  font-size: 28px; color: var(--ferrari);
+  position: relative; z-index: 2;
+  transition: background 0.25s, transform 0.25s;
+}
+.step:hover .step-num {
+  background: var(--ferrari);
+  color: #fff;
+  transform: scale(1.1);
+}
+.step-title {
+  font-size: 15px; font-weight: 700;
+  color: var(--dark1); margin-bottom: 10px;
+}
+.step-desc {
+  font-size: 13px; color: #666;
+  line-height: 1.6; font-weight: 300;
+}
+
+/* ══════════════════════════════════════════════
+   PRODUCTOS — Dark section
+══════════════════════════════════════════════ */
+#productos { background: var(--black); }
+
+.products-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 20px;
+  margin-top: 64px;
+}
+.product-card {
+  background: var(--dark2);
+  border: 1px solid rgba(255,255,255,0.06);
+  border-radius: 16px;
+  overflow: hidden;
+  transition: transform 0.25s, border-color 0.25s, box-shadow 0.25s;
+  cursor: pointer;
+}
+.product-card:hover {
+  transform: translateY(-6px);
+  border-color: rgba(224,26,0,0.3);
+  box-shadow: 0 20px 60px rgba(0,0,0,0.5), 0 0 0 1px rgba(224,26,0,0.15);
+}
+.product-img {
+  height: 220px;
+  background: var(--dark3);
+  display: flex; align-items: center; justify-content: center;
+  position: relative; overflow: hidden;
+}
+.product-img-placeholder {
+  display: flex; flex-direction: column; align-items: center; gap: 12px;
+}
+.product-img-placeholder svg { opacity: 0.15; }
+.product-img-placeholder span {
+  font-family: var(--font-mono);
+  font-size: 10px; color: rgba(255,255,255,0.2);
+  letter-spacing: 2px; text-transform: uppercase;
+}
+.product-tag {
+  position: absolute; top: 16px; left: 16px;
+  background: var(--ferrari);
+  color: #fff; font-size: 10px; font-weight: 700;
+  padding: 4px 10px; border-radius: 4px;
+  letter-spacing: 1px; text-transform: uppercase;
+  font-family: var(--font-mono);
+}
+.product-body { padding: 24px; }
+.product-name {
+  font-size: 17px; font-weight: 700;
+  color: var(--white); margin-bottom: 8px;
+  letter-spacing: -0.3px;
+}
+.product-desc {
+  font-size: 13px; color: var(--silver);
+  line-height: 1.6; font-weight: 300;
+  margin-bottom: 20px;
+}
+.product-footer {
+  display: flex; align-items: center; justify-content: space-between;
+}
+.product-cta {
+  background: transparent;
+  border: 1px solid rgba(224,26,0,0.5);
+  color: var(--ferrari);
+  padding: 8px 18px; border-radius: 6px;
+  font-size: 12px; font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s, color 0.2s;
+}
+.product-cta:hover {
+  background: var(--ferrari);
+  color: #fff;
+}
+.product-ml {
+  font-size: 11px; color: var(--silver);
+  font-family: var(--font-mono);
+  display: flex; align-items: center; gap: 4px;
+}
+
+/* ══════════════════════════════════════════════
+   MATERIALES — featured strip
+══════════════════════════════════════════════ */
+#materiales {
+  background: var(--navy);
+  padding: 60px 48px;
+  overflow: hidden;
+}
+.materials-inner {
+  display: flex; align-items: center;
+  gap: 64px; flex-wrap: wrap;
+}
+.materials-text { flex: 1; min-width: 280px; }
+.materials-text .section-label { color: rgba(255,255,255,0.6); }
+.materials-text .section-label::before { background: rgba(255,255,255,0.4); }
+.materials-text .section-title { color: #fff; font-size: clamp(32px, 4vw, 56px); }
+.materials-text .section-sub { color: rgba(255,255,255,0.7); }
+.materials-chips {
+  display: flex; flex-wrap: wrap; gap: 8px;
+  margin-top: 28px;
+}
+.chip {
+  background: rgba(255,255,255,0.1);
+  border: 1px solid rgba(255,255,255,0.2);
+  color: rgba(255,255,255,0.85);
+  padding: 6px 14px; border-radius: 100px;
+  font-size: 12px; font-family: var(--font-mono);
+  letter-spacing: 0.5px;
+  transition: background 0.2s, border-color 0.2s;
+}
+.chip:hover {
+  background: rgba(224,26,0,0.2);
+  border-color: rgba(224,26,0,0.5);
+}
+.chip.highlight {
+  background: rgba(224,26,0,0.2);
+  border-color: rgba(224,26,0,0.5);
+  color: #fff;
+}
+.materials-visual {
+  flex: 0 0 auto;
+  display: grid; grid-template-columns: repeat(4, 40px);
+  grid-template-rows: repeat(4, 40px);
+  gap: 6px;
+}
+.swatch {
+  border-radius: 6px;
+  border: 1px solid rgba(255,255,255,0.1);
+  transition: transform 0.2s;
+}
+.swatch:hover { transform: scale(1.15); z-index: 1; }
+
+/* ══════════════════════════════════════════════
+   PERSONALIZACION
+══════════════════════════════════════════════ */
+#personalizacion { background: var(--dark1); }
+
+.custom-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 48px;
+  margin-top: 64px;
+  align-items: center;
+}
+.custom-visual {
+  background: var(--dark2);
+  border: 1px solid rgba(255,255,255,0.06);
+  border-radius: 20px;
+  padding: 48px;
+  display: flex; flex-direction: column; gap: 16px;
+  position: relative; overflow: hidden;
+}
+.custom-visual::after {
+  content: '';
+  position: absolute; bottom: 0; left: 0; right: 0;
+  height: 3px;
+  background: linear-gradient(to right, var(--ferrari), var(--navy-l));
+}
+.custom-step {
+  display: flex; align-items: flex-start; gap: 16px;
+}
+.custom-step-dot {
+  width: 8px; height: 8px; border-radius: 50%;
+  background: var(--ferrari);
+  margin-top: 6px; flex-shrink: 0;
+}
+.custom-step-line {
+  width: 1px; background: rgba(255,255,255,0.08);
+  flex-shrink: 0; align-self: stretch; margin-left: 3.5px;
+  margin-top: -8px;
+}
+.custom-step-text strong {
+  display: block; font-size: 14px; color: var(--white);
+  margin-bottom: 4px;
+}
+.custom-step-text span {
+  font-size: 12px; color: var(--silver); line-height: 1.5;
+}
+.custom-benefits {
+  display: flex; flex-direction: column; gap: 20px;
+}
+.benefit {
+  display: flex; gap: 16px; align-items: flex-start;
+}
+.benefit-icon {
+  width: 40px; height: 40px; border-radius: 10px;
+  background: rgba(224,26,0,0.1);
+  border: 1px solid rgba(224,26,0,0.2);
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0; font-size: 18px;
+}
+.benefit-title {
+  font-size: 15px; font-weight: 700; color: var(--white);
+  margin-bottom: 4px;
+}
+.benefit-desc {
+  font-size: 13px; color: var(--silver); line-height: 1.6; font-weight: 300;
+}
+
+/* ══════════════════════════════════════════════
+   GUIAS — Light section
+══════════════════════════════════════════════ */
+#guias { background: #f0f0f2; color: var(--dark1); }
+#guias .section-title { color: var(--dark1); }
+#guias .section-sub { color: #555; }
+
+.guides-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 24px; margin-top: 64px;
+}
+.guide-card {
+  background: #fff;
+  border-radius: 16px;
+  overflow: hidden;
+  box-shadow: 0 2px 16px rgba(0,0,0,0.06);
+  transition: transform 0.25s, box-shadow 0.25s;
+  cursor: pointer;
+}
+.guide-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 12px 40px rgba(0,0,0,0.12);
+}
+.guide-header {
+  height: 8px;
+  background: var(--ferrari);
+}
+.guide-body { padding: 28px 24px; }
+.guide-category {
+  font-family: var(--font-mono);
+  font-size: 10px; color: var(--navy);
+  letter-spacing: 2px; text-transform: uppercase;
+  margin-bottom: 10px;
+}
+.guide-title {
+  font-size: 16px; font-weight: 700;
+  color: var(--dark1); margin-bottom: 10px;
+  line-height: 1.3;
+}
+.guide-desc {
+  font-size: 13px; color: #666;
+  line-height: 1.6; font-weight: 300;
+}
+.guide-footer {
+  display: flex; align-items: center; justify-content: space-between;
+  margin-top: 20px; padding-top: 16px;
+  border-top: 1px solid #f0f0f0;
+}
+.guide-level {
+  font-size: 11px; font-family: var(--font-mono);
+  color: #999; letter-spacing: 1px;
+}
+.guide-arrow {
+  width: 28px; height: 28px;
+  background: var(--dark1);
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  transition: background 0.2s, transform 0.2s;
+}
+.guide-card:hover .guide-arrow {
+  background: var(--ferrari);
+  transform: translateX(3px);
+}
+
+/* ══════════════════════════════════════════════
+   CTA — Full dark
+══════════════════════════════════════════════ */
+#contacto {
+  background: var(--black);
+  text-align: center;
+  padding: 120px 48px;
+  position: relative; overflow: hidden;
+}
+#contacto::before {
+  content: '';
+  position: absolute;
+  width: 700px; height: 700px;
+  background: radial-gradient(circle, rgba(224,26,0,0.08) 0%, transparent 70%);
+  top: 50%; left: 50%; transform: translate(-50%, -50%);
+  pointer-events: none;
+}
+.cta-title {
+  font-family: var(--font-display);
+  font-size: clamp(48px, 7vw, 96px);
+  line-height: 0.95;
+  letter-spacing: 2px;
+  margin-bottom: 24px;
+  position: relative;
+}
+.cta-sub {
+  font-size: 17px; color: var(--silver);
+  max-width: 480px; margin: 0 auto 48px;
+  line-height: 1.7; font-weight: 300;
+}
+.cta-options {
+  display: flex; gap: 16px; justify-content: center; flex-wrap: wrap;
+  position: relative;
+}
+.cta-whatsapp {
+  background: #25D366;
+  color: #fff;
+  padding: 14px 32px;
+  border-radius: 8px;
+  font-size: 14px; font-weight: 600;
+  display: flex; align-items: center; gap: 10px;
+  border: none; cursor: pointer;
+  transition: background 0.2s, transform 0.15s;
+  box-shadow: 0 4px 20px rgba(37,211,102,0.3);
+}
+.cta-whatsapp:hover {
+  background: #1db954;
+  transform: translateY(-2px);
+}
+.cta-email {
+  background: transparent;
+  color: var(--white);
+  padding: 14px 32px;
+  border-radius: 8px;
+  font-size: 14px; font-weight: 500;
+  border: 1px solid rgba(255,255,255,0.2);
+  cursor: pointer;
+  transition: border-color 0.2s, background 0.2s, transform 0.15s;
+  display: flex; align-items: center; gap: 10px;
+}
+.cta-email:hover {
+  border-color: var(--navy-l);
+  background: rgba(26,58,107,0.15);
+  transform: translateY(-2px);
+}
+
+/* ══════════════════════════════════════════════
+   FOOTER
+══════════════════════════════════════════════ */
+footer {
+  background: var(--dark1);
+  border-top: 1px solid rgba(255,255,255,0.05);
+  padding: 48px;
+}
+.footer-inner {
+  max-width: 1200px; margin: 0 auto;
+  display: flex; align-items: center; justify-content: space-between;
+  flex-wrap: wrap; gap: 24px;
+}
+.footer-logo {
+  font-family: var(--font-display);
+  font-size: 20px; letter-spacing: 1px;
+}
+.footer-logo span { color: var(--ferrari); }
+.footer-links {
+  display: flex; gap: 28px; list-style: none; flex-wrap: wrap;
+}
+.footer-links a {
+  font-size: 13px; color: var(--silver);
+  transition: color 0.2s;
+}
+.footer-links a:hover { color: var(--white); }
+.footer-copy {
+  font-size: 12px; color: var(--silver);
+  font-family: var(--font-mono);
+}
+.footer-line {
+  width: 100%; height: 2px;
+  background: linear-gradient(to right, var(--ferrari), var(--navy), transparent);
+  margin-bottom: 32px;
+}
+
+/* ══════════════════════════════════════════════
+   MOBILE NAV
+══════════════════════════════════════════════ */
+.mobile-menu {
+  display: none;
+  position: fixed; inset: 0;
+  background: rgba(0,0,0,0.97);
+  z-index: 99;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 32px;
+}
+.mobile-menu.open { display: flex; }
+.mobile-menu a {
+  font-family: var(--font-display);
+  font-size: 48px; letter-spacing: 2px;
+  color: var(--white);
+  transition: color 0.2s;
+}
+.mobile-menu a:hover { color: var(--ferrari); }
+.mobile-close {
+  position: absolute; top: 24px; right: 24px;
+  background: none; border: none; color: var(--silver);
+  font-size: 32px; cursor: pointer;
+}
+
+/* ══════════════════════════════════════════════
+   RESPONSIVE
+══════════════════════════════════════════════ */
+@media (max-width: 900px) {
+  nav { padding: 0 24px; }
+  .nav-links { display: none; }
+  .nav-hamburger { display: flex; }
+  section { padding: 72px 24px; }
+  .hero { padding: 100px 24px 64px; }
+  .custom-grid { grid-template-columns: 1fr; }
+  .process-steps::before { display: none; }
+  .hero-stats { gap: 32px; }
+  .stat::after { display: none; }
+  .materials-visual { display: none; }
+  footer { padding: 32px 24px; }
+  #materiales { padding: 60px 24px; }
+  #contacto { padding: 80px 24px; }
+}
+@media (max-width: 560px) {
+  .hero-title { font-size: 52px; }
+  .services-grid { grid-template-columns: 1fr; }
+  .products-grid { grid-template-columns: 1fr; }
+  .guides-grid { grid-template-columns: 1fr; }
+  .hero-stats { flex-direction: column; gap: 24px; }
+}
+</style>
+</head>
+<body>
+
+<!-- Custom cursor (desktop only) -->
+<div class="cursor" id="cursor"></div>
+<div class="cursor-ring" id="cursor-ring"></div>
+
+<!-- ══ NAV ══ -->
+<nav id="navbar">
+  <a href="#" class="nav-logo">
+    <svg class="nav-logo-icon" viewBox="0 0 40 40" fill="none">
+      <rect x="2" y="35" width="36" height="3" rx="1" fill="#e01a00"/>
+      <rect x="2" y="8" width="7" height="27" rx="1" fill="#f4f4f6"/>
+      <rect x="31" y="8" width="7" height="27" rx="1" fill="#f4f4f6"/>
+      <polygon points="9,8 17,22 17,28 9,35" fill="#f4f4f6"/>
+      <polygon points="31,8 23,22 23,28 31,35" fill="#f4f4f6"/>
+      <polygon points="17,22 20,28 23,22 23,28 20,34 17,28" fill="#f4f4f6"/>
+      <polygon points="2,8 4,5 12,5 9,8" fill="#4a7fd4"/>
+      <polygon points="31,8 33,5 40,5 38,8" fill="#4a7fd4" opacity="0.7"/>
+    </svg>
+    <span class="nav-logo-text">MARCANO<span>TECH</span></span>
+  </a>
+  <ul class="nav-links">
+    <li><a href="#servicios">Servicios</a></li>
+    <li><a href="#proceso">Proceso</a></li>
+    <li><a href="#productos">Productos</a></li>
+    <li><a href="#guias">Guías</a></li>
+    <li><a href="#contacto" class="nav-cta">Cotizar</a></li>
+  </ul>
+  <div class="nav-hamburger" id="hamburger" onclick="toggleMenu()">
+    <span></span><span></span><span></span>
+  </div>
+</nav>
+
+<!-- Mobile menu -->
+<div class="mobile-menu" id="mobile-menu">
+  <button class="mobile-close" onclick="toggleMenu()">✕</button>
+  <a href="#servicios" onclick="toggleMenu()">Servicios</a>
+  <a href="#proceso" onclick="toggleMenu()">Proceso</a>
+  <a href="#productos" onclick="toggleMenu()">Productos</a>
+  <a href="#guias" onclick="toggleMenu()">Guías</a>
+  <a href="#contacto" onclick="toggleMenu()" style="color:var(--ferrari)">Cotizar</a>
+</div>
+
+<!-- ══ HERO ══ -->
+<section class="hero" id="inicio">
+  <div class="hero-grid"></div>
+  <div class="hero-glow-1"></div>
+  <div class="hero-glow-2"></div>
+  <div class="hero-content">
+    <div class="hero-badge">Buenos Aires · Argentina</div>
+    <h1 class="hero-title">
+      <span class="line-1">FABRICACIÓN</span>
+      <span class="line-2">DIGITAL</span>
+      <span class="line-3">DE PRECISIÓN</span>
+    </h1>
+    <p class="hero-sub">Diseño, impresión 3D y fabricación a medida. Desde prototipos técnicos hasta productos terminados — cada pieza construida con precisión milimétrica y materiales de calidad.</p>
+    <div class="hero-actions">
+      <a href="#productos" class="btn-primary">Ver productos</a>
+      <a href="#proceso" class="btn-secondary">Cómo trabajamos</a>
+    </div>
+    <div class="hero-stats">
+      <div class="stat">
+        <div class="stat-num">+<span>200</span></div>
+        <div class="stat-label">Piezas impresas</div>
+      </div>
+      <div class="stat">
+        <div class="stat-num"><span>15</span>+</div>
+        <div class="stat-label">Materiales</div>
+      </div>
+      <div class="stat">
+        <div class="stat-num"><span>1</span>:10</div>
+        <div class="stat-label">Escala de precisión</div>
+      </div>
+    </div>
+  </div>
+  <div class="scroll-hint">
+    <span>Scroll</span>
+    <div class="scroll-line"></div>
+  </div>
+</section>
+
+<!-- ══ SERVICIOS ══ -->
+<section id="servicios">
+  <div class="container">
+    <div class="reveal">
+      <div class="section-label">Qué hacemos</div>
+      <h2 class="section-title">SERVICIOS</h2>
+      <p class="section-sub">Todo lo que necesitás para dar vida a tus ideas con tecnología de fabricación digital.</p>
+    </div>
+    <div class="services-grid reveal">
+
+      <div class="service-card">
+        <div class="service-num">01</div>
+        <div class="service-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="#4a7fd4" stroke-width="1.5"><polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg>
+        </div>
+        <div class="service-name">Impresión 3D FDM</div>
+        <div class="service-desc">Piezas funcionales en PLA, PETG, TPU, ABS y más. Alta velocidad, múltiples materiales y acabados profesionales para cualquier aplicación.</div>
+      </div>
+
+      <div class="service-card">
+        <div class="service-num">02</div>
+        <div class="service-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="#4a7fd4" stroke-width="1.5"><path d="M12 19l7-7 3 3-7 7-3-3z"/><path d="M18 13l-1.5-7.5L2 2l3.5 14.5L13 18l5-5z"/><path d="M2 2l7.586 7.586"/><circle cx="11" cy="11" r="2"/></svg>
+        </div>
+        <div class="service-name">Diseño 3D</div>
+        <div class="service-desc">Modelado paramétrico y orgánico en Fusion 360 y Blender. Desde boceto hasta archivo listo para imprimir o fabricar en CNC.</div>
+      </div>
+
+      <div class="service-card">
+        <div class="service-num">03</div>
+        <div class="service-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="#4a7fd4" stroke-width="1.5"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8m-4-4v4"/></svg>
+        </div>
+        <div class="service-name">Kits & Modelos RC</div>
+        <div class="service-desc">Carrocerías, chasis, componentes y accesorios para vehículos RC a escala. Diseños exclusivos y réplicas de alta fidelidad.</div>
+      </div>
+
+      <div class="service-card">
+        <div class="service-num">04</div>
+        <div class="service-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="#4a7fd4" stroke-width="1.5"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+        </div>
+        <div class="service-name">Personalización</div>
+        <div class="service-desc">Regalos únicos, accesorios personalizados, decoración para el hogar y objetos a medida. Tu idea convertida en un objeto real.</div>
+      </div>
+
+      <div class="service-card">
+        <div class="service-num">05</div>
+        <div class="service-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="#4a7fd4" stroke-width="1.5"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>
+        </div>
+        <div class="service-name">Guías de construcción</div>
+        <div class="service-desc">Documentación técnica y tutoriales paso a paso para que puedas construir, ensamblar y mantener tus proyectos con confianza.</div>
+      </div>
+
+      <div class="service-card">
+        <div class="service-num">06</div>
+        <div class="service-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="#4a7fd4" stroke-width="1.5"><circle cx="12" cy="12" r="3"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14M4.93 4.93a10 10 0 0 0 0 14.14"/></svg>
+        </div>
+        <div class="service-name">Componentes RC</div>
+        <div class="service-desc">Motores, ESC, servos, baterías y electrónica seleccionada para proyectos RC. Asesoramiento técnico incluido en cada compra.</div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ══ PROCESO ══ -->
+<section id="proceso">
+  <div class="container">
+    <div class="reveal">
+      <div class="section-label" style="color:var(--ferrari)">Cómo trabajamos</div>
+      <h2 class="section-title">EL PROCESO</h2>
+      <p class="section-sub" style="color:#555">De la idea a la pieza terminada en pasos claros y transparentes.</p>
+    </div>
+    <div class="process-steps reveal">
+      <div class="step">
+        <div class="step-num">1</div>
+        <div class="step-title">Consulta</div>
+        <div class="step-desc">Contanos tu idea o necesidad. Evaluamos materiales, escala, tiempo y presupuesto.</div>
+      </div>
+      <div class="step">
+        <div class="step-num">2</div>
+        <div class="step-title">Diseño</div>
+        <div class="step-desc">Modelamos en 3D o ajustamos un diseño existente. Revisión y aprobación antes de imprimir.</div>
+      </div>
+      <div class="step">
+        <div class="step-num">3</div>
+        <div class="step-title">Impresión</div>
+        <div class="step-desc">Fabricación con parámetros optimizados para cada material y aplicación. Control de calidad en proceso.</div>
+      </div>
+      <div class="step">
+        <div class="step-num">4</div>
+        <div class="step-title">Posprocesado</div>
+        <div class="step-desc">Lijado, ensamble, inserción de hardware y acabado final según especificaciones del proyecto.</div>
+      </div>
+      <div class="step">
+        <div class="step-num">5</div>
+        <div class="step-title">Entrega</div>
+        <div class="step-desc">Envío o retiro en Buenos Aires. Documentación técnica y soporte posventa incluidos.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══ PRODUCTOS ══ -->
+<section id="productos">
+  <div class="container">
+    <div class="reveal">
+      <div class="section-label">Catálogo</div>
+      <h2 class="section-title">PRODUCTOS</h2>
+      <p class="section-sub">Una selección de lo que fabricamos. Todo disponible en MercadoLibre con envío a todo el país.</p>
+    </div>
+    <div class="products-grid reveal">
+
+      <div class="product-card">
+        <div class="product-img">
+          <div class="product-tag">RC 1:10</div>
+          <div class="product-img-placeholder">
+            <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8m-4-4v4"/></svg>
+            <span>Foto próximamente</span>
+          </div>
+        </div>
+        <div class="product-body">
+          <div class="product-name">Carrocería RC 1:10 Formula</div>
+          <div class="product-desc">Carrocería impresa en PETG de alta resistencia. Compatible con chasis estándar 257mm. Acabado profesional.</div>
+          <div class="product-footer">
+            <a href="https://www.mercadolibre.com.ar" target="_blank" class="product-cta">Ver en ML</a>
+            <span class="product-ml">🛒 MercadoLibre</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="product-card">
+        <div class="product-img">
+          <div class="product-tag">Personalizado</div>
+          <div class="product-img-placeholder">
+            <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+            <span>Foto próximamente</span>
+          </div>
+        </div>
+        <div class="product-body">
+          <div class="product-name">Llavero personalizado 3D</div>
+          <div class="product-desc">Diseño a pedido. Nombre, logo, forma o figura. Impreso en PLA Silk con acabado satinado premium.</div>
+          <div class="product-footer">
+            <a href="https://www.mercadolibre.com.ar" target="_blank" class="product-cta">Ver en ML</a>
+            <span class="product-ml">🛒 MercadoLibre</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="product-card">
+        <div class="product-img">
+          <div class="product-tag">Decoración</div>
+          <div class="product-img-placeholder">
+            <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+            <span>Foto próximamente</span>
+          </div>
+        </div>
+        <div class="product-body">
+          <div class="product-name">Organizador de escritorio</div>
+          <div class="product-desc">Sistema modular para organizar cables, herramientas y accesorios. Diseño limpio y funcional para el espacio de trabajo.</div>
+          <div class="product-footer">
+            <a href="https://www.mercadolibre.com.ar" target="_blank" class="product-cta">Ver en ML</a>
+            <span class="product-ml">🛒 MercadoLibre</span>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ══ MATERIALES ══ -->
+<section id="materiales">
+  <div class="container">
+    <div class="materials-inner reveal">
+      <div class="materials-text">
+        <div class="section-label">Inventario activo</div>
+        <h2 class="section-title">MATERIALES</h2>
+        <p class="section-sub">Más de 15 filamentos en stock permanente. Seleccionamos materiales de calidad para cada aplicación.</p>
+        <div class="materials-chips">
+          <span class="chip highlight">PLA Matte</span>
+          <span class="chip highlight">PETG Pro</span>
+          <span class="chip">TPU 95A</span>
+          <span class="chip">PLA Silk</span>
+          <span class="chip">ABS</span>
+          <span class="chip">ASA</span>
+          <span class="chip">PLA-CF</span>
+          <span class="chip">Rapid PETG</span>
+          <span class="chip">TPU 85A</span>
+          <span class="chip">PLA Wood</span>
+        </div>
+      </div>
+      <div class="materials-visual">
+        <!-- Color swatches grid -->
+        <div class="swatch" style="background:#f2f2f2"></div>
+        <div class="swatch" style="background:#1a1a1a"></div>
+        <div class="swatch" style="background:#e01a00"></div>
+        <div class="swatch" style="background:#1a3a6b"></div>
+        <div class="swatch" style="background:#f97316"></div>
+        <div class="swatch" style="background:#22c55e"></div>
+        <div class="swatch" style="background:#eab308"></div>
+        <div class="swatch" style="background:#8b5cf6"></div>
+        <div class="swatch" style="background:#06b6d4"></div>
+        <div class="swatch" style="background:#ec4899"></div>
+        <div class="swatch" style="background:#9eaab8"></div>
+        <div class="swatch" style="background:rgba(200,210,220,0.4);border:1px solid rgba(255,255,255,0.3)"></div>
+        <div class="swatch" style="background:#2d1b00"></div>
+        <div class="swatch" style="background:#1a0a1a"></div>
+        <div class="swatch" style="background:#78716c"></div>
+        <div class="swatch" style="background:#fef3c7"></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══ PERSONALIZACIÓN ══ -->
+<section id="personalizacion">
+  <div class="container">
+    <div class="reveal">
+      <div class="section-label">A tu medida</div>
+      <h2 class="section-title">PERSONALIZACIÓN</h2>
+      <p class="section-sub">Cada objeto puede adaptarse a tus necesidades exactas. Sin mínimos de producción.</p>
+    </div>
+    <div class="custom-grid reveal">
+      <div class="custom-visual">
+        <div class="custom-step">
+          <div>
+            <div class="custom-step-dot"></div>
+            <div class="custom-step-line"></div>
+          </div>
+          <div class="custom-step-text">
+            <strong>Me escribís la idea</strong>
+            <span>Por WhatsApp o email. No necesitás saber nada de impresión 3D — explicalo como si le contaras a un amigo.</span>
+          </div>
+        </div>
+        <div class="custom-step">
+          <div>
+            <div class="custom-step-dot"></div>
+            <div class="custom-step-line"></div>
+          </div>
+          <div class="custom-step-text">
+            <strong>Te mando el diseño para aprobar</strong>
+            <span>Renderizado 3D del objeto antes de imprimir. Podés pedir cambios hasta que quede exactamente como querés.</span>
+          </div>
+        </div>
+        <div class="custom-step">
+          <div>
+            <div class="custom-step-dot"></div>
+            <div class="custom-step-line"></div>
+          </div>
+          <div class="custom-step-text">
+            <strong>Impresión y entrega</strong>
+            <span>Producción en 24-72hs según complejidad. Envío a todo el país o retiro en Buenos Aires.</span>
+          </div>
+        </div>
+        <div class="custom-step">
+          <div><div class="custom-step-dot" style="background:var(--navy-l)"></div></div>
+          <div class="custom-step-text">
+            <strong>Soporte posventa</strong>
+            <span>Si algo no está bien, lo solucionamos. Siempre.</span>
+          </div>
+        </div>
+      </div>
+      <div class="custom-benefits">
+        <div class="benefit">
+          <div class="benefit-icon">🎯</div>
+          <div>
+            <div class="benefit-title">Sin mínimos</div>
+            <div class="benefit-desc">Una sola pieza, un kit completo o una tirada de producción. El precio se ajusta a la cantidad.</div>
+          </div>
+        </div>
+        <div class="benefit">
+          <div class="benefit-icon">⚡</div>
+          <div>
+            <div class="benefit-title">Entrega rápida</div>
+            <div class="benefit-desc">Impresoras activas todos los días. La mayoría de los pedidos se entregan en menos de 72 horas.</div>
+          </div>
+        </div>
+        <div class="benefit">
+          <div class="benefit-icon">🔧</div>
+          <div>
+            <div class="benefit-title">Asesoramiento técnico</div>
+            <div class="benefit-desc">Te recomendamos el material y proceso correcto para tu aplicación específica.</div>
+          </div>
+        </div>
+        <div class="benefit">
+          <div class="benefit-icon">📦</div>
+          <div>
+            <div class="benefit-title">Envío a todo el país</div>
+            <div class="benefit-desc">Embalaje protegido para que cada pieza llegue en perfecto estado. Seguimiento incluido.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══ GUÍAS ══ -->
+<section id="guias">
+  <div class="container">
+    <div class="reveal">
+      <div class="section-label" style="color:var(--ferrari)">Aprendé con nosotros</div>
+      <h2 class="section-title" style="color:var(--dark1)">GUÍAS</h2>
+      <p class="section-sub">Recursos técnicos gratuitos para que entiendas el proceso y saques el máximo de cada pieza.</p>
+    </div>
+    <div class="guides-grid reveal">
+
+      <div class="guide-card">
+        <div class="guide-header"></div>
+        <div class="guide-body">
+          <div class="guide-category">Materiales</div>
+          <div class="guide-title">PLA vs PETG vs TPU: ¿cuál usar en cada caso?</div>
+          <div class="guide-desc">Comparativa técnica completa de los materiales más usados en impresión FDM.</div>
+          <div class="guide-footer">
+            <span class="guide-level">⬤ Principiante</span>
+            <div class="guide-arrow">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5"><polyline points="9 18 15 12 9 6"/></svg>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="guide-card">
+        <div class="guide-header" style="background:var(--navy)"></div>
+        <div class="guide-body">
+          <div class="guide-category">RC · Construcción</div>
+          <div class="guide-title">Guía completa: Chasis RC 1:10 desde cero</div>
+          <div class="guide-desc">Diseño, impresión, selección de componentes y ensamble paso a paso de un chasis Touring 1:10.</div>
+          <div class="guide-footer">
+            <span class="guide-level">⬤⬤ Intermedio</span>
+            <div class="guide-arrow">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5"><polyline points="9 18 15 12 9 6"/></svg>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="guide-card">
+        <div class="guide-header" style="background:#8b5cf6"></div>
+        <div class="guide-body">
+          <div class="guide-category">Diseño 3D</div>
+          <div class="guide-title">Tolerancias en impresión 3D: la guía definitiva</div>
+          <div class="guide-desc">Cómo diseñar piezas que encajen perfectamente la primera vez. Valores reales, probados.</div>
+          <div class="guide-footer">
+            <span class="guide-level">⬤⬤⬤ Avanzado</span>
+            <div class="guide-arrow">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5"><polyline points="9 18 15 12 9 6"/></svg>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ══ CTA / CONTACTO ══ -->
+<section id="contacto">
+  <div class="container" style="position:relative;z-index:1">
+    <div class="reveal">
+      <h2 class="cta-title">HAGAMOS<br><span style="color:var(--ferrari)">ALGO</span><br>JUNTOS</h2>
+      <p class="cta-sub">Tenés una idea, un proyecto o una necesidad. Nosotros tenemos la tecnología y la experiencia para hacerlo realidad.</p>
+      <div class="cta-options">
+        <a href="https://wa.me/5491100000000?text=Hola%20MarcanoTech%203D%2C%20quiero%20hacer%20una%20consulta" target="_blank" class="cta-whatsapp">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 0 1-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 0 1-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 0 1 2.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0 0 12.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 0 0 5.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 0 0-3.48-8.413Z"/></svg>
+          WhatsApp
+        </a>
+        <a href="mailto:contacto@marcanotech.com" class="cta-email">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+          Email
+        </a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══ FOOTER ══ -->
+<footer>
+  <div class="footer-inner">
+    <div>
+      <div class="footer-line"></div>
+      <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:20px">
+        <div class="footer-logo">MARCANO<span>TECH</span> 3D</div>
+        <ul class="footer-links">
+          <li><a href="#servicios">Servicios</a></li>
+          <li><a href="#productos">Productos</a></li>
+          <li><a href="#guias">Guías</a></li>
+          <li><a href="#contacto">Contacto</a></li>
+          <li><a href="https://app.marcanotech.com" target="_blank">Dashboard ↗</a></li>
+        </ul>
+        <div class="footer-copy">© 2026 MarcanoTech 3D · Buenos Aires</div>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<script>
+// Custom cursor
+const cursor = document.getElementById('cursor');
+const ring = document.getElementById('cursor-ring');
+let mouseX = 0, mouseY = 0, ringX = 0, ringY = 0;
+
+document.addEventListener('mousemove', e => {
+  mouseX = e.clientX; mouseY = e.clientY;
+  cursor.style.transform = `translate(${mouseX - 4}px, ${mouseY - 4}px)`;
+});
+
+// Smooth ring follow
+function animateRing() {
+  ringX += (mouseX - ringX - 16) * 0.15;
+  ringY += (mouseY - ringY - 16) * 0.15;
+  ring.style.transform = `translate(${ringX}px, ${ringY}px)`;
+  requestAnimationFrame(animateRing);
+}
+animateRing();
+
+// Hover effect on interactive elements
+document.querySelectorAll('a, button, .product-card, .service-card, .guide-card').forEach(el => {
+  el.addEventListener('mouseenter', () => {
+    cursor.style.transform += ' scale(2)';
+    ring.style.width = '48px'; ring.style.height = '48px';
+    ring.style.borderColor = 'rgba(224,26,0,0.8)';
+  });
+  el.addEventListener('mouseleave', () => {
+    ring.style.width = '32px'; ring.style.height = '32px';
+    ring.style.borderColor = 'rgba(224,26,0,0.5)';
+  });
+});
+
+// Scroll reveal
+const reveals = document.querySelectorAll('.reveal');
+const observer = new IntersectionObserver(entries => {
+  entries.forEach((entry, i) => {
+    if (entry.isIntersecting) {
+      setTimeout(() => entry.target.classList.add('visible'), i * 80);
+    }
+  });
+}, { threshold: 0.1 });
+reveals.forEach(r => observer.observe(r));
+
+// Nav scroll effect
+window.addEventListener('scroll', () => {
+  const nav = document.getElementById('navbar');
+  nav.style.background = window.scrollY > 50
+    ? 'rgba(0,0,0,0.95)'
+    : 'rgba(0,0,0,0.8)';
+});
+
+// Mobile menu
+function toggleMenu() {
+  document.getElementById('mobile-menu').classList.toggle('open');
+  document.body.style.overflow =
+    document.getElementById('mobile-menu').classList.contains('open') ? 'hidden' : '';
+}
+
+// Hide cursor on mobile
+if ('ontouchstart' in window) {
+  cursor.style.display = 'none';
+  ring.style.display = 'none';
+}
+</script>
+</body>
+</html>
