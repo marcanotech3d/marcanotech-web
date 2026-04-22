@@ -1,0 +1,449 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Guía de Materiales — MarcanoTech</title>
+<meta name="description" content="Guía completa de filamentos para impresión 3D: PLA, PETG, TPU, ABS, ASA y más. Temperaturas, velocidades y usos recomendados.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+:root{
+  --black:#000;--dark1:#0a0a0c;--dark2:#111116;--dark3:#18181e;
+  --navy:#1a3a6b;--navy-l:#4a7fd4;--ferrari:#e01a00;--silver:#9eaab8;--white:#f4f4f6;
+  --font-d:'Bebas Neue',sans-serif;--font-b:'DM Sans',sans-serif;--font-m:'DM Mono',monospace;
+}
+html{scroll-behavior:smooth;}
+body{font-family:var(--font-b);background:var(--dark1);color:var(--white);line-height:1.6;}
+a{text-decoration:none;color:inherit;}
+/* Nav */
+nav{position:sticky;top:0;z-index:50;padding:0 48px;height:64px;display:flex;align-items:center;justify-content:space-between;background:rgba(10,10,12,0.95);backdrop-filter:blur(12px);border-bottom:1px solid rgba(255,255,255,0.06);}
+.logo{font-family:var(--font-d);font-size:20px;letter-spacing:1px;}
+.logo span{color:var(--ferrari);}
+.back-btn{display:flex;align-items:center;gap:8px;font-size:13px;color:var(--silver);padding:8px 16px;border:1px solid rgba(255,255,255,0.1);border-radius:6px;transition:all 0.2s;}
+.back-btn:hover{color:var(--white);border-color:var(--ferrari);}
+/* Hero */
+.hero{padding:72px 48px 56px;max-width:900px;margin:0 auto;}
+.cat-badge{display:inline-flex;align-items:center;gap:8px;background:rgba(224,26,0,0.1);border:1px solid rgba(224,26,0,0.3);padding:5px 14px;border-radius:100px;font-size:11px;font-family:var(--font-m);color:var(--ferrari);letter-spacing:2px;text-transform:uppercase;margin-bottom:24px;}
+.hero h1{font-family:var(--font-d);font-size:clamp(48px,7vw,84px);line-height:0.95;letter-spacing:1px;margin-bottom:20px;}
+.hero h1 span{color:var(--ferrari);}
+.hero p{font-size:16px;color:var(--silver);max-width:640px;font-weight:300;}
+/* Table of contents */
+.toc{background:var(--dark2);border:1px solid rgba(255,255,255,0.07);border-radius:12px;padding:24px 28px;max-width:900px;margin:0 auto 0;margin-left:auto;margin-right:auto;}
+.toc-title{font-size:12px;font-family:var(--font-m);letter-spacing:2px;color:var(--ferrari);text-transform:uppercase;margin-bottom:14px;}
+.toc-links{display:flex;flex-wrap:wrap;gap:8px;}
+.toc-link{background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.08);color:var(--silver);padding:6px 14px;border-radius:6px;font-size:12px;transition:all 0.2s;}
+.toc-link:hover{background:rgba(224,26,0,0.1);border-color:rgba(224,26,0,0.3);color:var(--white);}
+/* Content */
+.content{max-width:900px;margin:0 auto;padding:0 48px 80px;}
+.mat-section{margin-top:64px;padding-top:32px;border-top:1px solid rgba(255,255,255,0.06);}
+.mat-header{display:flex;align-items:flex-start;gap:16px;margin-bottom:24px;flex-wrap:wrap;}
+.mat-icon{width:52px;height:52px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-family:var(--font-d);font-size:22px;flex-shrink:0;}
+.mat-title{font-family:var(--font-d);font-size:clamp(32px,4vw,48px);line-height:1;letter-spacing:0.5px;}
+.mat-subtitle{font-size:13px;color:var(--silver);font-family:var(--font-m);margin-top:4px;}
+/* Specs table */
+.specs-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:10px;margin:20px 0;}
+.spec-card{background:var(--dark2);border:1px solid rgba(255,255,255,0.07);border-radius:10px;padding:14px 16px;}
+.spec-key{font-size:10px;color:var(--silver);font-family:var(--font-m);letter-spacing:1px;text-transform:uppercase;margin-bottom:6px;}
+.spec-val{font-size:16px;font-weight:700;color:var(--white);}
+/* Variants */
+.variants{display:flex;flex-wrap:wrap;gap:8px;margin:16px 0;}
+.variant-chip{padding:6px 14px;border-radius:20px;font-size:12px;font-family:var(--font-m);border:1px solid;}
+/* Pros/cons */
+.pros-cons{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin:20px 0;}
+.pros,.cons{background:var(--dark2);border-radius:10px;padding:16px 18px;}
+.pros{border-left:3px solid #34d399;}
+.cons{border-left:3px solid var(--ferrari);}
+.pc-title{font-size:11px;font-family:var(--font-m);letter-spacing:1.5px;text-transform:uppercase;margin-bottom:12px;}
+.pros .pc-title{color:#34d399;}
+.cons .pc-title{color:var(--ferrari);}
+.pc-item{font-size:13px;color:var(--silver);display:flex;gap:8px;margin-bottom:7px;}
+.pc-item::before{content:'';flex-shrink:0;margin-top:6px;width:5px;height:5px;border-radius:50%;}
+.pros .pc-item::before{background:#34d399;}
+.cons .pc-item::before{background:var(--ferrari);}
+/* Uses */
+.uses{display:flex;flex-wrap:wrap;gap:8px;margin:16px 0;}
+.use-tag{background:rgba(74,127,212,0.1);border:1px solid rgba(74,127,212,0.2);color:var(--navy-l);padding:5px 12px;border-radius:6px;font-size:12px;}
+/* Tip box */
+.tip{background:rgba(26,58,107,0.15);border:1px solid rgba(74,127,212,0.25);border-radius:10px;padding:16px 18px;margin:20px 0;font-size:13px;color:var(--silver);line-height:1.6;}
+.tip strong{color:var(--navy-l);}
+/* Comparison table */
+.comp-table{width:100%;border-collapse:collapse;margin:32px 0;font-size:13px;}
+.comp-table th{background:var(--dark3);padding:12px 16px;text-align:left;font-size:11px;letter-spacing:1px;text-transform:uppercase;color:var(--silver);font-family:var(--font-m);}
+.comp-table td{padding:12px 16px;border-bottom:1px solid rgba(255,255,255,0.05);color:var(--white);}
+.comp-table tr:hover td{background:rgba(255,255,255,0.02);}
+.dot-green{color:#34d399;font-weight:700;}
+.dot-yellow{color:#fbbf24;font-weight:700;}
+.dot-red{color:#f04040;font-weight:700;}
+/* Footer */
+footer{background:var(--dark1);border-top:1px solid rgba(255,255,255,0.06);padding:32px 48px;text-align:center;}
+footer p{font-size:12px;color:var(--silver);font-family:var(--font-m);}
+footer span{color:var(--ferrari);}
+@media(max-width:768px){
+  nav,footer{padding-left:20px;padding-right:20px;}
+  .hero,.content{padding-left:20px;padding-right:20px;}
+  .pros-cons{grid-template-columns:1fr;}
+  .toc{margin-left:20px;margin-right:20px;padding:18px;}
+}
+</style>
+</head>
+<body>
+
+<nav>
+  <a href="index.html" class="logo">MARCANO<span>TECH</span></a>
+  <a href="index.html#guias" class="back-btn">
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 18 9 12 15 6"/></svg>
+    Volver a Guías
+  </a>
+</nav>
+
+<div class="hero">
+  <div class="cat-badge">Guía técnica · Materiales</div>
+  <h1>GUÍA DE<br><span>MATERIALES</span></h1>
+  <p>Todo lo que necesitás saber sobre los filamentos para impresión 3D FDM: propiedades, temperaturas, usos y cómo elegir el material correcto para cada proyecto.</p>
+</div>
+
+<div class="toc" style="margin:0 48px 0;">
+  <div class="toc-title">Contenido</div>
+  <div class="toc-links">
+    <a href="#pla" class="toc-link">PLA / PLA+</a>
+    <a href="#petg" class="toc-link">PETG</a>
+    <a href="#tpu" class="toc-link">TPU Flexible</a>
+    <a href="#abs" class="toc-link">ABS</a>
+    <a href="#asa" class="toc-link">ASA</a>
+    <a href="#cf" class="toc-link">Fibra de Carbono</a>
+    <a href="#especiales" class="toc-link">Especiales</a>
+    <a href="#comparativa" class="toc-link">Tabla comparativa</a>
+  </div>
+</div>
+
+<div class="content">
+
+<!-- PLA -->
+<div class="mat-section" id="pla">
+  <div class="mat-header">
+    <div class="mat-icon" style="background:rgba(52,211,153,0.1);color:#34d399;">PLA</div>
+    <div>
+      <div class="mat-title" style="color:#34d399;">PLA</div>
+      <div class="mat-subtitle">Ácido Poliláctico · El más popular del mundo</div>
+    </div>
+  </div>
+  <p style="color:var(--silver);margin-bottom:20px;">El PLA es el filamento más usado globalmente. Derivado de recursos renovables como el maíz y la caña de azúcar, es biodegradable, fácil de imprimir y ofrece excelentes acabados superficiales. Es el punto de entrada ideal para cualquier proyecto y el estándar contra el que se comparan todos los demás materiales.</p>
+  <div class="specs-grid">
+    <div class="spec-card"><div class="spec-key">Temp. boquilla</div><div class="spec-val">190–220 °C</div></div>
+    <div class="spec-card"><div class="spec-key">Temp. cama</div><div class="spec-val">25–60 °C</div></div>
+    <div class="spec-card"><div class="spec-key">Velocidad</div><div class="spec-val">60–150 mm/s</div></div>
+    <div class="spec-card"><div class="spec-key">Ventilador capa</div><div class="spec-val">100%</div></div>
+    <div class="spec-card"><div class="spec-key">Res. térmica</div><div class="spec-val">~60 °C HDT</div></div>
+    <div class="spec-card"><div class="spec-key">Dificultad</div><div class="spec-val">⭐ Fácil</div></div>
+  </div>
+  <div style="font-size:12px;color:var(--silver);margin-bottom:8px;font-family:var(--font-m);">VARIANTES DISPONIBLES</div>
+  <div class="variants">
+    <span class="variant-chip" style="background:rgba(52,211,153,0.08);border-color:rgba(52,211,153,0.25);color:#34d399;">PLA Basic</span>
+    <span class="variant-chip" style="background:rgba(52,211,153,0.08);border-color:rgba(52,211,153,0.25);color:#34d399;">PLA+ / Rapid PLA+</span>
+    <span class="variant-chip" style="background:rgba(52,211,153,0.08);border-color:rgba(52,211,153,0.25);color:#34d399;">PLA Pro</span>
+    <span class="variant-chip" style="background:rgba(52,211,153,0.08);border-color:rgba(52,211,153,0.25);color:#34d399;">PLA Matte</span>
+    <span class="variant-chip" style="background:rgba(52,211,153,0.08);border-color:rgba(52,211,153,0.25);color:#34d399;">PLA Silk</span>
+    <span class="variant-chip" style="background:rgba(52,211,153,0.08);border-color:rgba(52,211,153,0.25);color:#34d399;">PLA Wood</span>
+    <span class="variant-chip" style="background:rgba(52,211,153,0.08);border-color:rgba(52,211,153,0.25);color:#34d399;">PLA Marble</span>
+  </div>
+  <div class="pros-cons">
+    <div class="pros">
+      <div class="pc-title">✓ Ventajas</div>
+      <div class="pc-item">Muy fácil de imprimir, ideal para principiantes</div>
+      <div class="pc-item">Excelente acabado superficial y detalle</div>
+      <div class="pc-item">Mayor variedad de colores disponibles</div>
+      <div class="pc-item">No requiere cámara cerrada ni ventilación especial</div>
+      <div class="pc-item">Precio accesible y amplia disponibilidad</div>
+    </div>
+    <div class="cons">
+      <div class="pc-title">✗ Limitaciones</div>
+      <div class="pc-item">Baja resistencia térmica (~60 °C) — no apto para interior de vehículos o exteriores con sol directo</div>
+      <div class="pc-item">Más frágil que PETG o ABS ante impactos</div>
+      <div class="pc-item">Se degrada con humedad prolongada</div>
+      <div class="pc-item">No recomendado para piezas mecánicas de alta carga</div>
+    </div>
+  </div>
+  <div style="font-size:12px;color:var(--silver);margin-bottom:8px;font-family:var(--font-m);">USOS IDEALES</div>
+  <div class="uses">
+    <span class="use-tag">Decoración</span><span class="use-tag">Figuras y modelos</span><span class="use-tag">Prototipos visuales</span><span class="use-tag">Carrocerías RC</span><span class="use-tag">Llaveros y regalos</span><span class="use-tag">Piezas de interior</span>
+  </div>
+  <div class="tip"><strong>💡 Tip MarcanoTech:</strong> El PLA Matte oculta las líneas de capa mejor que cualquier otro material — si buscás un acabado premium sin lijar, es tu mejor opción. El PLA+ vale la pena para piezas que van a sufrir algo de estrés mecánico.</div>
+</div>
+
+<!-- PETG -->
+<div class="mat-section" id="petg">
+  <div class="mat-header">
+    <div class="mat-icon" style="background:rgba(74,127,212,0.1);color:#4a7fd4;">PETG</div>
+    <div>
+      <div class="mat-title" style="color:#4a7fd4;">PETG</div>
+      <div class="mat-subtitle">Polietileno Tereftalato Glicol · El equilibrio perfecto</div>
+    </div>
+  </div>
+  <p style="color:var(--silver);margin-bottom:20px;">El PETG combina lo mejor de dos mundos: la facilidad de impresión del PLA con la resistencia mecánica y térmica del ABS. Es el material preferido para piezas funcionales que deben durar. Resistente a la humedad, a los impactos y a temperaturas de hasta 75–80 °C. Las impresoras Prusa están fabricadas con PETG.</p>
+  <div class="specs-grid">
+    <div class="spec-card"><div class="spec-key">Temp. boquilla</div><div class="spec-val">230–250 °C</div></div>
+    <div class="spec-card"><div class="spec-key">Temp. cama</div><div class="spec-val">70–85 °C</div></div>
+    <div class="spec-card"><div class="spec-key">Velocidad</div><div class="spec-val">40–200 mm/s</div></div>
+    <div class="spec-card"><div class="spec-key">Ventilador capa</div><div class="spec-val">30–50%</div></div>
+    <div class="spec-card"><div class="spec-key">Res. térmica</div><div class="spec-val">~75–80 °C</div></div>
+    <div class="spec-card"><div class="spec-key">Dificultad</div><div class="spec-val">⭐⭐ Moderada</div></div>
+  </div>
+  <div class="variants">
+    <span class="variant-chip" style="background:rgba(74,127,212,0.08);border-color:rgba(74,127,212,0.25);color:#4a7fd4;">PETG Estándar</span>
+    <span class="variant-chip" style="background:rgba(74,127,212,0.08);border-color:rgba(74,127,212,0.25);color:#4a7fd4;">PETG Pro</span>
+    <span class="variant-chip" style="background:rgba(74,127,212,0.08);border-color:rgba(74,127,212,0.25);color:#4a7fd4;">Rapid PETG (hasta 600 mm/s)</span>
+    <span class="variant-chip" style="background:rgba(74,127,212,0.08);border-color:rgba(74,127,212,0.25);color:#4a7fd4;">PETG-CF</span>
+  </div>
+  <div class="pros-cons">
+    <div class="pros">
+      <div class="pc-title">✓ Ventajas</div>
+      <div class="pc-item">Excelente adhesión entre capas — difícil de romper</div>
+      <div class="pc-item">Resistente a la humedad y a químicos comunes</div>
+      <div class="pc-item">Soporta temperaturas hasta 75–80 °C</div>
+      <div class="pc-item">Apto para contacto con alimentos (grado FDA)</div>
+      <div class="pc-item">Buen comportamiento en exterior sin sol directo</div>
+    </div>
+    <div class="cons">
+      <div class="pc-title">✗ Limitaciones</div>
+      <div class="pc-item">Más propenso a stringing (hilitos) que el PLA</div>
+      <div class="pc-item">Puede pegarse demasiado a la cama si se aplasta la primera capa</div>
+      <div class="pc-item">Superficies inferiores menos perfectas que PLA</div>
+      <div class="pc-item">Requiere cama caliente obligatoria</div>
+    </div>
+  </div>
+  <div class="uses">
+    <span class="use-tag">Piezas funcionales</span><span class="use-tag">Chasis RC</span><span class="use-tag">Contenedores</span><span class="use-tag">Exterior (sombra)</span><span class="use-tag">Piezas de impresoras</span><span class="use-tag">Soporte de cargas</span>
+  </div>
+  <div class="tip"><strong>💡 Tip MarcanoTech:</strong> Para chasis y piezas estructurales RC, el PETG es nuestra primera elección. El Rapid PETG de Elegoo permite velocidades muy altas sin perder calidad — ideal para producciones grandes.</div>
+</div>
+
+<!-- TPU -->
+<div class="mat-section" id="tpu">
+  <div class="mat-header">
+    <div class="mat-icon" style="background:rgba(251,191,36,0.1);color:#fbbf24;">TPU</div>
+    <div>
+      <div class="mat-title" style="color:#fbbf24;">TPU</div>
+      <div class="mat-subtitle">Poliuretano Termoplástico · Flexibilidad y absorción de impactos</div>
+    </div>
+  </div>
+  <p style="color:var(--silver);margin-bottom:20px;">El TPU es el material flexible de referencia en impresión 3D. Su dureza Shore A define cuán rígido o blando es: a menor número, más flexible. El 95A es semi-rígido perfecto para uso general RC, mientras que el 85A es muy blando e ideal para sellos o piezas que deben deformarse y volver a su forma original.</p>
+  <div class="specs-grid">
+    <div class="spec-card"><div class="spec-key">Temp. boquilla</div><div class="spec-val">190–230 °C</div></div>
+    <div class="spec-card"><div class="spec-key">Temp. cama</div><div class="spec-val">25–60 °C</div></div>
+    <div class="spec-card"><div class="spec-key">Velocidad</div><div class="spec-val">20–60 mm/s</div></div>
+    <div class="spec-card"><div class="spec-key">Ventilador capa</div><div class="spec-val">50–100%</div></div>
+    <div class="spec-card"><div class="spec-key">Boquilla recom.</div><div class="spec-val">0.4–0.6 mm</div></div>
+    <div class="spec-card"><div class="spec-key">Dificultad</div><div class="spec-val">⭐⭐ Moderada</div></div>
+  </div>
+  <div class="variants">
+    <span class="variant-chip" style="background:rgba(251,191,36,0.08);border-color:rgba(251,191,36,0.25);color:#fbbf24;">TPU 98A — Casi rígido</span>
+    <span class="variant-chip" style="background:rgba(251,191,36,0.08);border-color:rgba(251,191,36,0.25);color:#fbbf24;">TPU 95A — Uso general RC</span>
+    <span class="variant-chip" style="background:rgba(251,191,36,0.08);border-color:rgba(251,191,36,0.25);color:#fbbf24;">TPU 90A — Semi-blando</span>
+    <span class="variant-chip" style="background:rgba(251,191,36,0.08);border-color:rgba(251,191,36,0.25);color:#fbbf24;">TPU 85A — Muy flexible</span>
+  </div>
+  <div class="pros-cons">
+    <div class="pros">
+      <div class="pc-title">✓ Ventajas</div>
+      <div class="pc-item">Flexible, elástico y resistente a la abrasión</div>
+      <div class="pc-item">Excelente absorción de impactos y vibraciones</div>
+      <div class="pc-item">Resistente a químicos y aceites</div>
+      <div class="pc-item">No se rompe — se dobla y vuelve a su forma</div>
+    </div>
+    <div class="cons">
+      <div class="pc-title">✗ Limitaciones</div>
+      <div class="pc-item">Requiere velocidades lentas (20–60 mm/s) para evitar atascos</div>
+      <div class="pc-item">Difícil de imprimir con extrusoras Bowden — mejor Direct Drive</div>
+      <div class="pc-item">Más caro que PLA o PETG</div>
+      <div class="pc-item">Difícil de lijar o posprocesar</div>
+    </div>
+  </div>
+  <div class="uses">
+    <span class="use-tag">Neumáticos RC</span><span class="use-tag">Amortiguadores</span><span class="use-tag">Protectores</span><span class="use-tag">Sellos</span><span class="use-tag">Fundas</span><span class="use-tag">Gripper / antideslizantes</span>
+  </div>
+  <div class="tip"><strong>💡 Tip MarcanoTech:</strong> Para neumáticos RC el TPU 95A es el estándar de la industria — suficiente agarre y durabilidad sin ser demasiado blando. Imprimimos a 30 mm/s para garantizar consistencia en la geometría.</div>
+</div>
+
+<!-- ABS -->
+<div class="mat-section" id="abs">
+  <div class="mat-header">
+    <div class="mat-icon" style="background:rgba(249,115,22,0.1);color:#f97316;">ABS</div>
+    <div>
+      <div class="mat-title" style="color:#f97316;">ABS</div>
+      <div class="mat-subtitle">Acrilonitrilo Butadieno Estireno · Alta resistencia térmica</div>
+    </div>
+  </div>
+  <p style="color:var(--silver);margin-bottom:20px;">Material técnico con alta resistencia mecánica y térmica. Soporta hasta 95–100 °C sin deformarse. Puede alisarse perfectamente con acetona para superficies tipo inyección. Requiere condiciones controladas de impresión — cámara cerrada y cama muy caliente. En muchas aplicaciones ha sido reemplazado por ASA (mayor resistencia UV) o PETG (más fácil).</p>
+  <div class="specs-grid">
+    <div class="spec-card"><div class="spec-key">Temp. boquilla</div><div class="spec-val">230–260 °C</div></div>
+    <div class="spec-card"><div class="spec-key">Temp. cama</div><div class="spec-val">90–110 °C</div></div>
+    <div class="spec-card"><div class="spec-key">Velocidad</div><div class="spec-val">40–80 mm/s</div></div>
+    <div class="spec-card"><div class="spec-key">Ventilador capa</div><div class="spec-val">0–20%</div></div>
+    <div class="spec-card"><div class="spec-key">Res. térmica</div><div class="spec-val">~95–100 °C</div></div>
+    <div class="spec-card"><div class="spec-key">Dificultad</div><div class="spec-val">⭐⭐⭐ Avanzada</div></div>
+  </div>
+  <div class="pros-cons">
+    <div class="pros">
+      <div class="pc-title">✓ Ventajas</div>
+      <div class="pc-item">Alta resistencia térmica (hasta 100 °C)</div>
+      <div class="pc-item">Se puede alisar con acetona — acabado perfecto</div>
+      <div class="pc-item">Buena resistencia mecánica e impactos</div>
+      <div class="pc-item">Material maduro con amplia documentación</div>
+    </div>
+    <div class="cons">
+      <div class="pc-title">✗ Limitaciones</div>
+      <div class="pc-item">Warping agresivo — requiere cámara cerrada obligatoria</div>
+      <div class="pc-item">Genera vapores durante la impresión — requiere ventilación</div>
+      <div class="pc-item">Alta contracción al enfriar</div>
+      <div class="pc-item">Sensible a la humedad ambiental</div>
+    </div>
+  </div>
+  <div class="uses">
+    <span class="use-tag">Prototipos industriales</span><span class="use-tag">Carcasas técnicas</span><span class="use-tag">Piezas de alta temperatura</span><span class="use-tag">Aplicaciones mecánicas</span>
+  </div>
+</div>
+
+<!-- ASA -->
+<div class="mat-section" id="asa">
+  <div class="mat-header">
+    <div class="mat-icon" style="background:rgba(224,26,0,0.1);color:#e01a00;">ASA</div>
+    <div>
+      <div class="mat-title" style="color:#e01a00;">ASA</div>
+      <div class="mat-subtitle">Acrilonitrilo Estireno Acrilato · El rey del exterior</div>
+    </div>
+  </div>
+  <p style="color:var(--silver);margin-bottom:20px;">El ASA es la evolución del ABS con resistencia UV añadida. Ideal para cualquier pieza que vaya al exterior o reciba sol directo. Menos warping que el ABS, acabados mate robustos y propiedades mecánicas similares. La primera elección para señalización, piezas de automoción exterior y aplicaciones de jardín.</p>
+  <div class="specs-grid">
+    <div class="spec-card"><div class="spec-key">Temp. boquilla</div><div class="spec-val">245–260 °C</div></div>
+    <div class="spec-card"><div class="spec-key">Temp. cama</div><div class="spec-val">90–110 °C</div></div>
+    <div class="spec-card"><div class="spec-key">Velocidad</div><div class="spec-val">40–60 mm/s</div></div>
+    <div class="spec-card"><div class="spec-key">Ventilador capa</div><div class="spec-val">10–25%</div></div>
+    <div class="spec-card"><div class="spec-key">Res. UV</div><div class="spec-val">Excelente</div></div>
+    <div class="spec-card"><div class="spec-key">Dificultad</div><div class="spec-val">⭐⭐⭐ Avanzada</div></div>
+  </div>
+  <div class="pros-cons">
+    <div class="pros">
+      <div class="pc-title">✓ Ventajas</div>
+      <div class="pc-item">Resistencia UV superior — no amarillea ni se vuelve frágil con el sol</div>
+      <div class="pc-item">Menos warping que el ABS</div>
+      <div class="pc-item">Buena resistencia química comparable al PETG</div>
+      <div class="pc-item">Puede alisarse con acetona</div>
+    </div>
+    <div class="cons">
+      <div class="pc-title">✗ Limitaciones</div>
+      <div class="pc-item">Requiere cámara cerrada y cama muy caliente</div>
+      <div class="pc-item">Genera vapores — requiere ventilación</div>
+      <div class="pc-item">Temperaturas de impresión más altas que ABS</div>
+      <div class="pc-item">Precio superior al ABS</div>
+    </div>
+  </div>
+  <div class="uses">
+    <span class="use-tag">Piezas de exterior</span><span class="use-tag">Automoción</span><span class="use-tag">Señalización</span><span class="use-tag">Jardín</span><span class="use-tag">Carcasas de cámaras</span>
+  </div>
+  <div class="tip"><strong>💡 Tip MarcanoTech:</strong> Si tu pieza va a estar expuesta al sol o a la intemperie, elegí ASA sobre ABS o PETG sin dudarlo. La diferencia en durabilidad a largo plazo es enorme.</div>
+</div>
+
+<!-- CF -->
+<div class="mat-section" id="cf">
+  <div class="mat-header">
+    <div class="mat-icon" style="background:rgba(158,170,184,0.1);color:#9eaab8;">CF</div>
+    <div>
+      <div class="mat-title" style="color:#9eaab8;">FIBRA DE CARBONO</div>
+      <div class="mat-subtitle">PLA-CF / PETG-CF · Rigidez máxima, peso mínimo</div>
+    </div>
+  </div>
+  <p style="color:var(--silver);margin-bottom:20px;">Compuestos de PLA o PETG reforzados con micro-partículas de fibra de carbono. Ofrecen mayor rigidez y menor peso que sus equivalentes estándar. El aspecto oscuro moteado con tono metálico es característico e inconfundible. <strong style="color:var(--white)">Requieren boquilla de acero endurecido</strong> — las de latón se desgastan rápidamente.</p>
+  <div class="specs-grid">
+    <div class="spec-card"><div class="spec-key">Temp. boquilla</div><div class="spec-val">200–230 °C</div></div>
+    <div class="spec-card"><div class="spec-key">Temp. cama</div><div class="spec-val">45–60 °C</div></div>
+    <div class="spec-card"><div class="spec-key">Velocidad</div><div class="spec-val">40–80 mm/s</div></div>
+    <div class="spec-card"><div class="spec-key">Boquilla</div><div class="spec-val">Acero endurecido</div></div>
+    <div class="spec-card"><div class="spec-key">Rigidez</div><div class="spec-val">Muy alta</div></div>
+    <div class="spec-card"><div class="spec-key">Dificultad</div><div class="spec-val">⭐⭐ Moderada</div></div>
+  </div>
+  <div class="uses">
+    <span class="use-tag">Piezas estructurales ligeras</span><span class="use-tag">Brazos de drones</span><span class="use-tag">Componentes de precisión</span><span class="use-tag">Prototipos de ingeniería</span>
+  </div>
+</div>
+
+<!-- ESPECIALES -->
+<div class="mat-section" id="especiales">
+  <div class="mat-header">
+    <div>
+      <div class="mat-title">ESPECIALES</div>
+      <div class="mat-subtitle">Matte · Silk · Wood · Marble · Fosforescente</div>
+    </div>
+  </div>
+  <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:16px;margin-top:16px;">
+    <div style="background:var(--dark2);border-radius:10px;padding:20px;border-left:3px solid #8b5cf6;">
+      <div style="font-weight:700;color:#8b5cf6;margin-bottom:8px;">PLA Matte</div>
+      <div style="font-size:13px;color:var(--silver);">Acabado opaco y suave al tacto. Oculta líneas de capa. Colores pastel y suaves. El favorito para figuras y decoración premium sin posprocesado.</div>
+    </div>
+    <div style="background:var(--dark2);border-radius:10px;padding:20px;border-left:3px solid #fbbf24;">
+      <div style="font-weight:700;color:#fbbf24;margin-bottom:8px;">PLA Silk / Seda</div>
+      <div style="font-size:13px;color:var(--silver);">Acabado brillante sedoso con efecto metálico o perlado. Muy visual y llamativo. Ideal para regalos, trofeos y piezas decorativas de alto impacto.</div>
+    </div>
+    <div style="background:var(--dark2);border-radius:10px;padding:20px;border-left:3px solid #78716c;">
+      <div style="font-weight:700;color:#a8a29e;margin-bottom:8px;">PLA Wood</div>
+      <div style="font-size:13px;color:var(--silver);">PLA con partículas de madera real. Aspecto y textura de madera real. Se puede lijar y teñir. Imprime como PLA estándar con boquilla ≥ 0.4mm.</div>
+    </div>
+    <div style="background:var(--dark2);border-radius:10px;padding:20px;border-left:3px solid #e2e8f0;">
+      <div style="font-weight:700;color:#e2e8f0;margin-bottom:8px;">PLA Marble</div>
+      <div style="font-size:13px;color:var(--silver);">Efecto mármol veteado. Aspecto decorativo único y elegante. Perfecto para esculturas, bases y objetos decorativos de hogar.</div>
+    </div>
+    <div style="background:var(--dark2);border-radius:10px;padding:20px;border-left:3px solid #22c55e;">
+      <div style="font-weight:700;color:#22c55e;margin-bottom:8px;">Fosforescente</div>
+      <div style="font-size:13px;color:var(--silver);">Acumula luz y brilla en la oscuridad. Seguridad, decoración nocturna y efectos especiales. Imprime como PLA estándar.</div>
+    </div>
+  </div>
+</div>
+
+<!-- COMPARATIVA -->
+<div class="mat-section" id="comparativa">
+  <div class="mat-title" style="margin-bottom:24px;">TABLA COMPARATIVA</div>
+  <div style="overflow-x:auto;">
+    <table class="comp-table">
+      <thead>
+        <tr>
+          <th>Material</th>
+          <th>Facilidad</th>
+          <th>Resistencia</th>
+          <th>Térmica</th>
+          <th>UV/Exterior</th>
+          <th>Flexibilidad</th>
+          <th>Precio</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr><td><strong>PLA</strong></td><td><span class="dot-green">●●●</span></td><td><span class="dot-yellow">●●</span></td><td><span class="dot-red">●</span></td><td><span class="dot-red">●</span></td><td><span class="dot-red">●</span></td><td><span class="dot-green">$</span></td></tr>
+        <tr><td><strong>PLA+</strong></td><td><span class="dot-green">●●●</span></td><td><span class="dot-yellow">●●</span></td><td><span class="dot-red">●</span></td><td><span class="dot-red">●</span></td><td><span class="dot-red">●</span></td><td><span class="dot-yellow">$$</span></td></tr>
+        <tr><td><strong>PETG</strong></td><td><span class="dot-yellow">●●</span></td><td><span class="dot-green">●●●</span></td><td><span class="dot-yellow">●●</span></td><td><span class="dot-yellow">●●</span></td><td><span class="dot-yellow">●●</span></td><td><span class="dot-yellow">$$</span></td></tr>
+        <tr><td><strong>TPU 95A</strong></td><td><span class="dot-yellow">●●</span></td><td><span class="dot-yellow">●●</span></td><td><span class="dot-yellow">●●</span></td><td><span class="dot-yellow">●●</span></td><td><span class="dot-green">●●●</span></td><td><span class="dot-yellow">$$</span></td></tr>
+        <tr><td><strong>ABS</strong></td><td><span class="dot-red">●</span></td><td><span class="dot-green">●●●</span></td><td><span class="dot-green">●●●</span></td><td><span class="dot-red">●</span></td><td><span class="dot-red">●</span></td><td><span class="dot-yellow">$$</span></td></tr>
+        <tr><td><strong>ASA</strong></td><td><span class="dot-red">●</span></td><td><span class="dot-green">●●●</span></td><td><span class="dot-green">●●●</span></td><td><span class="dot-green">●●●</span></td><td><span class="dot-red">●</span></td><td><span class="dot-red">$$$</span></td></tr>
+        <tr><td><strong>PLA-CF</strong></td><td><span class="dot-yellow">●●</span></td><td><span class="dot-green">●●●</span></td><td><span class="dot-yellow">●●</span></td><td><span class="dot-yellow">●●</span></td><td><span class="dot-red">●</span></td><td><span class="dot-red">$$$</span></td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p style="font-size:11px;color:var(--silver);font-family:var(--font-m);margin-top:8px;">● Bajo &nbsp;●● Medio &nbsp;●●● Alto &nbsp;·&nbsp; $ Económico &nbsp;$$ Moderado &nbsp;$$$ Premium</p>
+
+  <div style="margin-top:40px;background:rgba(224,26,0,0.06);border:1px solid rgba(224,26,0,0.2);border-radius:12px;padding:24px;">
+    <div style="font-family:var(--font-d);font-size:24px;margin-bottom:12px;">¿NO SÉS QUÉ MATERIAL ELEGIR?</div>
+    <p style="font-size:14px;color:var(--silver);margin-bottom:16px;">Contanos tu proyecto y te recomendamos el material más adecuado según el uso, el presupuesto y los requisitos técnicos.</p>
+    <a href="https://wa.me/5491123468533?text=Hola%20MarcanoTech%2C%20necesito%20ayuda%20para%20elegir%20el%20material%20correcto" target="_blank"
+      style="display:inline-flex;align-items:center;gap:10px;background:#e01a00;color:#fff;padding:12px 24px;border-radius:8px;font-weight:600;font-size:14px;transition:background 0.2s;"
+      onmouseover="this.style.background='#c01500'" onmouseout="this.style.background='#e01a00'">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 0 1-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 0 1-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 0 1 2.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0 0 12.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 0 0 5.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 0 0-3.48-8.413Z"/></svg>
+      Consultar por WhatsApp
+    </a>
+  </div>
+</div>
+
+</div>
+
+<footer>
+  <p>© 2026 <span>MarcanoTech</span> · Buenos Aires · <a href="index.html" style="color:var(--ferrari)">marcanotech.com</a></p>
+</footer>
+</body>
+</html>

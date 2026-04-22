@@ -1,0 +1,393 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Guía de Diseño 3D — MarcanoTech</title>
+<meta name="description" content="Guía de diseño 3D para impresión FDM: tolerancias, orientación de piezas, soportes, Fusion 360 y Blender.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+:root{
+  --black:#000;--dark1:#0a0a0c;--dark2:#111116;--dark3:#18181e;
+  --navy:#1a3a6b;--navy-l:#4a7fd4;--ferrari:#e01a00;--silver:#9eaab8;--white:#f4f4f6;
+  --font-d:'Bebas Neue',sans-serif;--font-b:'DM Sans',sans-serif;--font-m:'DM Mono',monospace;
+}
+html{scroll-behavior:smooth;}
+body{font-family:var(--font-b);background:var(--dark1);color:var(--white);line-height:1.6;}
+a{text-decoration:none;color:inherit;}
+nav{position:sticky;top:0;z-index:50;padding:0 48px;height:64px;display:flex;align-items:center;justify-content:space-between;background:rgba(10,10,12,0.95);backdrop-filter:blur(12px);border-bottom:1px solid rgba(255,255,255,0.06);}
+.logo{font-family:var(--font-d);font-size:20px;letter-spacing:1px;}
+.logo span{color:var(--ferrari);}
+.back-btn{display:flex;align-items:center;gap:8px;font-size:13px;color:var(--silver);padding:8px 16px;border:1px solid rgba(255,255,255,0.1);border-radius:6px;transition:all 0.2s;}
+.back-btn:hover{color:var(--white);border-color:var(--ferrari);}
+.hero{padding:72px 48px 56px;max-width:900px;margin:0 auto;}
+.cat-badge{display:inline-flex;align-items:center;gap:8px;background:rgba(74,127,212,0.1);border:1px solid rgba(74,127,212,0.3);padding:5px 14px;border-radius:100px;font-size:11px;font-family:var(--font-m);color:var(--navy-l);letter-spacing:2px;text-transform:uppercase;margin-bottom:24px;}
+h1{font-family:var(--font-d);font-size:clamp(48px,7vw,84px);line-height:0.95;letter-spacing:1px;margin-bottom:20px;}
+h1 span{color:var(--navy-l);}
+.hero p{font-size:16px;color:var(--silver);max-width:640px;font-weight:300;}
+.toc{background:var(--dark2);border:1px solid rgba(255,255,255,0.07);border-radius:12px;padding:24px 28px;max-width:860px;margin:0 48px;}
+.toc-title{font-size:12px;font-family:var(--font-m);letter-spacing:2px;color:var(--navy-l);text-transform:uppercase;margin-bottom:14px;}
+.toc-links{display:flex;flex-wrap:wrap;gap:8px;}
+.toc-link{background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.08);color:var(--silver);padding:6px 14px;border-radius:6px;font-size:12px;transition:all 0.2s;}
+.toc-link:hover{background:rgba(74,127,212,0.1);border-color:rgba(74,127,212,0.3);color:var(--white);}
+.content{max-width:900px;margin:0 auto;padding:0 48px 80px;}
+.section{margin-top:64px;padding-top:32px;border-top:1px solid rgba(255,255,255,0.06);}
+.section-title{font-family:var(--font-d);font-size:clamp(28px,4vw,42px);letter-spacing:0.5px;margin-bottom:8px;color:var(--navy-l);}
+.section-sub{font-size:13px;color:var(--silver);font-family:var(--font-m);margin-bottom:20px;letter-spacing:0.5px;}
+.body-text{font-size:14px;color:var(--silver);line-height:1.75;margin-bottom:16px;}
+/* Cards */
+.cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:14px;margin:20px 0;}
+.card{background:var(--dark2);border:1px solid rgba(255,255,255,0.07);border-radius:12px;padding:20px;transition:border-color 0.2s;}
+.card:hover{border-color:rgba(74,127,212,0.3);}
+.card-icon{font-size:24px;margin-bottom:12px;}
+.card-title{font-size:14px;font-weight:700;color:var(--white);margin-bottom:8px;}
+.card-desc{font-size:12px;color:var(--silver);line-height:1.6;}
+/* Tolerance table */
+.tol-table{width:100%;border-collapse:collapse;margin:20px 0;font-size:13px;}
+.tol-table th{background:var(--dark3);padding:11px 16px;text-align:left;font-size:10px;letter-spacing:1px;text-transform:uppercase;color:var(--silver);font-family:var(--font-m);border-bottom:1px solid rgba(255,255,255,0.08);}
+.tol-table td{padding:11px 16px;border-bottom:1px solid rgba(255,255,255,0.05);color:var(--white);}
+.tol-table tr:hover td{background:rgba(255,255,255,0.02);}
+.val-good{color:#34d399;font-weight:700;font-family:var(--font-m);}
+.val-ok{color:#fbbf24;font-weight:700;font-family:var(--font-m);}
+/* Steps */
+.steps{display:flex;flex-direction:column;gap:0;margin:20px 0;}
+.step-item{display:flex;gap:16px;padding-bottom:24px;position:relative;}
+.step-item::before{content:'';position:absolute;left:15px;top:36px;bottom:0;width:1px;background:rgba(255,255,255,0.08);}
+.step-item:last-child::before{display:none;}
+.step-num{width:32px;height:32px;border-radius:50%;background:var(--navy);color:#fff;display:flex;align-items:center;justify-content:center;font-family:var(--font-d);font-size:16px;flex-shrink:0;margin-top:2px;}
+.step-title{font-size:14px;font-weight:700;color:var(--white);margin-bottom:6px;}
+.step-desc{font-size:13px;color:var(--silver);line-height:1.6;}
+/* Tip */
+.tip{background:rgba(74,127,212,0.08);border:1px solid rgba(74,127,212,0.2);border-radius:10px;padding:16px 18px;margin:16px 0;font-size:13px;color:var(--silver);line-height:1.6;}
+.tip strong{color:var(--navy-l);}
+.warn{background:rgba(251,191,36,0.06);border:1px solid rgba(251,191,36,0.2);border-radius:10px;padding:16px 18px;margin:16px 0;font-size:13px;color:var(--silver);line-height:1.6;}
+.warn strong{color:#fbbf24;}
+/* Software comparison */
+.soft-grid{display:grid;grid-template-columns:1fr 1fr;gap:20px;margin:20px 0;}
+.soft-card{background:var(--dark2);border-radius:12px;padding:24px;border-top:3px solid;}
+.soft-title{font-size:18px;font-weight:700;margin-bottom:4px;}
+.soft-sub{font-size:11px;font-family:var(--font-m);color:var(--silver);margin-bottom:16px;}
+.soft-list{font-size:13px;color:var(--silver);line-height:1.8;}
+.soft-list li{margin-left:16px;}
+footer{background:var(--dark1);border-top:1px solid rgba(255,255,255,0.06);padding:32px 48px;text-align:center;}
+footer p{font-size:12px;color:var(--silver);font-family:var(--font-m);}
+footer span{color:var(--ferrari);}
+@media(max-width:768px){
+  nav,footer{padding-left:20px;padding-right:20px;}
+  .hero,.content{padding-left:20px;padding-right:20px;}
+  .toc{margin-left:20px;margin-right:20px;}
+  .soft-grid{grid-template-columns:1fr;}
+}
+</style>
+</head>
+<body>
+
+<nav>
+  <a href="index.html" class="logo">MARCANO<span>TECH</span></a>
+  <a href="index.html#guias" class="back-btn">
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 18 9 12 15 6"/></svg>
+    Volver a Guías
+  </a>
+</nav>
+
+<div class="hero">
+  <div class="cat-badge">Guía técnica · Diseño 3D</div>
+  <h1>GUÍA DE<br><span>DISEÑO 3D</span></h1>
+  <p>Principios esenciales para diseñar piezas que se impriman bien a la primera: tolerancias, orientación, soportes, software y flujos de trabajo profesionales.</p>
+</div>
+
+<div class="toc">
+  <div class="toc-title">Contenido</div>
+  <div class="toc-links">
+    <a href="#principios" class="toc-link">Principios básicos</a>
+    <a href="#tolerancias" class="toc-link">Tolerancias</a>
+    <a href="#orientacion" class="toc-link">Orientación</a>
+    <a href="#soportes" class="toc-link">Soportes</a>
+    <a href="#hardware" class="toc-link">Hardware en piezas</a>
+    <a href="#software" class="toc-link">Software</a>
+    <a href="#flujo" class="toc-link">Flujo de trabajo</a>
+  </div>
+</div>
+
+<div class="content">
+
+<!-- PRINCIPIOS -->
+<div class="section" id="principios">
+  <div class="section-title">PRINCIPIOS BÁSICOS</div>
+  <div class="section-sub">Lo que todo diseñador debe entender sobre FDM</div>
+  <p class="body-text">La impresión 3D FDM construye objetos depositando material fundido capa por capa. Esto tiene implicaciones directas en el diseño: las piezas tienen propiedades direccionales, las geometrías horizontales necesitan soporte, y las tolerancias deben compensar la expansión del material al enfriarse.</p>
+  <div class="cards">
+    <div class="card">
+      <div class="card-icon">📐</div>
+      <div class="card-title">Diseñá para la orientación</div>
+      <div class="card-desc">La resistencia es mayor en X/Y que en Z. Las capas se separan bajo tracción vertical. Orientá la pieza para que las cargas principales sean perpendiculares a la dirección de impresión.</div>
+    </div>
+    <div class="card">
+      <div class="card-icon">🔩</div>
+      <div class="card-title">Tolerancias son obligatorias</div>
+      <div class="card-desc">El filamento se expande al enfriarse. Un agujero de 10mm en el modelo puede imprimir como 9.7mm. Siempre agregá tolerancia de 0.2–0.4mm en ajustes móviles o ensambles.</div>
+    </div>
+    <div class="card">
+      <div class="card-icon">📏</div>
+      <div class="card-title">Grosor mínimo de pared</div>
+      <div class="card-desc">Con boquilla estándar 0.4mm, el grosor mínimo funcional es 0.8mm (2 perímetros). Para piezas estructurales, usá al menos 1.6mm (4 perímetros).</div>
+    </div>
+    <div class="card">
+      <div class="card-icon">🏗️</div>
+      <div class="card-title">Voladizos y ángulos</div>
+      <div class="card-desc">Los voladizos hasta 45° se imprimen sin soporte. Por encima de 45° necesitás soporte o rediseño. Los puentes horizontales se pueden imprimir hasta ~60mm sin soporte.</div>
+    </div>
+    <div class="card">
+      <div class="card-icon">⚡</div>
+      <div class="card-title">Relleno según uso</div>
+      <div class="card-desc">Decoración: 10–15%. Uso general: 20–30%. Mecánico: 40–60%. Estructural: 80–100% o sólido. El patrón Gyroid ofrece la mejor relación resistencia/material.</div>
+    </div>
+    <div class="card">
+      <div class="card-icon">🔄</div>
+      <div class="card-title">Primera capa y adhesión</div>
+      <div class="card-desc">Una base plana amplia mejora la adhesión. Para piezas pequeñas o con poca área de contacto, diseñá un brim (falda) o una base de sacrificio que se remueve post-impresión.</div>
+    </div>
+  </div>
+</div>
+
+<!-- TOLERANCIAS -->
+<div class="section" id="tolerancias">
+  <div class="section-title">TOLERANCIAS</div>
+  <div class="section-sub">Valores reales probados en impresoras FDM calibradas</div>
+  <p class="body-text">Las tolerancias son la diferencia entre un ensamble que funciona y uno que no. Estos valores son los que usamos en MarcanoTech después de cientos de iteraciones con diferentes materiales y boquillas.</p>
+
+  <div style="overflow-x:auto;">
+    <table class="tol-table">
+      <thead>
+        <tr>
+          <th>Tipo de ajuste</th>
+          <th>Tolerancia unilateral</th>
+          <th>Ejemplo</th>
+          <th>Resultado</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr><td><strong>Holgura libre</strong> — piezas que deben moverse</td><td><span class="val-good">+0.3 / +0.4 mm</span></td><td>Eje ø10mm → agujero ø10.4mm</td><td>Movimiento suave</td></tr>
+        <tr><td><strong>Ajuste deslizante</strong> — guías, rieles</td><td><span class="val-good">+0.2 mm</span></td><td>Ranura 5mm → pieza 4.8mm</td><td>Desliza sin holgura</td></tr>
+        <tr><td><strong>Ajuste a presión</strong> — press-fit</td><td><span class="val-ok">-0.1 / -0.2 mm</span></td><td>Agujero ø8mm → perno ø8.1mm</td><td>Entra con fuerza, queda fijo</td></tr>
+        <tr><td><strong>Insert metálico</strong> (brass heat-set)</td><td><span class="val-good">-0.3 mm diámetro</span></td><td>Insert M3 ø4.7mm → agujero ø4.4mm</td><td>Se inserta con calor, queda sólido</td></tr>
+        <tr><td><strong>Rosca directa</strong> (hilo impreso)</td><td><span class="val-ok">+0.2 mm por lado</span></td><td>Rosca M4 → sobredimensionar 0.2mm</td><td>Enrosca sin forzar</td></tr>
+        <tr><td><strong>Snap-fit / clip</strong></td><td><span class="val-good">0.1 / 0.15 mm</span></td><td>Pestaña 1mm → ranura 1.1mm</td><td>Encaja y traba</td></tr>
+        <tr><td><strong>Encaje rígido</strong> (partes fijas)</td><td><span class="val-ok">0 / +0.1 mm</span></td><td>Espiga 6mm → agujero 6.05mm</td><td>Entra justo, queda fijo</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="tip"><strong>💡 Regla práctica:</strong> Siempre imprimí una pieza de prueba (test piece) antes de imprimir el modelo final. Un cilindro con agujeros de distintos diámetros tarda 15 minutos y te ahorra horas de reimpresión.</div>
+  <div class="warn"><strong>⚠️ Importante:</strong> Estas tolerancias son para PLA y PETG con boquilla 0.4mm y altura de capa 0.2mm. El ABS y ASA tienen mayor contracción — aumentá las tolerancias en 0.05–0.1mm adicionales.</div>
+</div>
+
+<!-- ORIENTACIÓN -->
+<div class="section" id="orientacion">
+  <div class="section-title">ORIENTACIÓN DE IMPRESIÓN</div>
+  <div class="section-sub">La decisión más importante antes de imprimir</div>
+  <p class="body-text">La orientación de una pieza en la cama de impresión determina su resistencia, su calidad superficial y la necesidad de soportes. No existe una orientación "correcta" universal — depende de qué querés priorizar.</p>
+
+  <div class="cards">
+    <div class="card" style="border-left:3px solid #34d399;">
+      <div class="card-title" style="color:#34d399;">✓ Resistencia máxima</div>
+      <div class="card-desc">Orientá la pieza para que las cargas principales sean paralelas a las capas (en el plano XY). Las capas se separan fácilmente bajo tracción en Z — nunca pongas el punto de carga perpendicular a las capas.</div>
+    </div>
+    <div class="card" style="border-left:3px solid #4a7fd4;">
+      <div class="card-title" style="color:#4a7fd4;">✓ Acabado visual</div>
+      <div class="card-desc">La cara que quede abajo tendrá las mejores líneas de capa (más uniformes). La cara superior queda bien si el ventilador está bien calibrado. Las caras laterales tienen las líneas de capa visibles — orientá la cara "importante" hacia abajo o al frente.</div>
+    </div>
+    <div class="card" style="border-left:3px solid #fbbf24;">
+      <div class="card-title" style="color:#fbbf24;">✓ Mínimo soporte</div>
+      <div class="card-desc">Rotá la pieza para que los voladizos queden por debajo de 45°. A veces vale agregar un pequeño chaflán al diseño original para eliminar soportes completamente — ahorrás material y tiempo de posprocesado.</div>
+    </div>
+    <div class="card" style="border-left:3px solid #e01a00;">
+      <div class="card-title" style="color:#e01a00;">✓ Piezas cilíndricas</div>
+      <div class="card-desc">Los agujeros horizontales imprimen peor que los verticales. Para agujeros de precisión, orientá la pieza con el agujero en vertical. Si no es posible, diseñá el agujero ligeramente elíptico (compensando la caída del techo).</div>
+    </div>
+  </div>
+</div>
+
+<!-- SOPORTES -->
+<div class="section" id="soportes">
+  <div class="section-title">SOPORTES</div>
+  <div class="section-sub">Cuándo usarlos y cómo minimizarlos desde el diseño</div>
+  <p class="body-text">Los soportes son material de sacrificio que se remueve tras la impresión. Siempre que sea posible, es mejor rediseñar la pieza para evitarlos — el tiempo de remoción y el acabado de las superficies donde hubo soporte nunca es perfecto.</p>
+
+  <div class="tip"><strong>💡 La regla del 45°:</strong> Cualquier superficie que forme menos de 45° con la horizontal necesita soporte. Por encima de 45° la impresora puede gestionar el voladizo sola.</div>
+
+  <div class="cards">
+    <div class="card">
+      <div class="card-icon">🔺</div>
+      <div class="card-title">Chaflanes en lugar de voladizos</div>
+      <div class="card-desc">En lugar de una esquina horizontal, usá un chaflán de 45°. El resultado visual es similar pero la pieza imprime sin soporte. Aplica especialmente a partes inferiores de cabezas de tornillos y conectores.</div>
+    </div>
+    <div class="card">
+      <div class="card-icon">🔶</div>
+      <div class="card-title">Forma de lágrima para agujeros</div>
+      <div class="card-desc">Un agujero circular horizontal tiene el techo plano que necesita soporte. Cambiá la parte superior a forma de lágrima o triángulo para que el material se pueda construir sin soporte.</div>
+    </div>
+    <div class="card">
+      <div class="card-icon">⬆️</div>
+      <div class="card-title">Dividir piezas complejas</div>
+      <div class="card-desc">A veces es mejor dividir una pieza en dos partes simples y pegarlas o ensamblarlas, que imprimir una sola pieza compleja con mucho soporte. Cada parte imprime limpia y el resultado final es mejor.</div>
+    </div>
+  </div>
+</div>
+
+<!-- HARDWARE EN PIEZAS -->
+<div class="section" id="hardware">
+  <div class="section-title">HARDWARE EN PIEZAS</div>
+  <div class="section-sub">Insertos, tornillos y elementos metálicos</div>
+  <p class="body-text">Las piezas impresas en 3D ganan enormemente cuando se combinan con hardware metálico estándar. Los insertos de latón termoprensados son la técnica más usada para ensambles desmontables profesionales.</p>
+
+  <div class="steps">
+    <div class="step-item">
+      <div class="step-num">1</div>
+      <div>
+        <div class="step-title">Insertos de latón (Heat-Set Inserts)</div>
+        <div class="step-desc">Son la solución estándar para roscas en plástico. Se insertan con un soldador caliente — el calor funde el plástico alrededor del inserto y al enfriarse queda perfectamente anclado. Permiten ensamblar y desensamblar decenas de veces sin deterioro. Diseñá el agujero 0.3mm más pequeño que el diámetro externo del inserto.</div>
+      </div>
+    </div>
+    <div class="step-item">
+      <div class="step-num">2</div>
+      <div>
+        <div class="step-title">Tuercas cuadradas y hexagonales embutidas</div>
+        <div class="step-desc">Diseñá una cavidad hexagonal o cuadrada para embutir la tuerca durante el ensamble. Más rápido que los insertos de latón pero no soporta tantos ciclos de desmontaje. Ideal para estructuras fijas o de bajo mantenimiento.</div>
+      </div>
+    </div>
+    <div class="step-item">
+      <div class="step-num">3</div>
+      <div>
+        <div class="step-title">Ejes y rodamientos</div>
+        <div class="step-desc">Para agujeros que recibirán un eje metálico, diseñá el ajuste 0.1–0.2mm más pequeño y usá un rodamiento de bolas estándar. Los rodamientos 608 (skateboard) son los más fáciles de conseguir y se adaptan a miles de aplicaciones RC y robóticas.</div>
+      </div>
+    </div>
+    <div class="step-item">
+      <div class="step-num">4</div>
+      <div>
+        <div class="step-title">Tornillos directamente en plástico</div>
+        <div class="step-desc">Para ensambles simples, un agujero de diámetro igual al núcleo del tornillo permite roscar directamente. Funciona bien para cargas ligeras. Para M3: agujero ø2.5mm. Para M4: agujero ø3.3mm. No usar para ensambles que se desmonten frecuentemente.</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="tip"><strong>💡 En MarcanoTech:</strong> Todos los proyectos RC que requieren mantenimiento o ajuste usan insertos de latón M3 estándar. La diferencia en durabilidad vs roscar directamente el plástico es enorme.</div>
+</div>
+
+<!-- SOFTWARE -->
+<div class="section" id="software">
+  <div class="section-title">SOFTWARE</div>
+  <div class="section-sub">Las herramientas que usamos en MarcanoTech</div>
+  <p class="body-text">No existe un software único para todo. El flujo profesional combina una herramienta paramétrica para geometría mecánica con una herramienta orgánica para formas complejas.</p>
+
+  <div class="soft-grid">
+    <div class="soft-card" style="border-color:var(--navy-l);">
+      <div class="soft-title" style="color:var(--navy-l);">Fusion 360</div>
+      <div class="soft-sub">Paramétrico · Mecánico · Precisión</div>
+      <ul class="soft-list">
+        <li>Diseño paramétrico con parámetros globales</li>
+        <li>Tolerancias exactas y cálculo de ajustes</li>
+        <li>Exportación directa a STL/STEP optimizado</li>
+        <li>Ideal para piezas mecánicas, chasis RC, brackets</li>
+        <li>Simulación de esfuerzos básica incluida</li>
+        <li>Gratuito para uso personal y pequeñas empresas</li>
+      </ul>
+      <div style="margin-top:16px;font-size:12px;color:rgba(74,127,212,0.8);font-family:var(--font-m);">Curva de aprendizaje: Media · Recomendado para principiantes con piezas funcionales</div>
+    </div>
+    <div class="soft-card" style="border-color:#f97316;">
+      <div class="soft-title" style="color:#f97316;">Blender</div>
+      <div class="soft-sub">Orgánico · Escultura · Visual</div>
+      <ul class="soft-list">
+        <li>Modelado orgánico y escultura digital</li>
+        <li>Superficies complejas imposibles en CAD paramétrico</li>
+        <li>Figuras, carrocerías RC, objetos decorativos</li>
+        <li>Texturizado y render fotorrealista para presentación</li>
+        <li>Comunidad enorme, tutoriales ilimitados</li>
+        <li>100% gratuito y open source</li>
+      </ul>
+      <div style="margin-top:16px;font-size:12px;color:rgba(249,115,22,0.8);font-family:var(--font-m);">Curva de aprendizaje: Alta · Recomendado para formas orgánicas y visualización</div>
+    </div>
+  </div>
+
+  <div style="margin-top:20px;background:var(--dark2);border-radius:12px;padding:20px 24px;border:1px solid rgba(255,255,255,0.07);">
+    <div style="font-size:13px;font-weight:700;color:var(--white);margin-bottom:12px;">Software de laminado (Slicer)</div>
+    <div style="display:flex;flex-wrap:wrap;gap:12px;font-size:13px;color:var(--silver);">
+      <div style="background:rgba(255,255,255,0.05);padding:8px 14px;border-radius:8px;"><strong style="color:var(--white);">Bambu Studio</strong> — Optimizado para Bambu Lab. Perfiles automáticos, soporte multi-material.</div>
+      <div style="background:rgba(255,255,255,0.05);padding:8px 14px;border-radius:8px;"><strong style="color:var(--white);">OrcaSlicer</strong> — Open source, basado en Bambu Studio. Mayor control de parámetros avanzados.</div>
+      <div style="background:rgba(255,255,255,0.05);padding:8px 14px;border-radius:8px;"><strong style="color:var(--white);">PrusaSlicer</strong> — Universal, excelente para aprendizaje. Compatibilidad amplia con cualquier impresora.</div>
+    </div>
+  </div>
+</div>
+
+<!-- FLUJO DE TRABAJO -->
+<div class="section" id="flujo">
+  <div class="section-title">FLUJO DE TRABAJO</div>
+  <div class="section-sub">Del concepto a la pieza terminada</div>
+
+  <div class="steps">
+    <div class="step-item">
+      <div class="step-num" style="background:var(--ferrari);">1</div>
+      <div>
+        <div class="step-title">Definir requisitos</div>
+        <div class="step-desc">¿Cuál es la función de la pieza? ¿Qué cargas va a soportar? ¿Temperatura ambiente? ¿Exposición UV? ¿Necesita ensamblar con otras piezas? Definir esto antes de modelar ahorra horas de rediseño.</div>
+      </div>
+    </div>
+    <div class="step-item">
+      <div class="step-num" style="background:var(--ferrari);">2</div>
+      <div>
+        <div class="step-title">Elegir material y orientación</div>
+        <div class="step-desc">Con los requisitos claros, el material se elige casi solo. La orientación de impresión también se define en esta etapa — influye en el diseño (ángulos de los voladizos, ubicación de los orificios).</div>
+      </div>
+    </div>
+    <div class="step-item">
+      <div class="step-num" style="background:var(--ferrari);">3</div>
+      <div>
+        <div class="step-title">Modelado con tolerancias</div>
+        <div class="step-desc">Usá parámetros globales en Fusion 360 para las tolerancias — así podés ajustarlas rápidamente sin tocar cada dimensión. Para elementos de ensamble, modelá siempre 0.2mm más holgado de lo que querés y ajustá en la primera prueba.</div>
+      </div>
+    </div>
+    <div class="step-item">
+      <div class="step-num" style="background:var(--ferrari);">4</div>
+      <div>
+        <div class="step-title">Test piece antes del modelo final</div>
+        <div class="step-desc">Para piezas con ajustes críticos, imprimí solo la sección de ensamble (no toda la pieza). Verificá que los ajustes sean correctos. Esta simple práctica ahorra material y tiempo en el 80% de los proyectos.</div>
+      </div>
+    </div>
+    <div class="step-item">
+      <div class="step-num" style="background:var(--ferrari);">5</div>
+      <div>
+        <div class="step-title">Laminado y parámetros</div>
+        <div class="step-desc">Configurá el slicer según el material y uso. Ajustá el relleno, los perímetros y el soporte según los requisitos definidos en el paso 1. Guardá los perfiles para reutilizarlos — la consistencia es clave en producción.</div>
+      </div>
+    </div>
+    <div class="step-item">
+      <div class="step-num" style="background:var(--ferrari);">6</div>
+      <div>
+        <div class="step-title">Posprocesado y ensamble</div>
+        <div class="step-desc">Lijado, inserción de hardware, encolado o ensamble mecánico. El posprocesado bien planificado desde el diseño es rápido. Si requiere mucho trabajo manual, revisá el diseño — probablemente se puede mejorar.</div>
+      </div>
+    </div>
+  </div>
+
+  <div style="margin-top:40px;background:rgba(224,26,0,0.06);border:1px solid rgba(224,26,0,0.2);border-radius:12px;padding:24px;">
+    <div style="font-family:var(--font-d);font-size:24px;margin-bottom:12px;">¿NECESITÁS AYUDA CON TU DISEÑO?</div>
+    <p style="font-size:14px;color:var(--silver);margin-bottom:16px;">Podemos ayudarte desde el boceto inicial hasta el archivo listo para imprimir. Modelado en Fusion 360 y Blender, optimizado para producción.</p>
+    <a href="https://wa.me/5491123468533?text=Hola%20MarcanoTech%2C%20necesito%20ayuda%20con%20un%20dise%C3%B1o%203D" target="_blank"
+      style="display:inline-flex;align-items:center;gap:10px;background:#e01a00;color:#fff;padding:12px 24px;border-radius:8px;font-weight:600;font-size:14px;"
+      onmouseover="this.style.background='#c01500'" onmouseout="this.style.background='#e01a00'">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 0 1-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 0 1-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 0 1 2.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0 0 12.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 0 0 5.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 0 0-3.48-8.413Z"/></svg>
+      Consultar diseño por WhatsApp
+    </a>
+  </div>
+</div>
+
+</div>
+
+<footer>
+  <p>© 2026 <span>MarcanoTech</span> · Buenos Aires · <a href="index.html" style="color:var(--ferrari)">marcanotech.com</a></p>
+</footer>
+</body>
+</html>
