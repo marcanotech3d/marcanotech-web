@@ -896,9 +896,6 @@ footer {
 </head>
 <body>
 
-<!-- Custom cursor (desktop only) -->
-<div class="cursor" id="cursor"></div>
-<div class="cursor-ring" id="cursor-ring"></div>
 
 <!-- ══ NAV ══ -->
 <nav id="navbar">
@@ -913,7 +910,7 @@ footer {
       <polygon points="2,8 4,5 12,5 9,8" fill="#4a7fd4"/>
       <polygon points="31,8 33,5 40,5 38,8" fill="#4a7fd4" opacity="0.7"/>
     </svg>
-    <span class="nav-logo-text">MARCANO<span>TECH</span></span>
+    <span class="nav-logo-text">MARCANO<span>TECH</span></span><span style="font-family:var(--font-mono);font-size:9px;color:var(--ferrari);background:rgba(224,26,0,0.1);border:1px solid rgba(224,26,0,0.25);padding:2px 6px;border-radius:4px;letter-spacing:1px;margin-left:4px">v1.0</span>
   </a>
   <ul class="nav-links">
     <li><a href="#servicios">Servicios</a></li>
@@ -1368,43 +1365,21 @@ footer {
           <li><a href="#contacto">Contacto</a></li>
           <li><a href="https://app.marcanotech.com" target="_blank">Dashboard ↗</a></li>
         </ul>
-        <div class="footer-copy">© 2026 MarcanoTech 3D · Buenos Aires</div>
+        <div class="footer-copy">© 2026 MarcanoTech 3D · Buenos Aires · <span id="site-version" style="color:var(--ferrari)">v1.0</span></div>
       </div>
     </div>
   </div>
 </footer>
 
 <script>
-// Custom cursor
-const cursor = document.getElementById('cursor');
-const ring = document.getElementById('cursor-ring');
-let mouseX = 0, mouseY = 0, ringX = 0, ringY = 0;
+// ── VERSION ──
+const SITE_VERSION = 'v1.0';
+const SITE_DATE = '2026-04-22';
 
-document.addEventListener('mousemove', e => {
-  mouseX = e.clientX; mouseY = e.clientY;
-  cursor.style.transform = `translate(${mouseX - 4}px, ${mouseY - 4}px)`;
-});
-
-// Smooth ring follow
-function animateRing() {
-  ringX += (mouseX - ringX - 16) * 0.15;
-  ringY += (mouseY - ringY - 16) * 0.15;
-  ring.style.transform = `translate(${ringX}px, ${ringY}px)`;
-  requestAnimationFrame(animateRing);
-}
-animateRing();
-
-// Hover effect on interactive elements
-document.querySelectorAll('a, button, .product-card, .service-card, .guide-card').forEach(el => {
-  el.addEventListener('mouseenter', () => {
-    cursor.style.transform += ' scale(2)';
-    ring.style.width = '48px'; ring.style.height = '48px';
-    ring.style.borderColor = 'rgba(224,26,0,0.8)';
-  });
-  el.addEventListener('mouseleave', () => {
-    ring.style.width = '32px'; ring.style.height = '32px';
-    ring.style.borderColor = 'rgba(224,26,0,0.5)';
-  });
+// ── Show version in footer ──
+document.addEventListener('DOMContentLoaded', () => {
+  const vEl = document.getElementById('site-version');
+  if(vEl) vEl.textContent = `${SITE_VERSION} · ${SITE_DATE}`;
 });
 
 // Scroll reveal
@@ -1431,12 +1406,6 @@ function toggleMenu() {
   document.getElementById('mobile-menu').classList.toggle('open');
   document.body.style.overflow =
     document.getElementById('mobile-menu').classList.contains('open') ? 'hidden' : '';
-}
-
-// Hide cursor on mobile
-if ('ontouchstart' in window) {
-  cursor.style.display = 'none';
-  ring.style.display = 'none';
 }
 </script>
 </body>
