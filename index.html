@@ -683,8 +683,22 @@ section { padding: 100px 48px; }
 .guides-grid {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
-  gap: 24px; margin-top: 64px;
-  align-items: start;
+  gap: 24px;
+  margin-top: 64px;
+  align-items: stretch;
+}
+.guides-grid .guide-card {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+.guides-grid .guide-body {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+.guides-grid .guide-footer {
+  margin-top: auto;
 }
 .guide-card {
   background: #fff;
@@ -889,6 +903,9 @@ footer {
 @media (max-width: 900px) {
   .guides-grid { grid-template-columns: repeat(2, 1fr); }
 }
+@media (max-width: 640px) {
+  .guides-grid { grid-template-columns: 1fr; }
+}
 @media (max-width: 560px) {
   .hero-title { font-size: 52px; }
   .services-grid { grid-template-columns: 1fr; }
@@ -911,9 +928,9 @@ footer {
       <g stroke="#cc0000" fill="none" stroke-linecap="square" stroke-linejoin="miter"><line x1="5" y1="4.5" x2="5" y2="108.1" stroke-width="11"/><line x1="95" y1="4.4" x2="95" y2="108.1" stroke-width="11"/><line x1="6.7" y1="1.9" x2="50.3" y2="26.1" stroke-width="9.6"/><line x1="93.4" y1="1.9" x2="49.9" y2="26.1" stroke-width="9.6"/></g>
     </svg>
     <!-- MarcanoTech Wordmark -->
-    <svg viewBox="0 0 320 40" width="160" height="22" xmlns="http://www.w3.org/2000/svg" style="flex-shrink:0">
-      <text x="0" y="34" font-family="Rajdhani,sans-serif" font-weight="700" font-size="38" letter-spacing="3" fill="#f0f2f5">MARCANO</text>
-      <text x="222" y="34" font-family="Rajdhani,sans-serif" font-weight="700" font-size="38" letter-spacing="3" fill="#cc0000">TECH</text>
+    <svg viewBox="0 0 290 40" width="150" height="22" xmlns="http://www.w3.org/2000/svg" style="flex-shrink:0">
+      <text x="0" y="34" font-family="Rajdhani,sans-serif" font-weight="700" font-size="38" letter-spacing="1" fill="#f0f2f5">MARCANO</text>
+      <text x="200" y="34" font-family="Rajdhani,sans-serif" font-weight="700" font-size="38" letter-spacing="1" fill="#cc0000">TECH</text>
     </svg>
     <span style="font-family:var(--font-mono);font-size:9px;color:var(--ferrari);background:rgba(224,26,0,0.1);border:1px solid rgba(224,26,0,0.25);padding:2px 6px;border-radius:4px;letter-spacing:1px">v1.1</span>
   </a>
@@ -945,9 +962,8 @@ footer {
   <div class="hero-glow-1"></div>
   <div class="hero-glow-2"></div>
   <div class="hero-content">
-    <div class="hero-badge">Buenos Aires · Argentina</div>
     <!-- Hero illustration — impresora 3D estilizada -->
-    <div style="margin-bottom:32px;position:relative;display:inline-block" class="reveal">
+    <div style="margin-bottom:28px;position:relative;display:inline-block;background:var(--dark2);border:1px solid rgba(255,255,255,0.08);border-radius:16px;padding:20px;box-shadow:0 0 60px rgba(204,0,0,0.15),0 0 0 1px rgba(204,0,0,0.1)" class="reveal">
       <svg viewBox="0 0 480 280" width="min(480px,90vw)" xmlns="http://www.w3.org/2000/svg" style="filter:drop-shadow(0 0 40px rgba(204,0,0,0.25))">
         <!-- Build plate -->
         <rect x="80" y="238" width="320" height="8" rx="3" fill="#1a1a1a" stroke="#333" stroke-width="1"/>
@@ -1002,6 +1018,7 @@ footer {
         <text x="340" y="235" font-family="DM Mono,monospace" font-size="8" fill="#505058">65% completado</text>
       </svg>
     </div>
+    <div class="hero-badge" style="margin-bottom:16px">Buenos Aires · Argentina</div>
     <!-- Slogan -->
     <div style="font-family:var(--font-display);font-size:clamp(13px,2vw,18px);letter-spacing:6px;color:var(--silver);text-transform:uppercase;margin-bottom:16px">FABRICACIÓN DIGITAL DE PRECISIÓN</div>
     <p class="hero-sub" style="margin-top:0">Diseño, impresión 3D y fabricación a medida. Desde prototipos técnicos hasta productos terminados — cada pieza construida con precisión milimétrica.</p>
@@ -1486,9 +1503,9 @@ footer {
     <div>
       <div class="footer-line"></div>
       <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:20px">
-        <svg viewBox="0 0 320 40" width="180" height="22" xmlns="http://www.w3.org/2000/svg">
-          <text x="0" y="34" font-family="Rajdhani,sans-serif" font-weight="700" font-size="38" letter-spacing="3" fill="#f0f2f5">MARCANO</text>
-          <text x="222" y="34" font-family="Rajdhani,sans-serif" font-weight="700" font-size="38" letter-spacing="3" fill="#cc0000">TECH</text>
+        <svg viewBox="0 0 290 40" width="170" height="22" xmlns="http://www.w3.org/2000/svg">
+          <text x="0" y="34" font-family="Rajdhani,sans-serif" font-weight="700" font-size="38" letter-spacing="1" fill="#f0f2f5">MARCANO</text>
+          <text x="200" y="34" font-family="Rajdhani,sans-serif" font-weight="700" font-size="38" letter-spacing="1" fill="#cc0000">TECH</text>
         </svg>
         <ul class="footer-links">
           <li><a href="#servicios">Servicios</a></li>
