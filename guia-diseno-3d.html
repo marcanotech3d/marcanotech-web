@@ -6,7 +6,7 @@
 <title>Guía de Diseño 3D — MarcanoTech</title>
 <meta name="description" content="Guía de diseño 3D para impresión FDM: tolerancias, orientación de piezas, soportes, Fusion 360 y Blender.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@700&family=Bebas+Neue&family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
 :root{
@@ -389,5 +389,12 @@ footer span{color:var(--ferrari);}
 <footer>
   <p>© 2026 <span>MarcanoTech</span> · Buenos Aires · <a href="index.html" style="color:var(--ferrari)">marcanotech.com</a></p>
 </footer>
+<button id="scroll-top" onclick="window.scrollTo({top:0,behavior:'smooth'})" style="position:fixed;bottom:28px;right:28px;width:44px;height:44px;border-radius:50%;background:#cc0000;color:#fff;border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;opacity:0;pointer-events:none;transition:opacity 0.3s;box-shadow:0 4px 16px rgba(204,0,0,0.4);z-index:99">
+  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="18 15 12 9 6 15"/></svg>
+</button>
+<script>
+const st=document.getElementById('scroll-top');
+window.addEventListener('scroll',()=>{st.style.opacity=window.scrollY>400?'1':'0';st.style.pointerEvents=window.scrollY>400?'auto':'none';});
+</script>
 </body>
 </html>
