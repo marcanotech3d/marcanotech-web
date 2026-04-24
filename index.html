@@ -344,6 +344,7 @@ section { padding: 100px 48px; }
   font-weight: 300; line-height: 1.7;
   max-width: 560px;
 }
+#guias .section-sub { max-width: 100%; }
 
 /* Reveal animation */
 .reveal {
@@ -686,7 +687,8 @@ section { padding: 100px 48px; }
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   gap: 20px;
-  margin-top: 64px;
+  margin-top: 48px;
+  width: 100%;
 }
 .guide-card {
   background: #fff;
@@ -1364,22 +1366,20 @@ footer {
     </div>
     <div class="guides-grid reveal">
 
-      <a href="guia-materiales.html" style="display:block;color:inherit;text-decoration:none"><div class="guide-card">
+      <div class="guide-card" onclick="location.href='guia-materiales.html'" style="cursor:pointer">
         <div class="guide-header"></div>
         <div class="guide-body">
           <div class="guide-category">Materiales</div>
-          <a href="guia-materiales.html" style="color:inherit"><div class="guide-title">PLA vs PETG vs TPU: ¿cuál usar en cada caso?</div></a>
+          <div class="guide-title">PLA vs PETG vs TPU: ¿cuál usar en cada caso?</div>
           <div class="guide-desc">Comparativa técnica completa de los materiales más usados en impresión FDM.</div>
-          <a href="guia-materiales.html" style="display:contents"><div class="guide-footer">
+          <div class="guide-footer">
             <span class="guide-level">⬤ Principiante</span>
-            <div class="guide-arrow">
-              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5"><polyline points="9 18 15 12 9 6"/></svg>
-            </div>
+            <div class="guide-arrow"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5"><polyline points="9 18 15 12 9 6"/></svg></div>
           </div>
         </div>
       </div>
 
-      <div class="guide-card">
+      <div class="guide-card" style="cursor:default;opacity:0.7">
         <div class="guide-header" style="background:var(--navy)"></div>
         <div class="guide-body">
           <div class="guide-category">RC · Construcción</div>
@@ -1387,24 +1387,20 @@ footer {
           <div class="guide-desc">Diseño, impresión, selección de componentes y ensamble paso a paso de un chasis Touring 1:10.</div>
           <div class="guide-footer">
             <span class="guide-level">⬤⬤ Intermedio</span>
-            <div class="guide-arrow">
-              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5"><polyline points="9 18 15 12 9 6"/></svg>
-            </div>
+            <div class="guide-arrow"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5"><polyline points="9 18 15 12 9 6"/></svg></div>
           </div>
         </div>
       </div>
 
-      <a href="guia-diseno-3d.html" style="display:block;color:inherit;text-decoration:none"><div class="guide-card">
+      <div class="guide-card" onclick="location.href='guia-diseno-3d.html'" style="cursor:pointer">
         <div class="guide-header" style="background:#8b5cf6"></div>
         <div class="guide-body">
           <div class="guide-category">Diseño 3D</div>
-          <a href="guia-diseno-3d.html" style="color:inherit"><div class="guide-title">Tolerancias en impresión 3D: la guía definitiva</div></a>
+          <div class="guide-title">Tolerancias en impresión 3D: la guía definitiva</div>
           <div class="guide-desc">Cómo diseñar piezas que encajen perfectamente la primera vez. Valores reales, probados.</div>
           <div class="guide-footer">
             <span class="guide-level">⬤⬤⬤ Avanzado</span>
-            <div class="guide-arrow">
-              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5"><polyline points="9 18 15 12 9 6"/></svg>
-            </div>
+            <div class="guide-arrow"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5"><polyline points="9 18 15 12 9 6"/></svg></div>
           </div>
         </div>
       </div>
