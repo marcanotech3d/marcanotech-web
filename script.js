@@ -390,7 +390,7 @@ const COLORES_BASE = [
   { id:'es-08', nombre:'ePink',           hex:'#E8609A', marca:'eSUN',      material:'PLA+', dispo:'consultar' },
   { id:'es-09', nombre:'ePurple',         hex:'#7040C0', marca:'eSUN',      material:'PLA+', dispo:'consultar' },
   { id:'es-10', nombre:'eOrange',         hex:'#F07020', marca:'eSUN',      material:'PLA+', dispo:'disponible'},
-  { id:'es-11', nombre:'eTransparent',    hex:'#C8E8F8', marca:'eSUN',      material:'PLA+', dispo:'consultar' },
+  { id:'es-11', nombre:'eTransparent',    hex:'#C8E8F8', marca:'eSUN',      material:'PLA+', dispo:'consultar', acabado:'clear' },
   { id:'es-12', nombre:'eWhite PETG',     hex:'#F2F2EE', marca:'eSUN',      material:'PETG', dispo:'stock'     },
   { id:'es-13', nombre:'eBlack PETG',     hex:'#202020', marca:'eSUN',      material:'PETG', dispo:'stock'     },
   // ── POLYMAKER PLA Pro ──
@@ -430,13 +430,70 @@ const COLORES_BASE = [
   { id:'eg-04', nombre:'ABS-Like Rojo',   hex:'#C82020', marca:'Elegoo',     material:'Resina UV', dispo:'disponible'},
   { id:'eg-05', nombre:'ABS-Like Azul',   hex:'#1848C0', marca:'Elegoo',     material:'Resina UV', dispo:'disponible'},
   { id:'eg-06', nombre:'ABS-Like Verde',  hex:'#208040', marca:'Elegoo',     material:'Resina UV', dispo:'consultar' },
-  { id:'eg-07', nombre:'Transparente',    hex:'#C0E0F0', marca:'Elegoo',     material:'Resina UV', dispo:'consultar' },
+  { id:'eg-07', nombre:'Transparente',    hex:'#C0E0F0', marca:'Elegoo',     material:'Resina UV', dispo:'consultar', acabado:'clear' },
   { id:'eg-08', nombre:'Beige',           hex:'#E8D8B0', marca:'Elegoo',     material:'Resina UV', dispo:'consultar' },
+  // ── SUNLU PLA ──
+  { id:'sl-01', nombre:'PLA Blanco',      hex:'#F5F5F0', marca:'Sunlu', material:'PLA',  dispo:'stock'     },
+  { id:'sl-02', nombre:'PLA Negro',       hex:'#1A1A1A', marca:'Sunlu', material:'PLA',  dispo:'stock'     },
+  { id:'sl-03', nombre:'PLA Rojo',        hex:'#CC2020', marca:'Sunlu', material:'PLA',  dispo:'stock'     },
+  { id:'sl-04', nombre:'PLA Azul',        hex:'#1A48C0', marca:'Sunlu', material:'PLA',  dispo:'stock'     },
+  { id:'sl-05', nombre:'PLA Verde',       hex:'#20A030', marca:'Sunlu', material:'PLA',  dispo:'stock'     },
+  { id:'sl-06', nombre:'PLA Amarillo',    hex:'#F5C000', marca:'Sunlu', material:'PLA',  dispo:'stock'     },
+  { id:'sl-07', nombre:'PLA Naranja',     hex:'#F06010', marca:'Sunlu', material:'PLA',  dispo:'stock'     },
+  { id:'sl-08', nombre:'PLA Rosa',        hex:'#F070A0', marca:'Sunlu', material:'PLA',  dispo:'disponible'},
+  { id:'sl-09', nombre:'PLA Violeta',     hex:'#7030C0', marca:'Sunlu', material:'PLA',  dispo:'disponible'},
+  { id:'sl-10', nombre:'PLA Gris',        hex:'#909090', marca:'Sunlu', material:'PLA',  dispo:'stock'     },
+  { id:'sl-11', nombre:'PLA Marrón',      hex:'#7A4520', marca:'Sunlu', material:'PLA',  dispo:'disponible'},
+  { id:'sl-12', nombre:'PLA Verde Oliva', hex:'#4A6030', marca:'Sunlu', material:'PLA',  dispo:'disponible'},
+  { id:'sl-13', nombre:'PLA Azul Marino', hex:'#0A2060', marca:'Sunlu', material:'PLA',  dispo:'disponible'},
+  { id:'sl-14', nombre:'PLA Skin',        hex:'#F0C8A0', marca:'Sunlu', material:'PLA',  dispo:'consultar' },
+  { id:'sl-15', nombre:'PLA Clear',       hex:'#D0ECFA', marca:'Sunlu', material:'PLA',  dispo:'disponible', acabado:'clear' },
+  // ── SUNLU PLA MATTE ──
+  { id:'sl-m01', nombre:'Matte Blanco',       hex:'#EDEDED', marca:'Sunlu', material:'PLA Matte', dispo:'stock',     acabado:'matte' },
+  { id:'sl-m02', nombre:'Matte Negro',         hex:'#252525', marca:'Sunlu', material:'PLA Matte', dispo:'stock',     acabado:'matte' },
+  { id:'sl-m03', nombre:'Matte Azul Oscuro',   hex:'#1A2A5A', marca:'Sunlu', material:'PLA Matte', dispo:'stock',     acabado:'matte' },
+  { id:'sl-m04', nombre:'Matte Verde Oliva',   hex:'#3A5028', marca:'Sunlu', material:'PLA Matte', dispo:'stock',     acabado:'matte' },
+  { id:'sl-m05', nombre:'Matte Gris',          hex:'#808080', marca:'Sunlu', material:'PLA Matte', dispo:'disponible',acabado:'matte' },
+  { id:'sl-m06', nombre:'Matte Marrón',        hex:'#6A3820', marca:'Sunlu', material:'PLA Matte', dispo:'disponible',acabado:'matte' },
+  { id:'sl-m07', nombre:'Matte Beige',         hex:'#D8C8A0', marca:'Sunlu', material:'PLA Matte', dispo:'disponible',acabado:'matte' },
+  { id:'sl-m08', nombre:'Matte Rojo',          hex:'#C02020', marca:'Sunlu', material:'PLA Matte', dispo:'disponible',acabado:'matte' },
+  { id:'sl-m09', nombre:'Matte Naranja',       hex:'#D85010', marca:'Sunlu', material:'PLA Matte', dispo:'consultar', acabado:'matte' },
+  // ── SUNLU PLA SILK ──
+  { id:'sl-s01', nombre:'Silk Dorado',     hex:'#D4A020', marca:'Sunlu', material:'PLA Silk', dispo:'stock',     acabado:'silk' },
+  { id:'sl-s02', nombre:'Silk Plateado',   hex:'#B0B0B0', marca:'Sunlu', material:'PLA Silk', dispo:'stock',     acabado:'silk' },
+  { id:'sl-s03', nombre:'Silk Cobre',      hex:'#B06830', marca:'Sunlu', material:'PLA Silk', dispo:'stock',     acabado:'silk' },
+  { id:'sl-s04', nombre:'Silk Rose Gold',  hex:'#D49080', marca:'Sunlu', material:'PLA Silk', dispo:'disponible',acabado:'silk' },
+  { id:'sl-s05', nombre:'Silk Azul Plata', hex:'#6090C0', marca:'Sunlu', material:'PLA Silk', dispo:'disponible',acabado:'silk' },
+  { id:'sl-s06', nombre:'Silk Rainbow',    hex:'#E060A0', marca:'Sunlu', material:'PLA Silk', dispo:'consultar', acabado:'silk' },
+  // ── SUNLU PETG ──
+  { id:'sl-p01', nombre:'PETG Blanco',  hex:'#F2F2EE', marca:'Sunlu', material:'PETG', dispo:'stock'     },
+  { id:'sl-p02', nombre:'PETG Negro',   hex:'#1E1E1E', marca:'Sunlu', material:'PETG', dispo:'stock'     },
+  { id:'sl-p03', nombre:'PETG Rojo',    hex:'#C82020', marca:'Sunlu', material:'PETG', dispo:'disponible'},
+  { id:'sl-p04', nombre:'PETG Azul',    hex:'#1A48C0', marca:'Sunlu', material:'PETG', dispo:'disponible'},
+  { id:'sl-p05', nombre:'PETG Clear',   hex:'#C8E8F8', marca:'Sunlu', material:'PETG', dispo:'disponible', acabado:'clear' },
+  // ── SUNLU TPU ──
+  { id:'sl-t01', nombre:'TPU Blanco',   hex:'#F0F0EC', marca:'Sunlu', material:'TPU',  dispo:'stock'     },
+  { id:'sl-t02', nombre:'TPU Negro',    hex:'#202020', marca:'Sunlu', material:'TPU',  dispo:'stock'     },
+  { id:'sl-t03', nombre:'TPU Rojo',     hex:'#CC2020', marca:'Sunlu', material:'TPU',  dispo:'disponible'},
+  { id:'sl-t04', nombre:'TPU Amarillo', hex:'#F0C000', marca:'Sunlu', material:'TPU',  dispo:'disponible'},
+  { id:'sl-t05', nombre:'TPU Clear',    hex:'#D0EAF8', marca:'Sunlu', material:'TPU',  dispo:'consultar', acabado:'clear' },
+  // ── POLYMAKER POLYTERRA (Matte) ──
+  { id:'pt-01', nombre:'PolyTerra Blanco',     hex:'#EDEDEA', marca:'Polymaker', material:'PLA Matte', dispo:'disponible', acabado:'matte' },
+  { id:'pt-02', nombre:'PolyTerra Negro',      hex:'#252525', marca:'Polymaker', material:'PLA Matte', dispo:'disponible', acabado:'matte' },
+  { id:'pt-03', nombre:'PolyTerra Verde Bosque',hex:'#2A5A30',marca:'Polymaker', material:'PLA Matte', dispo:'consultar',  acabado:'matte' },
+  { id:'pt-04', nombre:'PolyTerra Azul Marino',hex:'#0A2050', marca:'Polymaker', material:'PLA Matte', dispo:'consultar',  acabado:'matte' },
+  { id:'pt-05', nombre:'PolyTerra Rojo',       hex:'#B82020', marca:'Polymaker', material:'PLA Matte', dispo:'consultar',  acabado:'matte' },
+  { id:'pt-06', nombre:'PolyTerra Naranja',    hex:'#D05010', marca:'Polymaker', material:'PLA Matte', dispo:'consultar',  acabado:'matte' },
+  { id:'pt-07', nombre:'PolyTerra Lavanda',    hex:'#8878B8', marca:'Polymaker', material:'PLA Matte', dispo:'consultar',  acabado:'matte' },
+  { id:'pt-08', nombre:'PolyTerra Khaki',      hex:'#A89060', marca:'Polymaker', material:'PLA Matte', dispo:'consultar',  acabado:'matte' },
+  // ── BAMBU LAB Clear ──
+  { id:'bl-14', nombre:'PETG-HF Clear', hex:'#D4EEF8', marca:'Bambu Lab', material:'PETG', dispo:'consultar', acabado:'clear' },
 ];
 
 // Estado de filtros activos
-let _cfMarca = '';
-let _cfDispo = '';
+let _cfMarca   = '';
+let _cfDispo   = '';
+let _cfAcabado = '';
 let _catalogoColores = [...COLORES_BASE];
 
 // ── Renderizar grilla ──
@@ -445,9 +502,10 @@ function renderColoresGrid() {
   if (!grid) return;
 
   const filtrados = _catalogoColores.filter(c => {
-    const okMarca = !_cfMarca || c.marca === _cfMarca;
-    const okDispo = !_cfDispo || c.dispo === _cfDispo;
-    return okMarca && okDispo;
+    const okMarca   = !_cfMarca   || c.marca === _cfMarca;
+    const okDispo   = !_cfDispo   || c.dispo === _cfDispo;
+    const okAcabado = !_cfAcabado || (c.acabado || '') === _cfAcabado;
+    return okMarca && okDispo && okAcabado;
   });
 
   if (!filtrados.length) {
@@ -492,6 +550,9 @@ function filtrarColores(tipo, valor, btn) {
   if (tipo === 'marca') {
     _cfMarca = valor;
     document.querySelectorAll('.cf-btn').forEach(b => b.classList.remove('active'));
+  } else if (tipo === 'acabado') {
+    _cfAcabado = valor;
+    document.querySelectorAll('.cf-btn-acabado').forEach(b => b.classList.remove('active'));
   } else {
     _cfDispo = valor;
     document.querySelectorAll('.cf-btn-dispo').forEach(b => b.classList.remove('active'));
