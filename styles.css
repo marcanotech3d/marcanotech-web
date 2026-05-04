@@ -596,16 +596,21 @@ section { padding: 100px 48px; }
 }
 .materials-visual {
   flex: 0 0 auto;
-  display: grid; grid-template-columns: repeat(4, 40px);
-  grid-template-rows: repeat(4, 40px);
-  gap: 6px;
+  display: flex; align-items: center; justify-content: center;
 }
-.swatch {
-  border-radius: 6px;
+.spool-frame {
+  width: 220px; height: 220px;
+  border-radius: 16px;
   border: 1px solid rgba(255,255,255,0.1);
-  transition: transform 0.2s;
+  background: rgba(255,255,255,0.04);
+  display: flex; align-items: center; justify-content: center;
+  overflow: hidden;
 }
-.swatch:hover { transform: scale(1.15); z-index: 1; }
+.spool-frame img {
+  width: 100%; height: 100%;
+  object-fit: cover;
+  transition: opacity 0.3s;
+}
 
 /* ══════════════════════════════════════════════
    PERSONALIZACION
