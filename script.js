@@ -6,6 +6,7 @@ const SITE_DATE = '2026-04-30';
 document.addEventListener('DOMContentLoaded', () => {
   const vEl = document.getElementById('site-version');
   if(vEl) vEl.textContent = `${SITE_VERSION} · ${SITE_DATE}`;
+  showMatInfo('pla');
 });
 
 // Scroll to top visibility
@@ -93,7 +94,8 @@ const MAT_DATA = {
 function showMatInfo(key) {
   const m = MAT_DATA[key]; if(!m) return;
   document.querySelectorAll('#mat-chips .chip').forEach(c => c.classList.remove('highlight'));
-  event.target.classList.add('highlight');
+  const chip = document.querySelector(`#mat-chips .chip[onclick="showMatInfo('${key}')"]`);
+  if(chip) chip.classList.add('highlight');
   const specsHtml = (m.specs||[]).map(([label,val])=>`
     <div style="background:rgba(0,0,0,0.3);border-radius:6px;padding:8px 10px">
       <div style="font-size:9px;color:rgba(255,255,255,0.4);letter-spacing:1.5px;text-transform:uppercase;margin-bottom:3px;font-family:monospace">${label}</div>
