@@ -39,6 +39,57 @@ window.addEventListener('scroll', () => {
     : 'rgba(0,0,0,0.8)';
 });
 
+const MAT_DATA = {
+  pla: {
+    name: 'PLA / PLA+', color: '#22c55e',
+    desc: 'El filamento más versátil y fácil de imprimir. PLA+ ofrece mayor resistencia al impacto y mejor acabado superficial.',
+    specs: [['Boquilla','190–220°C'],['Cama','60°C'],['Resistencia tracción','~50 MPa'],['Densidad','1.24 g/cm³']],
+    usos: 'Prototipos, decoración, juguetes, maquetas, educación'
+  },
+  petg: {
+    name: 'PETG', color: '#06b6d4',
+    desc: 'Combina la facilidad del PLA con la resistencia del ABS. Resistente a humedad, químicos y temperaturas moderadas.',
+    specs: [['Boquilla','230–250°C'],['Cama','70–85°C'],['Resistencia tracción','~50 MPa'],['Densidad','1.27 g/cm³']],
+    usos: 'Piezas funcionales, contenedores, protección, exterior'
+  },
+  tpu: {
+    name: 'TPU Flexible', color: '#f97316',
+    desc: 'Material elastomérico flexible y resistente al desgaste. Absorbe impactos y vibraciones. Resistente a aceites y grasas.',
+    specs: [['Boquilla','220–240°C'],['Cama','30–60°C'],['Elongación','~580%'],['Densidad','1.21 g/cm³']],
+    usos: 'Protectores, sellos, suelas, agarre, amortiguadores'
+  },
+  abs: {
+    name: 'ABS', color: '#505060',
+    desc: 'Alta resistencia mecánica y térmica. Postprocesable con acetona para acabado liso. Requiere ambiente controlado.',
+    specs: [['Boquilla','230–250°C'],['Cama','100–110°C'],['Resistencia tracción','~40 MPa'],['Densidad','1.04 g/cm³']],
+    usos: 'Piezas técnicas, carcasas, automoción, alta temperatura'
+  },
+  asa: {
+    name: 'ASA', color: '#9eaab8',
+    desc: 'Similar al ABS pero con alta resistencia UV. No se decolora ni fragiliza con exposición solar prolongada.',
+    specs: [['Boquilla','240–260°C'],['Cama','100°C'],['Resistencia UV','Alta'],['Densidad','1.07 g/cm³']],
+    usos: 'Exteriores, señalética, automoción, jardín'
+  },
+  placf: {
+    name: 'PLA-CF (Fibra de carbono)', color: '#1a1a2e',
+    desc: 'PLA reforzado con fibra de carbono. Rigidez y resistencia superiores con menor peso. Acabado mate técnico.',
+    specs: [['Boquilla','200–220°C'],['Cama','60°C'],['Módulo elástico','Alto'],['Boquilla mínima','0.4mm acero']],
+    usos: 'Drones, robótica, piezas estructurales, competición'
+  },
+  plamatte: {
+    name: 'PLA Matte', color: '#78716c',
+    desc: 'PLA con acabado mate profesional. Oculta las líneas de capa. No requiere postprocesado para aspecto sobrio.',
+    specs: [['Boquilla','190–220°C'],['Cama','60°C'],['Acabado','Mate sin brillo'],['Densidad','1.24 g/cm³']],
+    usos: 'Diseño industrial, props, arquitectura, presentaciones'
+  },
+  plasilk: {
+    name: 'PLA Silk', color: '#ca8a04',
+    desc: 'PLA con acabado sedoso y brillante. Efecto metálico o satinado sin pintura. Disponible en dorado, plateado, cobre y más.',
+    specs: [['Boquilla','200–230°C'],['Cama','60°C'],['Acabado','Sedoso brillante'],['Densidad','1.24 g/cm³']],
+    usos: 'Decoración, trofeos, figuras, joyería, gifts'
+  }
+};
+
 function showMatInfo(key) {
   const m = MAT_DATA[key]; if(!m) return;
   document.querySelectorAll('#mat-chips .chip').forEach(c => c.classList.remove('highlight'));
