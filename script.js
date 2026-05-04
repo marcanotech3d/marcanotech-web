@@ -891,6 +891,20 @@ document.addEventListener('DOMContentLoaded', () => {
   document.getElementById('auth-modal-overlay').addEventListener('click', function(e) {
     if(e.target === this) closeAuthModal();
   });
+
+  document.querySelectorAll('a[href^="#"]').forEach(a => {
+    const hash = a.getAttribute('href');
+    if(hash === '#' || !hash) return;
+    a.addEventListener('click', function() {
+      if(document.getElementById('portal-cliente').classList.contains('visible')) {
+        closePortal();
+        setTimeout(() => {
+          const target = document.querySelector(hash);
+          if(target) target.scrollIntoView({ behavior: 'smooth' });
+        }, 50);
+      }
+    });
+  });
 });
 
 // ── Inicializar Firebase ──
