@@ -597,13 +597,23 @@ function clearAuthError() {
   document.getElementById('auth-error').classList.remove('visible');
 }
 
+const _eyeOn  = `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>`;
+const _eyeOff = `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"/><line x1="1" y1="1" x2="23" y2="23"/></svg>`;
+function togglePwd(id, btn) {
+  const input = document.getElementById(id);
+  const show  = input.type === 'password';
+  input.type  = show ? 'text' : 'password';
+  btn.innerHTML = show ? _eyeOff : _eyeOn;
+}
+
 // ── Google OAuth ──
 function signInWithGoogle() {
   if (!firebaseAuth) { showAuthError('Firebase no disponible.'); return; }
   const provider = new firebase.auth.GoogleAuthProvider();
   firebaseAuth.signInWithPopup(provider)
     .then(result => {
-      ensurePortalProfile(result.user);
+      return ensurePortalProfile(result.user)
+        .then(() => { if (currentPortalUser) loadPortalData(result.user); });
     })
     .catch(err => {
       showAuthError(translateAuthError(err.code));
@@ -629,11 +639,14 @@ function registerWithEmail() {
   const phone = document.getElementById('reg-phone').value.trim();
   if(!name || !email || !pass) { showAuthError('Completá nombre, email y contraseña.'); return; }
   if(pass.length < 6) { showAuthError('La contraseña debe tener al menos 6 caracteres.'); return; }
+  const confirm = document.getElementById('reg-password-confirm').value;
+  if(pass !== confirm) { showAuthError('Las contraseñas no coinciden.'); return; }
   clearAuthError();
   firebaseAuth.createUserWithEmailAndPassword(email, pass)
     .then(result => {
       return result.user.updateProfile({ displayName: name })
-        .then(() => ensurePortalProfile(result.user, { nombre: name, telefono: phone }));
+        .then(() => ensurePortalProfile(result.user, { nombre: name, telefono: phone }))
+        .then(() => onUserLoggedIn(result.user));
     })
     .catch(err => showAuthError(translateAuthError(err.code)));
 }
@@ -658,11 +671,11 @@ function signOutUser() {
 
 // ── Crear / asegurar perfil en RTDB ──
 function ensurePortalProfile(user, extra = {}) {
-  if (!firebaseDB) return;
+  if (!firebaseDB) return Promise.resolve();
   const ref = firebaseDB.ref(`marcanotech-dashboard/clientes-portal/${user.uid}/perfil`);
-  ref.once('value').then(snap => {
+  return ref.once('value').then(snap => {
     if (!snap.exists()) {
-      ref.set({
+      return ref.set({
         nombre:    extra.nombre   || user.displayName || '',
         email:     user.email     || '',
         telefono:  extra.telefono || '',

@@ -1377,7 +1377,12 @@
       </div>
       <div class="auth-field">
         <label>Contraseña</label>
-        <input type="password" id="login-password" placeholder="••••••••" autocomplete="current-password">
+        <div class="auth-password-wrap">
+          <input type="password" id="login-password" placeholder="••••••••" autocomplete="current-password">
+          <button type="button" class="auth-eye-btn" onclick="togglePwd('login-password',this)" tabindex="-1">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+          </button>
+        </div>
       </div>
       <button class="auth-submit-btn" onclick="signInWithEmail()">Iniciar sesión</button>
       <div style="text-align:center;margin-top:12px">
@@ -1397,7 +1402,21 @@
       </div>
       <div class="auth-field">
         <label>Contraseña</label>
-        <input type="password" id="reg-password" placeholder="Mínimo 6 caracteres" autocomplete="new-password">
+        <div class="auth-password-wrap">
+          <input type="password" id="reg-password" placeholder="Mínimo 6 caracteres" autocomplete="new-password">
+          <button type="button" class="auth-eye-btn" onclick="togglePwd('reg-password',this)" tabindex="-1">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+          </button>
+        </div>
+      </div>
+      <div class="auth-field">
+        <label>Confirmar contraseña</label>
+        <div class="auth-password-wrap">
+          <input type="password" id="reg-password-confirm" placeholder="Repetí tu contraseña" autocomplete="new-password">
+          <button type="button" class="auth-eye-btn" onclick="togglePwd('reg-password-confirm',this)" tabindex="-1">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+          </button>
+        </div>
       </div>
       <div class="auth-field">
         <label>Teléfono / WhatsApp <span style="color:#505060;font-weight:400">(opcional)</span></label>
@@ -1423,10 +1442,16 @@
       </div>
       <div style="font-size:12px;color:#505060;font-family:'DM Mono',monospace;margin-top:4px" id="portal-email-display"></div>
     </div>
-    <button class="portal-signout-btn" onclick="signOutUser()">
-      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-right:5px;vertical-align:middle"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
-      Cerrar sesión
-    </button>
+    <div style="display:flex;gap:10px;align-items:center">
+      <button class="portal-signout-btn" onclick="closePortal()" style="background:rgba(255,255,255,0.04);color:#9eaab8;border-color:rgba(255,255,255,0.08)">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-right:5px;vertical-align:middle"><polyline points="15 18 9 12 15 6"/></svg>
+        Volver al sitio
+      </button>
+      <button class="portal-signout-btn" onclick="signOutUser()">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-right:5px;vertical-align:middle"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+        Cerrar sesión
+      </button>
+    </div>
   </div>
 
   <div class="portal-grid">

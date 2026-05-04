@@ -1030,6 +1030,14 @@ footer {
   outline: none; transition: border-color 0.2s; box-sizing: border-box;
 }
 .auth-field input:focus { border-color: var(--ferrari); }
+.auth-password-wrap { position: relative; }
+.auth-password-wrap input { padding-right: 40px; }
+.auth-eye-btn {
+  position: absolute; right: 10px; top: 50%; transform: translateY(-50%);
+  background: none; border: none; cursor: pointer; color: #606070;
+  padding: 0; line-height: 0; transition: color 0.2s;
+}
+.auth-eye-btn:hover { color: #c0c0cc; }
 .auth-submit-btn {
   width: 100%; padding: 12px; background: var(--ferrari);
   color: #fff; border: none; border-radius: 8px;
