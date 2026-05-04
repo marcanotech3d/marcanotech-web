@@ -104,8 +104,13 @@ function showMatInfo(key) {
   document.querySelectorAll('#mat-chips .chip').forEach(c => c.classList.remove('highlight'));
   const chip = document.querySelector(`#mat-chips .chip[onclick="showMatInfo('${key}')"]`);
   if(chip) chip.classList.add('highlight');
-  const spoolImg = document.getElementById('mat-spool-img');
-  if(spoolImg && m.img) { spoolImg.style.opacity = '0'; setTimeout(() => { spoolImg.src = m.img; spoolImg.style.opacity = '1'; }, 150); }
+  const spoolImg   = document.getElementById('mat-spool-img');
+  const spoolFrame = document.querySelector('.spool-frame');
+  if(spoolFrame && m.color) spoolFrame.style.borderColor = m.color;
+  if(spoolImg && m.img) {
+    spoolImg.style.opacity = '0';
+    setTimeout(() => { spoolImg.src = m.img; spoolImg.style.opacity = '1'; }, 260);
+  }
   const specsHtml = (m.specs||[]).map(([label,val])=>`
     <div style="background:rgba(0,0,0,0.3);border-radius:6px;padding:8px 10px">
       <div style="font-size:9px;color:rgba(255,255,255,0.4);letter-spacing:1.5px;text-transform:uppercase;margin-bottom:3px;font-family:monospace">${label}</div>
