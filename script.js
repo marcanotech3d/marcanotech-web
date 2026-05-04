@@ -423,15 +423,26 @@ const COLORES_BASE = [
   { id:'gr-05', nombre:'G3 Natural',      hex:'#E8E0C8', marca:'Grilon3',    material:'PLA+', dispo:'disponible'},
   { id:'gr-06', nombre:'G3 Blanco PETG',  hex:'#F2F2EE', marca:'Grilon3',    material:'PETG', dispo:'disponible'},
   { id:'gr-07', nombre:'G3 Negro PETG',   hex:'#1C1C1C', marca:'Grilon3',    material:'PETG', dispo:'disponible'},
-  // ── ELEGOO RESINA ──
-  { id:'eg-01', nombre:'ABS-Like Blanco', hex:'#F5F5F0', marca:'Elegoo',     material:'Resina UV', dispo:'stock'     },
-  { id:'eg-02', nombre:'ABS-Like Negro',  hex:'#1A1A1A', marca:'Elegoo',     material:'Resina UV', dispo:'stock'     },
-  { id:'eg-03', nombre:'ABS-Like Gris',   hex:'#888888', marca:'Elegoo',     material:'Resina UV', dispo:'stock'     },
-  { id:'eg-04', nombre:'ABS-Like Rojo',   hex:'#C82020', marca:'Elegoo',     material:'Resina UV', dispo:'disponible'},
-  { id:'eg-05', nombre:'ABS-Like Azul',   hex:'#1848C0', marca:'Elegoo',     material:'Resina UV', dispo:'disponible'},
-  { id:'eg-06', nombre:'ABS-Like Verde',  hex:'#208040', marca:'Elegoo',     material:'Resina UV', dispo:'consultar' },
-  { id:'eg-07', nombre:'Transparente',    hex:'#C0E0F0', marca:'Elegoo',     material:'Resina UV', dispo:'consultar', acabado:'clear' },
-  { id:'eg-08', nombre:'Beige',           hex:'#E8D8B0', marca:'Elegoo',     material:'Resina UV', dispo:'consultar' },
+  // ── ELEGOO FDM PLA ──
+  { id:'eg-01', nombre:'PLA Blanco',     hex:'#F5F5F0', marca:'Elegoo', material:'PLA',  dispo:'stock',     desc:'PLA estándar blanco puro, ideal para prototipos y piezas de uso general.' },
+  { id:'eg-02', nombre:'PLA Negro',      hex:'#1A1A1A', marca:'Elegoo', material:'PLA',  dispo:'stock',     desc:'Negro intenso con excelente cobertura de capas.' },
+  { id:'eg-03', nombre:'PLA Gris',       hex:'#888888', marca:'Elegoo', material:'PLA',  dispo:'stock',     desc:'Gris neutro versátil para prototipos industriales.' },
+  { id:'eg-04', nombre:'PLA Rojo',       hex:'#CC2020', marca:'Elegoo', material:'PLA',  dispo:'disponible',desc:'Rojo saturado de alta visibilidad.' },
+  { id:'eg-05', nombre:'PLA Azul',       hex:'#1848C0', marca:'Elegoo', material:'PLA',  dispo:'disponible',desc:'Azul medio, buena adherencia y acabado.' },
+  { id:'eg-06', nombre:'PLA Verde',      hex:'#208040', marca:'Elegoo', material:'PLA',  dispo:'disponible',desc:'Verde vibrante para señalética y decoración.' },
+  { id:'eg-07', nombre:'PLA Amarillo',   hex:'#F5C000', marca:'Elegoo', material:'PLA',  dispo:'consultar', desc:'Amarillo brillante de alta visibilidad.' },
+  { id:'eg-08', nombre:'PLA Naranja',    hex:'#F06010', marca:'Elegoo', material:'PLA',  dispo:'consultar', desc:'Naranja intenso, resalta en cualquier entorno.' },
+  { id:'eg-09', nombre:'PLA Rosa',       hex:'#F07090', marca:'Elegoo', material:'PLA',  dispo:'consultar', desc:'Rosa suave para accesorios y piezas decorativas.' },
+  { id:'eg-10', nombre:'PLA Morado',     hex:'#7030C0', marca:'Elegoo', material:'PLA',  dispo:'consultar', desc:'Morado profundo, ideal para figuras y display.' },
+  { id:'eg-11', nombre:'PLA Clear',      hex:'#C8E8F8', marca:'Elegoo', material:'PLA',  dispo:'consultar', desc:'PLA traslúcido, permite paso de luz difuso.', acabado:'clear' },
+  // ── ELEGOO FDM PETG ──
+  { id:'eg-12', nombre:'PETG Blanco',   hex:'#F2F2EE', marca:'Elegoo', material:'PETG', dispo:'stock',     desc:'PETG blanco resistente a humedad y temperatura.' },
+  { id:'eg-13', nombre:'PETG Negro',    hex:'#1E1E1E', marca:'Elegoo', material:'PETG', dispo:'stock',     desc:'PETG negro para piezas funcionales de alta resistencia.' },
+  { id:'eg-14', nombre:'PETG Clear',    hex:'#C0E8F8', marca:'Elegoo', material:'PETG', dispo:'consultar', desc:'PETG transparente, resistente a impactos y UV moderado.', acabado:'clear' },
+  // ── ELEGOO FDM ABS ──
+  { id:'eg-15', nombre:'ABS Blanco',    hex:'#F0F0EC', marca:'Elegoo', material:'ABS',  dispo:'consultar', desc:'ABS blanco postprocesable con acetona. Alta resistencia térmica.' },
+  { id:'eg-16', nombre:'ABS Negro',     hex:'#1E1E1E', marca:'Elegoo', material:'ABS',  dispo:'consultar', desc:'ABS negro para carcasas técnicas y piezas de ingeniería.' },
+  { id:'eg-17', nombre:'ABS Gris',      hex:'#888888', marca:'Elegoo', material:'ABS',  dispo:'consultar', desc:'ABS gris neutro, fácil de pintar y postprocesar.' },
   // ── SUNLU PLA ──
   { id:'sl-01', nombre:'PLA Blanco',      hex:'#F5F5F0', marca:'Sunlu', material:'PLA',  dispo:'stock'     },
   { id:'sl-02', nombre:'PLA Negro',       hex:'#1A1A1A', marca:'Sunlu', material:'PLA',  dispo:'stock'     },
@@ -490,6 +501,72 @@ const COLORES_BASE = [
   { id:'bl-14', nombre:'PETG-HF Clear', hex:'#D4EEF8', marca:'Bambu Lab', material:'PETG', dispo:'consultar', acabado:'clear' },
 ];
 
+// Descripciones por id para colores sin campo desc
+const COLOR_DESCS = {
+  'bl-01':'Blanco clásico Bambu, neutro para prototipos y piezas pintables.',
+  'bl-02':'Negro profundo con brillo uniforme. Ideal para piezas técnicas.',
+  'bl-03':'Blanco con tinte cálido, acabado suave tipo jade.',
+  'bl-04':'Naranja vibrante Bambu, alta visibilidad y buen flujo.',
+  'bl-05':'Rojo saturado con pigmentación intensa.',
+  'bl-06':'Azul medio brillante para piezas decorativas y funcionales.',
+  'bl-07':'Amarillo canario de alto contraste.',
+  'bl-08':'Verde bosque, buena cobertura y adherencia entre capas.',
+  'bl-09':'Gris ceniza neutro, versátil para cualquier aplicación.',
+  'bl-10':'Rosa pastel suave para accesorios y decoración.',
+  'bl-11':'PETG negro jade de Bambu, resistente a impactos y humedad.',
+  'bl-12':'PETG blanco jade semitransparente, ideal para piezas funcionales.',
+  'bl-13':'PETG azul brillante con excelente resistencia química.',
+  'bl-14':'PETG-HF traslúcido de Bambu, deja pasar la luz difusamente.',
+  'es-01':'PLA+ blanco eSUN, alta calidad de superficie y fácil impresión.',
+  'es-02':'PLA+ negro profundo con cobertura uniforme de capas.',
+  'es-03':'Gris medio, ideal para prototipos de apariencia técnica.',
+  'es-04':'Rojo eSUN de alta saturación y buen acabado.',
+  'es-05':'Amarillo intenso para piezas de señalización.',
+  'es-06':'Azul cobalto con acabado brillante.',
+  'es-07':'Verde esmeralda, cobertura sólida.',
+  'es-08':'Rosa fucsia vibrante.',
+  'es-09':'Violeta oscuro para figuras y display.',
+  'es-10':'Naranja fuego de alto impacto visual.',
+  'es-11':'PLA+ semitransparente eSUN, deja pasar luz difusa.',
+  'es-12':'PETG blanco eSUN, resistente a la humedad y productos químicos.',
+  'es-13':'PETG negro eSUN, alta resistencia mecánica.',
+  'pm-01':'PLA Pro blanco Polymaker de alta resistencia y acabado mate.',
+  'pm-02':'Gris carbón oscuro con textura refinada.',
+  'pm-03':'Negro galaxia con partículas que simulan profundidad estelar.',
+  'pm-04':'Rojo puro Polymaker de alta durabilidad.',
+  'pm-05':'Azul real con acabado brillante profesional.',
+  'pm-06':'Verde militar, ideal para modelos y piezas outdoor.',
+  'pm-07':'Rosa sakura delicado, acabado satinado.',
+  'pm-08':'Verde azulado teal, acabado elegante.',
+  'pm-09':'PETG blanco Polymaker con excelente claridad y resistencia.',
+  'pm-10':'PETG carbón oscuro para piezas funcionales de alta exigencia.',
+  'pl-01':'PLA+ blanco PrintaLot, económico y de buena calidad.',
+  'pl-02':'Negro sólido PrintaLot para uso general.',
+  'pl-03':'Rojo PrintaLot de buena saturación.',
+  'pl-04':'Azul PrintaLot estándar, buena adhesión.',
+  'pl-05':'Amarillo brillante PrintaLot.',
+  'pl-06':'Verde hierba PrintaLot.',
+  'pl-07':'Naranja PrintaLot de uso versátil.',
+  'pl-08':'Gris medio PrintaLot para prototipos.',
+  'pl-09':'PETG blanco PrintaLot, resistente y económico.',
+  'pl-10':'PETG negro PrintaLot para piezas funcionales.',
+  'gr-01':'PLA+ blanco Grilon3, formulación local argentina.',
+  'gr-02':'Negro Grilon3 de gran cobertura.',
+  'gr-03':'Rojo Grilon3, buena saturación.',
+  'gr-04':'Azul Grilon3 estándar.',
+  'gr-05':'Natural translúcido levemente amarillento, aspecto orgánico.',
+  'gr-06':'PETG blanco Grilon3 local, buena resistencia mecánica.',
+  'gr-07':'PETG negro Grilon3 para piezas técnicas.',
+  'pt-01':'PolyTerra blanco matte Polymaker, acabado tierra sin brillo.',
+  'pt-02':'PolyTerra negro matte, profundo y sobrio.',
+  'pt-03':'Verde bosque matte oscuro, ideal para miniaturas y outdoor.',
+  'pt-04':'Azul marino matte profundo.',
+  'pt-05':'Rojo matte apagado, elegante y moderno.',
+  'pt-06':'Naranja tierra matte, aspecto cálido natural.',
+  'pt-07':'Lavanda matte suave, ideal para decoración.',
+  'pt-08':'Khaki matte, tono tierra neutro versátil.',
+};
+
 // Estado de filtros activos
 let _cfMarca   = '';
 let _cfDispo   = '';
@@ -525,13 +602,14 @@ function renderColoresGrid() {
   }
 
   grid.innerHTML = filtrados.map(c => {
-    const dc = dispoColor[c.dispo] || '#9eaab8';
-    const dl = dispoLabel[c.dispo] || c.dispo;
+    const dc   = dispoColor[c.dispo] || '#9eaab8';
+    const dl   = dispoLabel[c.dispo] || c.dispo;
     const dark = needsDark(c.hex);
+    const desc = c.desc || COLOR_DESCS[c.id] || '';
     return `
-    <div class="color-card" title="${c.nombre} · ${c.marca} · ${c.material} · ${dl}">
+    <div class="color-card">
       <div class="color-card-swatch" style="background:${c.hex}">
-        <div class="color-card-dispo" style="background:${dc}"></div>
+        <div class="color-card-dispo" style="background:${dc}" title="${dl}"></div>
       </div>
       <div class="color-card-body">
         <div class="color-card-name">${c.nombre}</div>
@@ -540,6 +618,7 @@ function renderColoresGrid() {
           <span>${c.hex.toUpperCase()}</span>
         </div>
         <span class="color-card-mat">${c.material}</span>
+        ${desc ? `<div class="color-card-desc">${desc}</div>` : ''}
       </div>
     </div>`;
   }).join('');
