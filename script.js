@@ -626,7 +626,7 @@ const COLOR_DESCS = {
 };
 
 // Estado de filtros activos
-let _cfMarca   = '';
+let _cfMarca   = 'Bambu Lab';
 let _cfDispo   = '';
 let _cfAcabado = '';
 let _catalogoColores = [...COLORES_BASE];
