@@ -807,7 +807,16 @@ function onUserLoggedIn(user) {
   if(mobileLink) mobileLink.textContent = 'Mi Portal';
 
   closeAuthModal();
-  loadPortalData(user);
+
+  const hash = window.location.hash;
+  if (hash && hash !== '#' && document.querySelector(hash)) {
+    setTimeout(() => {
+      document.querySelector(hash).scrollIntoView({ behavior: 'smooth' });
+      history.replaceState(null, '', window.location.pathname);
+    }, 100);
+  } else {
+    loadPortalData(user);
+  }
 }
 
 function onUserLoggedOut() {
