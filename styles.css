@@ -1123,6 +1123,12 @@ footer {
   transition: border-color 0.2s;
 }
 .portal-card:hover { border-color: rgba(249,115,22,0.2); }
+.portal-card-admin { border-color: rgba(37,99,235,0.2); }
+.portal-card-admin:hover { border-color: rgba(96,165,250,0.4); }
+.portal-admin-client-tag {
+  font-size: 10px; color: #60a5fa; font-family: 'DM Mono', monospace;
+  margin-bottom: 3px; letter-spacing: 0.3px;
+}
 .portal-card-header {
   display: flex; align-items: center; gap: 10px;
   margin-bottom: 16px;

@@ -1482,7 +1482,7 @@
     </div>
 
     <!-- Mis Pedidos / Cotizaciones -->
-    <div class="portal-card">
+    <div class="portal-card" id="portal-card-mis-pedidos">
       <div class="portal-card-header">
         <div class="portal-card-icon">📦</div>
         <div>
@@ -1499,7 +1499,7 @@
     </div>
 
     <!-- Historial de compras -->
-    <div class="portal-card">
+    <div class="portal-card" id="portal-card-mis-compras">
       <div class="portal-card-header">
         <div class="portal-card-icon">🧾</div>
         <div>
@@ -1516,7 +1516,7 @@
     </div>
 
     <!-- Proyectos personalizados -->
-    <div class="portal-card">
+    <div class="portal-card" id="portal-card-mis-proyectos">
       <div class="portal-card-header">
         <div class="portal-card-icon">🎨</div>
         <div>
@@ -1562,6 +1562,67 @@
           </a>
         </div>
       </div>
+    </div>
+
+    <!-- ADMIN: Pedidos de todos los clientes -->
+    <div class="portal-card portal-card-admin" id="portal-admin-pedidos-card" style="display:none">
+      <div class="portal-card-header">
+        <div class="portal-card-icon" style="background:rgba(37,99,235,0.15);color:#60a5fa">📋</div>
+        <div>
+          <div class="portal-card-title">Pedidos de Clientes</div>
+          <div class="portal-card-sub" id="portal-admin-pedidos-count">Cargando...</div>
+        </div>
+      </div>
+      <div id="portal-admin-pedidos-list">
+        <div class="portal-empty"><div class="portal-empty-icon">📭</div>Cargando pedidos...</div>
+      </div>
+    </div>
+
+    <!-- ADMIN: Historial de compras de todos -->
+    <div class="portal-card portal-card-admin" id="portal-admin-compras-card" style="display:none">
+      <div class="portal-card-header">
+        <div class="portal-card-icon" style="background:rgba(37,99,235,0.15);color:#60a5fa">💰</div>
+        <div>
+          <div class="portal-card-title">Historial de Compras</div>
+          <div class="portal-card-sub" id="portal-admin-compras-count">Cargando...</div>
+        </div>
+      </div>
+      <div id="portal-admin-compras-list">
+        <div class="portal-empty"><div class="portal-empty-icon">🛒</div>Cargando historial...</div>
+      </div>
+    </div>
+
+    <!-- ADMIN: Proyectos de todos los clientes -->
+    <div class="portal-card portal-card-admin" id="portal-admin-proyectos-card" style="display:none">
+      <div class="portal-card-header">
+        <div class="portal-card-icon" style="background:rgba(37,99,235,0.15);color:#60a5fa">🎨</div>
+        <div>
+          <div class="portal-card-title">Proyectos Personalizados</div>
+          <div class="portal-card-sub" id="portal-admin-proyectos-count">Cargando...</div>
+        </div>
+      </div>
+      <div id="portal-admin-proyectos-list">
+        <div class="portal-empty"><div class="portal-empty-icon">✏️</div>Cargando proyectos...</div>
+      </div>
+    </div>
+
+    <!-- ADMIN: Acceso al Dashboard -->
+    <div class="portal-card portal-card-admin" id="portal-admin-dashboard-card" style="display:none">
+      <div class="portal-card-header">
+        <div class="portal-card-icon" style="background:rgba(37,99,235,0.15);color:#60a5fa">⚙</div>
+        <div>
+          <div class="portal-card-title">Panel de Control</div>
+          <div class="portal-card-sub">Gestión administrativa</div>
+        </div>
+      </div>
+      <p style="font-size:13px;color:#707080;line-height:1.6;margin-bottom:16px">
+        Accedé al dashboard completo para gestionar clientes, pedidos, inventario, stock y métricas del negocio.
+      </p>
+      <a href="marcanotech-dashboard.html" target="_blank"
+        style="display:block;text-align:center;padding:11px;background:linear-gradient(135deg,#1e3a5f,#2563eb);color:#fff;border-radius:8px;font-size:13px;font-weight:700;text-decoration:none;letter-spacing:0.5px;transition:opacity 0.2s"
+        onmouseover="this.style.opacity='0.82'" onmouseout="this.style.opacity='1'">
+        ⚙ Abrir Dashboard
+      </a>
     </div>
 
     <!-- Cotizar nuevo proyecto -->

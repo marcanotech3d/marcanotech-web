@@ -1018,14 +1018,28 @@ function renderPortal(user, data) {
     document.getElementById('portal-vip-discount').textContent = perfil.descuento + '%';
   }
 
-  // Pedidos
-  renderPedidos(data.pedidos);
-
-  // Compras
-  renderCompras(data.compras);
-
-  // Proyectos
-  renderProyectos(data.proyectos);
+  // Cards cliente vs admin
+  if (isAdmin) {
+    document.getElementById('portal-card-mis-pedidos').style.display   = 'none';
+    document.getElementById('portal-card-mis-compras').style.display   = 'none';
+    document.getElementById('portal-card-mis-proyectos').style.display = 'none';
+    document.getElementById('portal-admin-pedidos-card').style.display   = 'block';
+    document.getElementById('portal-admin-compras-card').style.display   = 'block';
+    document.getElementById('portal-admin-proyectos-card').style.display = 'block';
+    document.getElementById('portal-admin-dashboard-card').style.display = 'block';
+    loadAdminData();
+  } else {
+    document.getElementById('portal-card-mis-pedidos').style.display   = 'block';
+    document.getElementById('portal-card-mis-compras').style.display   = 'block';
+    document.getElementById('portal-card-mis-proyectos').style.display = 'block';
+    document.getElementById('portal-admin-pedidos-card').style.display   = 'none';
+    document.getElementById('portal-admin-compras-card').style.display   = 'none';
+    document.getElementById('portal-admin-proyectos-card').style.display = 'none';
+    document.getElementById('portal-admin-dashboard-card').style.display = 'none';
+    renderPedidos(data.pedidos);
+    renderCompras(data.compras);
+    renderProyectos(data.proyectos);
+  }
 
   showPortal();
 }
@@ -1043,9 +1057,22 @@ function renderPortalOffline(user) {
   document.getElementById('portal-member-since').textContent  = '—';
   document.getElementById('portal-phone-display').textContent = '—';
   document.getElementById('portal-tier-display').textContent  = isAdmin ? '⚙ Administrador' : 'Estándar';
-  renderPedidos(null);
-  renderCompras(null);
-  renderProyectos(null);
+  if (isAdmin) {
+    document.getElementById('portal-card-mis-pedidos').style.display   = 'none';
+    document.getElementById('portal-card-mis-compras').style.display   = 'none';
+    document.getElementById('portal-card-mis-proyectos').style.display = 'none';
+    document.getElementById('portal-admin-pedidos-card').style.display   = 'block';
+    document.getElementById('portal-admin-compras-card').style.display   = 'block';
+    document.getElementById('portal-admin-proyectos-card').style.display = 'block';
+    document.getElementById('portal-admin-dashboard-card').style.display = 'block';
+    renderAdminPedidos([]);
+    renderAdminCompras([]);
+    renderAdminProyectos([]);
+  } else {
+    renderPedidos(null);
+    renderCompras(null);
+    renderProyectos(null);
+  }
   showPortal();
 }
 
@@ -1104,6 +1131,96 @@ function renderProyectos(proyectos) {
   count.textContent = arr.length + (arr.length === 1 ? ' proyecto' : ' proyectos');
   list.innerHTML = arr.map(p => `
     <div class="portal-list-item">
+      <div class="portal-item-title">${escHtml(p.nombre || p.titulo || 'Proyecto')}</div>
+      <div class="portal-item-meta">
+        <span>${formatDateShort(p.fecha)}</span>
+        <span class="portal-status ${getStatusClass(p.estado)}">${p.estado || 'Pendiente'}</span>
+        ${p.progreso ? `<span>${p.progreso}%</span>` : ''}
+      </div>
+      ${p.nota ? `<div style="font-size:11px;color:#505060;margin-top:5px;font-style:italic">${escHtml(p.nota)}</div>` : ''}
+    </div>`).join('');
+}
+
+// ── Admin: carga datos de todos los clientes ──
+function loadAdminData() {
+  if (!firebaseDB) return;
+  const ref = firebaseDB.ref('marcanotech-dashboard/clientes-portal');
+  ref.once('value').then(snap => {
+    const clientes = snap.val() || {};
+    const allPedidos = [], allCompras = [], allProyectos = [];
+    Object.values(clientes).forEach(cliente => {
+      const tag = (cliente.perfil && (cliente.perfil.email || cliente.perfil.nombre)) || 'Cliente';
+      if (cliente.pedidos)   Object.values(cliente.pedidos).forEach(p  => allPedidos.push({ ...p,  _tag: tag }));
+      if (cliente.compras)   Object.values(cliente.compras).forEach(c  => allCompras.push({ ...c,  _tag: tag }));
+      if (cliente.proyectos) Object.values(cliente.proyectos).forEach(pr => allProyectos.push({ ...pr, _tag: tag }));
+    });
+    renderAdminPedidos(allPedidos);
+    renderAdminCompras(allCompras);
+    renderAdminProyectos(allProyectos);
+  }).catch(() => {
+    renderAdminPedidos([]);
+    renderAdminCompras([]);
+    renderAdminProyectos([]);
+  });
+}
+
+function renderAdminPedidos(arr) {
+  const list  = document.getElementById('portal-admin-pedidos-list');
+  const count = document.getElementById('portal-admin-pedidos-count');
+  if (!arr.length) {
+    count.textContent = '0 pedidos';
+    list.innerHTML = `<div class="portal-empty"><div class="portal-empty-icon">📭</div>No hay pedidos registrados aún.</div>`;
+    return;
+  }
+  arr.sort((a, b) => new Date(b.fecha || 0) - new Date(a.fecha || 0));
+  count.textContent = arr.length + (arr.length === 1 ? ' pedido' : ' pedidos');
+  list.innerHTML = arr.map(p => `
+    <div class="portal-list-item">
+      <div class="portal-admin-client-tag">${escHtml(p._tag)}</div>
+      <div class="portal-item-title">${escHtml(p.titulo || p.descripcion || 'Pedido')}</div>
+      <div class="portal-item-meta">
+        <span>${formatDateShort(p.fecha)}</span>
+        <span class="portal-status ${getStatusClass(p.estado)}">${p.estado || 'Pendiente'}</span>
+        ${p.total ? `<span>$${p.total}</span>` : ''}
+      </div>
+    </div>`).join('');
+}
+
+function renderAdminCompras(arr) {
+  const list  = document.getElementById('portal-admin-compras-list');
+  const count = document.getElementById('portal-admin-compras-count');
+  if (!arr.length) {
+    count.textContent = '0 compras';
+    list.innerHTML = `<div class="portal-empty"><div class="portal-empty-icon">🛒</div>Sin compras registradas aún.</div>`;
+    return;
+  }
+  arr.sort((a, b) => new Date(b.fecha || 0) - new Date(a.fecha || 0));
+  count.textContent = arr.length + (arr.length === 1 ? ' compra' : ' compras');
+  list.innerHTML = arr.map(c => `
+    <div class="portal-list-item">
+      <div class="portal-admin-client-tag">${escHtml(c._tag)}</div>
+      <div class="portal-item-title">${escHtml(c.descripcion || c.titulo || 'Compra')}</div>
+      <div class="portal-item-meta">
+        <span>${formatDateShort(c.fecha)}</span>
+        ${c.monto ? `<span style="color:#34d399;font-weight:700">$${c.monto}</span>` : ''}
+        <span class="portal-status completado">Completado</span>
+      </div>
+    </div>`).join('');
+}
+
+function renderAdminProyectos(arr) {
+  const list  = document.getElementById('portal-admin-proyectos-list');
+  const count = document.getElementById('portal-admin-proyectos-count');
+  if (!arr.length) {
+    count.textContent = '0 proyectos';
+    list.innerHTML = `<div class="portal-empty"><div class="portal-empty-icon">✏️</div>Sin proyectos personalizados aún.</div>`;
+    return;
+  }
+  arr.sort((a, b) => new Date(b.fecha || 0) - new Date(a.fecha || 0));
+  count.textContent = arr.length + (arr.length === 1 ? ' proyecto' : ' proyectos');
+  list.innerHTML = arr.map(p => `
+    <div class="portal-list-item">
+      <div class="portal-admin-client-tag">${escHtml(p._tag)}</div>
       <div class="portal-item-title">${escHtml(p.nombre || p.titulo || 'Proyecto')}</div>
       <div class="portal-item-meta">
         <span>${formatDateShort(p.fecha)}</span>
