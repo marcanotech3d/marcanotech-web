@@ -976,17 +976,21 @@ function loadPortalData(user) {
   }).catch(() => renderPortalOffline(user));
 }
 
+const ADMIN_EMAIL = 'wmarcano.business@gmail.com';
+
 function renderPortal(user, data) {
-  const perfil = data.perfil || {};
-  const nombre = perfil.nombre || user.displayName || user.email.split('@')[0];
-  const tier   = perfil.tier || 'standard';
-  const isVip  = tier === 'vip';
+  const perfil  = data.perfil || {};
+  const nombre  = perfil.nombre || user.displayName || user.email.split('@')[0];
+  const tier    = perfil.tier || 'standard';
+  const isAdmin = user.email === ADMIN_EMAIL;
+  const isVip   = !isAdmin && tier === 'vip';
 
   // Header
   document.getElementById('portal-username').textContent = nombre.toUpperCase();
   document.getElementById('portal-email-display').textContent = user.email;
-  document.getElementById('portal-badge-vip').style.display  = isVip  ? 'inline' : 'none';
-  document.getElementById('portal-badge-std').style.display  = !isVip ? 'inline' : 'none';
+  document.getElementById('portal-badge-admin').style.display = isAdmin ? 'inline' : 'none';
+  document.getElementById('portal-badge-vip').style.display   = isVip   ? 'inline' : 'none';
+  document.getElementById('portal-badge-std').style.display   = (!isAdmin && !isVip) ? 'inline' : 'none';
 
   // Perfil card
   const avatarEl = document.getElementById('portal-profile-avatar');
@@ -999,7 +1003,7 @@ function renderPortal(user, data) {
   document.getElementById('portal-profile-name').textContent  = nombre;
   document.getElementById('portal-profile-email').textContent = user.email;
   document.getElementById('portal-phone-display').textContent = perfil.telefono || 'No registrado';
-  document.getElementById('portal-tier-display').textContent  = isVip ? '★ VIP' : 'Estándar';
+  document.getElementById('portal-tier-display').textContent  = isAdmin ? '⚙ Administrador' : isVip ? '★ VIP' : 'Estándar';
 
   // Fecha de ingreso
   if (perfil.creadoEn) {
@@ -1027,13 +1031,18 @@ function renderPortal(user, data) {
 }
 
 function renderPortalOffline(user) {
-  const nombre = user.displayName || user.email.split('@')[0];
+  const nombre  = user.displayName || user.email.split('@')[0];
+  const isAdmin = user.email === ADMIN_EMAIL;
   document.getElementById('portal-username').textContent = nombre.toUpperCase();
   document.getElementById('portal-email-display').textContent = user.email;
+  document.getElementById('portal-badge-admin').style.display = isAdmin ? 'inline' : 'none';
+  document.getElementById('portal-badge-vip').style.display   = 'none';
+  document.getElementById('portal-badge-std').style.display   = isAdmin ? 'none' : 'inline';
   document.getElementById('portal-profile-name').textContent  = nombre;
   document.getElementById('portal-profile-email').textContent = user.email;
   document.getElementById('portal-member-since').textContent  = '—';
   document.getElementById('portal-phone-display').textContent = '—';
+  document.getElementById('portal-tier-display').textContent  = isAdmin ? '⚙ Administrador' : 'Estándar';
   renderPedidos(null);
   renderCompras(null);
   renderProyectos(null);
