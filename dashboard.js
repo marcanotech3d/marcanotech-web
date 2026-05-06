@@ -579,6 +579,15 @@ function showApp(user){
         </div>
       </div>`;
   }
+  // Mostrar usuario en topbar
+  const topbarInfo = document.getElementById('topbar-user-info');
+  if(topbarInfo && user){
+    topbarInfo.style.display='flex';
+    const nameEl = document.getElementById('topbar-user-name');
+    if(nameEl) nameEl.textContent = user.displayName || user.email;
+    const photoEl = document.getElementById('topbar-user-photo');
+    if(photoEl && user.photoURL){ photoEl.src=user.photoURL; photoEl.style.display='block'; }
+  }
 }
 
 // ════════════════════════════════
@@ -770,11 +779,32 @@ function showSection(id, navEl){
   if(window.innerWidth <= 900) closeMobileMenu();
 }
 
+function resetProductoForm(){
+  document.getElementById('producto-edit-id').value='';
+  document.getElementById('modal-producto-title').textContent='Nuevo producto al catálogo';
+  clearForm(['prod-nombre','prod-sku','prod-precio','prod-stock','prod-descripcion','prod-tiempo','prod-gramos','prod-layer','prod-paredes','prod-relleno']);
+  document.getElementById('prod-emoji').value='📦';
+  document.getElementById('prod-imagen').value='';
+  document.getElementById('prod-categoria').selectedIndex=0;
+  const catWeb=document.getElementById('prod-categoria-web'); if(catWeb) catWeb.selectedIndex=0;
+  const linkML=document.getElementById('prod-link-ml'); if(linkML) linkML.value='';
+  const cb=document.getElementById('prod-publicar-web');
+  if(cb && cb.checked){
+    cb.checked=false;
+    const bg=document.getElementById('prod-toggle-bg'); if(bg) bg.style.background='rgba(255,255,255,0.1)';
+    const dot=document.getElementById('prod-toggle-dot'); if(dot) dot.style.transform='translateX(0)';
+    const lbl=document.getElementById('prod-web-label'); if(lbl) lbl.textContent='No publicado';
+  }
+  _prodImagenes=[];
+  renderProductoGaleria();
+}
+
 function openAddModal(){
   if(currentSection==='materiales') { openMatModal(); return; }
   if(currentSection==='accesorios') { openAccesorioModal(); return; }
   if(currentSection==='proyectos') { resetProyectoForm(); openModal('modal-proyecto'); return; }
   if(currentSection==='componentes') { resetComponenteForm(); openModal('modal-componente'); return; }
+  if(currentSection==='productos') { resetProductoForm(); openModal('modal-producto'); return; }
   if(currentSection==='calibracion') { openCalModal(); return; }
   if(currentSection==='presupuestos') { openPresupuestoModal(); return; }
   if(currentSection==='clientes') { openClienteModal(); return; }

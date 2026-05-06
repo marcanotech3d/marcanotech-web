@@ -1026,6 +1026,7 @@ function renderPortal(user, data) {
     document.getElementById('portal-admin-pedidos-card').style.display   = 'block';
     document.getElementById('portal-admin-compras-card').style.display   = 'block';
     document.getElementById('portal-admin-proyectos-card').style.display = 'block';
+    document.getElementById('portal-admin-usuarios-card').style.display  = 'block';
     document.getElementById('portal-admin-dashboard-card').style.display = 'block';
     loadAdminData();
   } else {
@@ -1035,6 +1036,7 @@ function renderPortal(user, data) {
     document.getElementById('portal-admin-pedidos-card').style.display   = 'none';
     document.getElementById('portal-admin-compras-card').style.display   = 'none';
     document.getElementById('portal-admin-proyectos-card').style.display = 'none';
+    document.getElementById('portal-admin-usuarios-card').style.display  = 'none';
     document.getElementById('portal-admin-dashboard-card').style.display = 'none';
     renderPedidos(data.pedidos);
     renderCompras(data.compras);
@@ -1147,21 +1149,52 @@ function loadAdminData() {
   const ref = firebaseDB.ref('marcanotech-dashboard/clientes-portal');
   ref.once('value').then(snap => {
     const clientes = snap.val() || {};
-    const allPedidos = [], allCompras = [], allProyectos = [];
-    Object.values(clientes).forEach(cliente => {
+    const allPedidos = [], allCompras = [], allProyectos = [], allUsuarios = [];
+    Object.entries(clientes).forEach(([uid, cliente]) => {
       const tag = (cliente.perfil && (cliente.perfil.email || cliente.perfil.nombre)) || 'Cliente';
       if (cliente.pedidos)   Object.values(cliente.pedidos).forEach(p  => allPedidos.push({ ...p,  _tag: tag }));
       if (cliente.compras)   Object.values(cliente.compras).forEach(c  => allCompras.push({ ...c,  _tag: tag }));
       if (cliente.proyectos) Object.values(cliente.proyectos).forEach(pr => allProyectos.push({ ...pr, _tag: tag }));
+      if (cliente.perfil) allUsuarios.push({ uid, ...cliente.perfil });
     });
     renderAdminPedidos(allPedidos);
     renderAdminCompras(allCompras);
     renderAdminProyectos(allProyectos);
+    renderAdminUsuarios(allUsuarios);
   }).catch(() => {
     renderAdminPedidos([]);
     renderAdminCompras([]);
     renderAdminProyectos([]);
+    renderAdminUsuarios([]);
   });
+}
+
+function renderAdminUsuarios(arr) {
+  const list  = document.getElementById('portal-admin-usuarios-list');
+  const count = document.getElementById('portal-admin-usuarios-count');
+  if (!list) return;
+  if (!arr.length) {
+    count.textContent = '0 usuarios';
+    list.innerHTML = `<div class="portal-empty"><div class="portal-empty-icon">👤</div>No hay usuarios registrados aún.</div>`;
+    return;
+  }
+  arr.sort((a, b) => new Date(b.creadoEn || 0) - new Date(a.creadoEn || 0));
+  count.textContent = arr.length + (arr.length === 1 ? ' usuario' : ' usuarios');
+  list.innerHTML = arr.map(u => {
+    const nombre  = u.nombre  || '—';
+    const email   = u.email   || '—';
+    const tier    = u.tier    || 'standard';
+    const tierLabel = tier === 'vip' ? '★ VIP' : tier === 'admin' ? '⚙ Admin' : 'Estándar';
+    const fecha   = u.creadoEn ? new Date(u.creadoEn).toLocaleDateString('es-AR') : '—';
+    return `<div class="portal-list-item">
+      <div class="portal-item-title">${escHtml(nombre)}</div>
+      <div class="portal-item-meta">
+        <span style="font-family:monospace;font-size:11px">${escHtml(email)}</span>
+        <span class="portal-status ${tier === 'vip' ? 'pendiente' : 'completado'}">${tierLabel}</span>
+        <span style="color:#505060;font-size:11px">${fecha}</span>
+      </div>
+    </div>`;
+  }).join('');
 }
 
 function renderAdminPedidos(arr) {

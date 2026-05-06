@@ -292,6 +292,7 @@ nav {
   background: linear-gradient(to bottom, var(--ferrari), transparent);
   animation: scrollAnim 2s infinite;
 }
+@media (max-height: 800px) { .scroll-hint { display: none; } }
 @keyframes scrollAnim {
   0% { transform: scaleY(0); transform-origin: top; opacity: 1; }
   50% { transform: scaleY(1); transform-origin: top; opacity: 1; }
