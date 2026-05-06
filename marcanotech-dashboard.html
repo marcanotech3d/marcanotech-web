@@ -517,13 +517,13 @@
   <div class="section" id="sec-productos">
     <div class="section-row" style="margin-top:0">
       <div class="section-title">Catálogo de productos</div>
-      <button class="btn btn-accent btn-sm" onclick="openModal('modal-producto')">+ Nuevo producto</button>
+      <button class="btn btn-accent btn-sm" onclick="_prodImagenes=[];renderProductoGaleria();document.getElementById('modal-producto-title').textContent='Nuevo producto al catálogo';const _cb=document.getElementById('prod-publicar-web');if(_cb){_cb.checked=false;const _bg=document.getElementById('prod-toggle-bg');const _dot=document.getElementById('prod-toggle-dot');const _lbl=document.getElementById('prod-web-label');if(_bg)_bg.style.background='rgba(255,255,255,0.1)';if(_dot)_dot.style.transform='translateX(0)';if(_lbl)_lbl.textContent='No publicado';}openModal('modal-producto')">+ Nuevo producto</button>
     </div>
     <div class="stats-row" id="productos-stats-row" style="margin-bottom:12px"></div>
     <div class="panel" style="overflow-x:auto">
       <table class="data-table" id="productos-table">
         <thead>
-          <tr><th>SKU</th><th>Nombre</th><th>Categoría</th><th>Stock</th><th>Precio</th><th>Fab.</th><th>Acciones</th></tr>
+          <tr><th>SKU</th><th>Nombre</th><th>Categoría</th><th>Stock</th><th>Precio</th><th>Fab.</th><th>Web</th><th>Acciones</th></tr>
         </thead>
         <tbody id="productos-grid"></tbody>
       </table>
@@ -1613,27 +1613,38 @@
 
 <!-- Producto -->
 <div class="modal-overlay" id="modal-producto">
-  <div class="modal" style="width:540px">
-    <div class="modal-title">Nuevo producto al catálogo</div>
+  <div class="modal" style="width:580px;max-height:90vh;overflow-y:auto">
+    <div class="modal-title" id="modal-producto-title">Nuevo producto al catálogo</div>
     <input type="hidden" id="producto-edit-id">
-    <div style="display:flex;gap:14px;align-items:flex-start;margin-bottom:14px">
-      <div>
-        <label class="form-label">Imagen</label>
-        <div id="prod-img-preview" onclick="document.getElementById('prod-imagen-file').click()" style="width:80px;height:72px;background:var(--bg3);border:0.5px dashed var(--border2);border-radius:10px;display:flex;flex-direction:column;align-items:center;justify-content:center;cursor:pointer;overflow:hidden;gap:3px">
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--text3)" stroke-width="1.5"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
-          <span style="font-size:9px;color:var(--text3);font-family:var(--mono)">Cargar</span>
-        </div>
-        <input type="file" id="prod-imagen-file" accept="image/*" style="display:none" onchange="previewGenImg(this,'prod-img-preview','prod-imagen')">
-        <input type="hidden" id="prod-imagen">
-        <input type="hidden" id="prod-emoji" value="📦">
+    <input type="hidden" id="prod-emoji" value="📦">
+    <input type="hidden" id="prod-imagen">
+
+    <!-- Galería de imágenes -->
+    <div class="form-group">
+      <label class="form-label" style="display:flex;justify-content:space-between;align-items:center">
+        <span>Imágenes del producto</span>
+        <span id="prod-img-count" style="color:var(--text3);font-family:var(--mono);font-size:10px">0/5 imágenes</span>
+      </label>
+      <div id="prod-galeria" style="display:flex;flex-wrap:wrap;gap:8px;margin-bottom:8px"></div>
+      <div id="prod-img-drop"
+           onclick="document.getElementById('prod-imagen-file-new').click()"
+           ondragover="event.preventDefault();this.style.borderColor='var(--ferrari)'"
+           ondragleave="this.style.borderColor='var(--border2)'"
+           ondrop="handleProdImgDrop(event)"
+           style="border:1.5px dashed var(--border2);border-radius:10px;padding:14px;text-align:center;cursor:pointer;transition:border-color 0.15s">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--text3)" stroke-width="1.5" style="margin-bottom:4px;display:block;margin-left:auto;margin-right:auto"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
+        <div style="font-size:11px;color:var(--text3)">Click o arrastrá imágenes · JPG, PNG, WEBP · máx 5 · recomendado cuadrada (1:1)</div>
       </div>
-      <div style="flex:1">
-        <div class="form-group" style="margin-bottom:0">
-          <label class="form-label">Nombre del producto</label>
-          <input class="form-input" id="prod-nombre" placeholder="ej: Kit Chasis Touring">
-        </div>
-      </div>
+      <input type="file" id="prod-imagen-file-new" accept="image/jpeg,image/png,image/webp" multiple style="display:none" onchange="addProductoImagenes(this.files)">
     </div>
+
+    <!-- Nombre -->
+    <div class="form-group">
+      <label class="form-label">Nombre del producto</label>
+      <input class="form-input" id="prod-nombre" placeholder="ej: Carrocería RC 1:10 Ferrari">
+    </div>
+
+    <!-- SKU + Precio -->
     <div class="form-row">
       <div class="form-group">
         <label class="form-label">SKU / código</label>
@@ -1645,13 +1656,15 @@
         <div id="prod-precio-hint" style="font-size:10px;color:var(--teal);font-family:var(--mono);margin-top:3px"></div>
       </div>
     </div>
+
+    <!-- Stock + Categoría interna -->
     <div class="form-row">
       <div class="form-group">
         <label class="form-label">Stock disponible</label>
         <input class="form-input" type="number" id="prod-stock" placeholder="ej: 5">
       </div>
       <div class="form-group">
-        <label class="form-label">Categoría</label>
+        <label class="form-label">Categoría interna</label>
         <select class="form-input" id="prod-categoria">
           <option>Kit completo</option>
           <option>Body / Carrocería</option>
@@ -1666,9 +1679,38 @@
       </div>
     </div>
 
-    <!-- Tiempo impresión + Gramos filamento -->
-    <div style="background:rgba(249,115,22,0.06);border:1px solid rgba(249,115,22,0.15);border-radius:10px;padding:14px;margin-bottom:14px">
-      <div style="font-size:11px;color:var(--navy-l, var(--accent));font-family:var(--mono);letter-spacing:1px;text-transform:uppercase;margin-bottom:10px">🖨️ Datos de fabricación</div>
+    <!-- Publicación web -->
+    <div style="background:rgba(249,115,22,0.07);border:1px solid rgba(249,115,22,0.2);border-radius:10px;padding:14px;margin-bottom:14px">
+      <div style="font-size:11px;color:var(--ferrari);font-family:var(--mono);letter-spacing:1px;text-transform:uppercase;margin-bottom:10px">🌐 Publicación en Catálogo Web</div>
+      <div class="form-row" style="margin-bottom:10px">
+        <div class="form-group" style="margin-bottom:0">
+          <label class="form-label">Categoría en web</label>
+          <select class="form-input" id="prod-categoria-web">
+            <option value="decoracion">Decoración / Home / Oficina</option>
+            <option value="rc">RC a Escala / Modelismo</option>
+            <option value="personalizado">Personalizados</option>
+          </select>
+        </div>
+        <div class="form-group" style="margin-bottom:0">
+          <label class="form-label">Link MercadoLibre (opcional)</label>
+          <input class="form-input" id="prod-link-ml" type="url" placeholder="https://articulo.mercadolibre.com.ar/...">
+        </div>
+      </div>
+      <div style="display:flex;align-items:center;gap:10px;margin-top:4px">
+        <label style="display:flex;align-items:center;gap:10px;cursor:pointer;user-select:none">
+          <div style="position:relative;width:42px;height:22px;flex-shrink:0">
+            <input type="checkbox" id="prod-publicar-web" style="opacity:0;width:0;height:0;position:absolute">
+            <div id="prod-toggle-bg" onclick="toggleProdWeb()" style="position:absolute;inset:0;background:var(--border2);border-radius:11px;transition:background 0.2s;cursor:pointer"></div>
+            <div id="prod-toggle-dot" style="position:absolute;top:3px;left:3px;width:16px;height:16px;background:#fff;border-radius:50%;transition:transform 0.2s;pointer-events:none"></div>
+          </div>
+          <span id="prod-web-label" style="font-size:12px;font-weight:600;color:var(--text3)">OCULTO en web</span>
+        </label>
+      </div>
+    </div>
+
+    <!-- Datos de fabricación -->
+    <div style="background:rgba(249,115,22,0.04);border:1px solid rgba(255,255,255,0.06);border-radius:10px;padding:14px;margin-bottom:14px">
+      <div style="font-size:11px;color:var(--text2);font-family:var(--mono);letter-spacing:1px;text-transform:uppercase;margin-bottom:10px">🖨️ Datos de fabricación</div>
       <div class="form-row" style="margin-bottom:10px">
         <div class="form-group" style="margin-bottom:0">
           <label class="form-label">Tiempo de impresión</label>
@@ -1709,7 +1751,7 @@
       <textarea class="form-input" id="prod-descripcion" rows="2" placeholder="Descripción del producto..."></textarea>
     </div>
     <div class="modal-footer">
-      <button class="btn btn-ghost" onclick="closeModal('modal-producto')">Cancelar</button>
+      <button class="btn btn-ghost" onclick="closeModal('modal-producto');_prodImagenes=[];">Cancelar</button>
       <button class="btn btn-accent" onclick="saveProducto()">Guardar producto</button>
     </div>
   </div>

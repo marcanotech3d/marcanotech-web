@@ -1,581 +1,220 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Catálogo de Productos — MarcanoTech</title>
-  <link rel="stylesheet" href="styles.css">
-  <style>
-    .cat-hero {
-      background: var(--dark);
-      padding: 100px 0 48px;
-      text-align: center;
-      border-bottom: 1px solid rgba(249,115,22,0.15);
-    }
-    .cat-hero .section-label { margin-bottom: 10px; }
-    .cat-hero .hero-title {
-      font-size: clamp(2rem, 5vw, 3.2rem);
-      font-weight: 800;
-      color: var(--text-light);
-      letter-spacing: -1px;
-      margin-bottom: 14px;
-    }
-    .cat-hero .section-sub { max-width: 520px; margin: 0 auto; }
-
-    .cat-section { padding: 60px 0 20px; }
-    .cat-section-header {
-      display: flex;
-      align-items: center;
-      gap: 14px;
-      margin-bottom: 32px;
-    }
-    .cat-section-icon {
-      width: 42px; height: 42px;
-      background: rgba(249,115,22,0.1);
-      border: 1px solid rgba(249,115,22,0.25);
-      border-radius: 10px;
-      display: flex; align-items: center; justify-content: center;
-      flex-shrink: 0;
-    }
-    .cat-section-icon svg { width: 20px; height: 20px; color: var(--ferrari); }
-    .cat-section-title {
-      font-size: 1.35rem;
-      font-weight: 800;
-      color: var(--text-light);
-      letter-spacing: -0.5px;
-    }
-    .cat-section-sub {
-      font-size: 0.875rem;
-      color: var(--text-muted);
-      margin-top: 3px;
-    }
-    .cat-section-divider {
-      height: 2px;
-      background: linear-gradient(90deg, var(--ferrari) 0%, transparent 100%);
-      margin-bottom: 32px;
-      border-radius: 2px;
-      max-width: 120px;
-    }
-
-    .cat-grid {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 20px;
-      margin-bottom: 48px;
-    }
-    @media (max-width: 900px) { .cat-grid { grid-template-columns: repeat(2, 1fr); } }
-    @media (max-width: 560px) { .cat-grid { grid-template-columns: 1fr; } }
-
-    .cat-card {
-      background: var(--card-bg);
-      border: 1px solid var(--border);
-      border-radius: 14px;
-      overflow: hidden;
-      transition: border-color 0.2s, transform 0.2s, box-shadow 0.2s;
-    }
-    .cat-card:hover {
-      border-color: rgba(249,115,22,0.4);
-      transform: translateY(-3px);
-      box-shadow: 0 8px 32px rgba(0,0,0,0.25);
-    }
-    .cat-card-img {
-      height: 180px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      background: rgba(255,255,255,0.02);
-      border-bottom: 1px solid var(--border);
-      position: relative;
-      overflow: hidden;
-    }
-    .cat-card-img img {
-      width: 100%; height: 100%;
-      object-fit: contain;
-      padding: 12px;
-    }
-    .cat-card-img-placeholder {
-      font-size: 3.5rem;
-      opacity: 0.35;
-    }
-    .cat-card-tag {
-      position: absolute;
-      top: 10px; left: 10px;
-      background: var(--ferrari);
-      color: #fff;
-      font-size: 10px;
-      font-weight: 700;
-      padding: 3px 8px;
-      border-radius: 5px;
-      letter-spacing: 0.5px;
-      text-transform: uppercase;
-    }
-    .cat-card-body { padding: 16px; }
-    .cat-card-name {
-      font-size: 14px;
-      font-weight: 700;
-      color: var(--text-light);
-      margin-bottom: 6px;
-    }
-    .cat-card-desc {
-      font-size: 12px;
-      color: var(--text-muted);
-      line-height: 1.5;
-      margin-bottom: 14px;
-    }
-    .cat-card-footer {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-    }
-    .cat-card-cta {
-      background: var(--ferrari);
-      color: #fff;
-      padding: 7px 14px;
-      border-radius: 7px;
-      font-size: 12px;
-      font-weight: 600;
-      text-decoration: none;
-      transition: background 0.15s;
-    }
-    .cat-card-cta:hover { background: #e06010; }
-    .cat-card-ml {
-      font-size: 11px;
-      color: var(--text-muted);
-    }
-
-    .cat-coming-soon {
-      opacity: 0.5;
-      pointer-events: none;
-    }
-    .cat-coming-soon .cat-card-cta {
-      background: var(--border);
-      color: var(--text-muted);
-    }
-    .cat-coming-badge {
-      position: absolute;
-      inset: 0;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      background: rgba(0,0,0,0.45);
-      font-size: 11px;
-      font-weight: 700;
-      color: var(--text-muted);
-      letter-spacing: 1px;
-      text-transform: uppercase;
-    }
-
-    .cat-back {
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-      color: var(--ferrari);
-      text-decoration: none;
-      font-size: 13px;
-      font-weight: 600;
-      margin-bottom: 12px;
-      transition: opacity 0.15s;
-    }
-    .cat-back:hover { opacity: 0.75; }
-
-    .cat-personalizado-note {
-      background: rgba(249,115,22,0.06);
-      border: 1px solid rgba(249,115,22,0.2);
-      border-radius: 10px;
-      padding: 18px 20px;
-      margin-top: -16px;
-      margin-bottom: 48px;
-      font-size: 13px;
-      color: var(--text-muted);
-      line-height: 1.6;
-    }
-    .cat-personalizado-note strong { color: var(--text-light); }
-  </style>
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml;base64,PHN2ZyB2aWV3Qm94PSIwIDAgNzAwIDYwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48ZwogICAgIGlua3NjYXBlOmdyb3VwbW9kZT0ibGF5ZXIiCiAgICAgaW5rc2NhcGU6bGFiZWw9IkltYWdlIgogICAgIGlkPSJnMSI+CiAgICA8ZwogICAgICAgaWQ9ImcyIj4KICAgICAgPHBhdGgKICAgICAgICAgc3R5bGU9ImZpbGw6I2UwMWEwMDtmaWxsLW9wYWNpdHk6MTtzdHJva2U6I2NjMDAwMDtzdHJva2Utd2lkdGg6MS4wNjkwNjtzdHJva2Utb3BhY2l0eToxIgogICAgICAgICBkPSJtIDMyMC4zNzAyMSw0MjAuODA4NjcgLTAuMzM4MjcsLTIuOTM5OTEgLTEzLjM2MzE1LC0wLjUzNDUzIC0xMy4zNjMyMywtMC41MzQ1MiB2IC0zLjIwNzE3IC0zLjIwNzE3IGwgMjUuMzkwMTIsLTAuMjg2NjEgYyAyNC41MDM2MSwtMC4yNzY2MSAyNS4zOTAwNSwtMC4zNjA1OSAyNS4zOTAwNSwtMi40MDUzOCAwLC0xLjk4MzkgLTAuNzQ4NTYsLTIuMTE4NzYgLTExLjc1OTU5LC0yLjExODc2IC0xMS41NTgxOSwwIC0xMS43NTk2NSwtMC4wNDIxIC0xMS43NTk2NSwtMi40NTg4MyAwLC00LjQzMDMgLTEuNzk1NDYsLTUuMDI0NTYgLTE1LjE4MDYxLC01LjAyNDU2IGggLTEyLjYxNDg2IHYgLTMuMjA3MTggLTMuMjA3MTYgbCA5LjM1NDIzLC0wLjExNTIyIGMgMzUuNjQ1NjcsLTAuNDM5MDMgNDEuNDI2LC0wLjgyODk2IDQxLjQyNiwtMi43OTQ1NiAwLC0xLjY4Mzc3IC0xLjI5ODY1LC0xLjkzNTUgLTExLjM2NTg0LC0yLjIwMzEyIGwgLTExLjM2NTY0LC0wLjMwMjE1IC0wLjYzNDQ3LC0zLjE3MjI5IC0wLjYzNDQyLC0zLjE3MjI4IGggLTEyLjgxNzg0IGMgLTExLjE4NDI1LDAgLTEyLjk0NzI4LC0wLjI0MTk0IC0xMy44MzM3OCwtMS44OTg0NSAtMC42NDQ1OCwtMS4yMDQzNCAtMC42Mzg5MywtMi41NzI0IDAuMDE0NiwtMy43NDE3IDAuOTMwODIsLTEuNjYzMjIgMy40Nzk5NiwtMS44NDMyNSAyNi4xMDEyMSwtMS44NDMyNSAyNC4zNTcwNCwwIDI1LjA2OTc4LC0wLjA2MDkgMjUuMDY5NzgsLTIuMTM4MSAwLC0yLjAwNzA0IC0wLjcxMjc0LC0yLjEzODEyIC0xMS42MjU5NiwtMi4xMzgxMiBoIC0xMS42MjU5NyBsIC0wLjY0MTQ2LC0zLjIwNzE3IC0wLjY0MTQ1LC0zLjIwNzE2IGggLTEyLjcyNDU2IGMgLTEzLjk0ODA2LDAgLTE2LjQyMDU5LC0wLjkyNTg3IC0xNC4wOTE5OCwtNS4yNzY5NSAxLjE0MjcxLC0yLjEzNSAyLjAxMDYsLTIuMjA2NDUgMjYuODAwNTksLTIuMjA2NDUgMjQuOTA3MTQsMCAyNS42MTk4OCwtMC4wNTk1IDI1LjYxOTg4LC0yLjEzODExIDAsLTEuODU2MTIgLTAuNzEyNzQsLTIuMTM4MTIgLTUuNDAzODUsLTIuMTM4MTIgaCAtNS40MDM5MiBsIDAuMzI1ODUsLTUuMDQzMDYgYyAwLjMxNDAxLC00Ljg2MDk4IDAuNDcwNjIsLTUuMDc3MTMgNC4zMzQ4MiwtNS45ODYwMSBsIDQuMDA4OTIsLTAuOTQyOTQgdiAtMTMuNzkxNTMgLTEzLjc5MTUzIGggOC45NTk2OSA4Ljk1OTc2IGwgLTAuMDcwNiw0LjU0MzQ4IGMgLTAuMDM4NSwyLjQ5ODkyIDAuMDE4Niw4LjY4MzMxIDAuMTI3MjQsMTMuNzQzMDkgbCAwLjE5NzY3LDkuMTk5NTkgMy40NzQ0NCwwLjk5MTE3IGMgMy4yMzQ2NCwwLjkyMjc1IDMuNDk3MywxLjM0ODg0IDMuODA1OTMsNi4xNzM0OCAwLjI4ODExLDQuNTAyODUgMC4wOTQxLDUuMDkxMjEgLTEuNDc5NzgsNC40ODcyNSAtMy4yNTU3MSwtMS4yNDkzMyAtOS4wMDc3OSwwLjQ0NjMyIC05LjAwNzc5LDIuNjU1NDMgMCwxLjg5Mjk4IDEuNDIxNTcsMi4wMTU4MiAyNi40NTkxMywyLjI4NjQgbCAyNi40NTkyOCwwLjI4NTk0IHYgMy4yMDcxNyAzLjIwNzE2IGwgLTEzLjM2MzIzLDAuNTM0NTQgLTEzLjM2MzE1LDAuNTM0NTIgLTAuMzM0OTUsMi45MDQ0MiAtMC4zMzQ4MSwyLjkwNDQzIC0xMS40MTIwOCwwLjMwMjc0IGMgLTkuODI5NzgsMC4yNjA3NyAtMTEuNDYxMjYsMC41NTk0NSAtMTEuNzY2NywyLjE1NDA3IC0wLjMyNzA0LDEuNzA3NDUgMS42MjQ0MywxLjg3MzYxIDI1LjExMDEyLDIuMTM4MTIgbCAyNS40NjQ4LDAuMjg2NzggdiAzLjIwNzE3IDMuMjA3MTcgbCAtMTMuMzYzMjMsMC41MzQ1MyAtMTMuMzYzMTUsMC41MzQ1MyAtMC4zMzg0LDIuOTM5OSAtMC4zMzgyNywyLjkzOTkxIEggMzcyLjM0MzYgYyAtMTAuMTUxNSwwIC0xMS4xNTQwMiwwLjE3ODI2IC0xMS4xNTQwMiwxLjk4MzUyIDAsMi41NTk4MyA3LjU1NzA1LDMuMzQzNjQgMzIuMzM5LDMuMzU0MTYgbCAxNy45MDY2OSwwLjAwNyB2IDMuMTc1MjMgMy4xNzUyNCBsIC0xMy42MzA1MywwLjI5OTE5IC0xMy42MzAzOSwwLjI5OTIxIC0wLjMzNTA4LDMuNDc0NDMgLTAuMzM1MDgsMy40NzQ0MyBoIC0xMS42OTE4MSBjIC0xMC45NDM1OSwwIC0xMS42OTE4MiwwLjEzNTYgLTExLjY5MTgyLDIuMTE4NzcgMCwyLjA0NDc5IDAuODg2MzcsMi4xMjg3NiAyNS4zOTAwNSwyLjQwNTM3IGwgMjUuMzkwMTIsMC4yODY2MSB2IDMuMjA3MTcgMy4yMDcxNyBsIC0xMy42MzA0NywwLjI5OTIxIC0xMy42MzA0NiwwLjI5OTIgdiAzLjE3NTM1IDMuMTc1MjMgaCAtMzEuNDY2MTggLTMxLjQ2NjE5IHoiCiAgICAgICAgIGlkPSJwYXRoMjYiIC8+CiAgICA8L2c+CiAgPC9nPjwvc3ZnPg==">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Catálogo de Productos — MarcanoTech</title>
+<meta name="description" content="Catálogo de productos impresos en 3D: decoración, home, oficina, RC a escala, modelismo y personalizados. MarcanoTech.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@700&family=Bebas+Neue&family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+:root{
+  --black:#000;--dark1:#0a0a0c;--dark2:#111116;--dark3:#18181e;
+  --navy:#1a3a6b;--navy-l:#4a7fd4;--ferrari:#f97316;--silver:#9eaab8;--white:#f4f4f6;
+  --font-d:'Bebas Neue',sans-serif;--font-b:'DM Sans',sans-serif;--font-m:'DM Mono',monospace;
+}
+html{scroll-behavior:smooth;}
+body{font-family:var(--font-b);background:var(--dark1);color:var(--white);line-height:1.6;}
+a{text-decoration:none;color:inherit;}
+nav{position:sticky;top:0;z-index:50;padding:0 48px;height:64px;display:flex;align-items:center;justify-content:space-between;background:rgba(10,10,12,0.95);backdrop-filter:blur(12px);border-bottom:1px solid rgba(255,255,255,0.06);}
+.logo{font-family:var(--font-d);font-size:20px;letter-spacing:1px;}
+.logo span{color:var(--ferrari);}
+.back-btn{display:flex;align-items:center;gap:8px;font-size:13px;color:var(--silver);padding:8px 16px;border:1px solid rgba(255,255,255,0.1);border-radius:6px;transition:all 0.2s;}
+.back-btn:hover{color:var(--white);border-color:var(--ferrari);}
+.hero{padding:72px 48px 56px;max-width:960px;margin:0 auto;}
+.cat-badge{display:inline-flex;align-items:center;gap:8px;background:rgba(249,115,22,0.1);border:1px solid rgba(249,115,22,0.3);padding:5px 14px;border-radius:100px;font-size:11px;font-family:var(--font-m);color:var(--ferrari);letter-spacing:2px;text-transform:uppercase;margin-bottom:24px;}
+.hero h1{font-family:var(--font-d);font-size:clamp(48px,7vw,84px);line-height:0.95;letter-spacing:1px;margin-bottom:20px;}
+.hero h1 span{color:var(--ferrari);}
+.hero p{font-size:16px;color:var(--silver);max-width:640px;font-weight:300;}
+.content{max-width:960px;margin:0 auto;padding:0 48px 80px;}
+.cat-section{margin-top:64px;padding-top:32px;border-top:1px solid rgba(255,255,255,0.06);}
+.cat-header{display:flex;align-items:flex-start;gap:16px;margin-bottom:28px;flex-wrap:wrap;}
+.cat-icon{width:52px;height:52px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:24px;flex-shrink:0;}
+.cat-title{font-family:var(--font-d);font-size:clamp(32px,4vw,48px);line-height:1;letter-spacing:0.5px;}
+.cat-subtitle{font-size:13px;color:var(--silver);font-family:var(--font-m);margin-top:4px;}
+.products-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:18px;margin-top:8px;}
+.product-card{background:var(--dark2);border:1px solid rgba(255,255,255,0.07);border-radius:14px;overflow:hidden;transition:border-color 0.2s,transform 0.2s;}
+.product-card:hover{border-color:rgba(249,115,22,0.35);transform:translateY(-2px);}
+.product-img{width:100%;aspect-ratio:1;object-fit:cover;background:var(--dark3);display:flex;align-items:center;justify-content:center;font-size:48px;}
+.product-img img{width:100%;height:100%;object-fit:cover;}
+.product-body{padding:14px 16px;}
+.product-name{font-size:14px;font-weight:600;margin-bottom:4px;line-height:1.3;}
+.product-desc{font-size:12px;color:var(--silver);line-height:1.5;margin-bottom:10px;}
+.product-price{font-family:var(--font-m);font-size:13px;font-weight:700;color:var(--ferrari);}
+.product-sku{font-family:var(--font-m);font-size:10px;color:var(--silver);margin-bottom:8px;}
+.product-actions{display:flex;gap:8px;margin-top:10px;flex-wrap:wrap;}
+.btn-ml{display:inline-flex;align-items:center;gap:6px;font-size:11px;padding:6px 12px;border-radius:6px;background:rgba(249,115,22,0.12);border:1px solid rgba(249,115,22,0.3);color:var(--ferrari);transition:all 0.2s;font-family:var(--font-m);}
+.btn-ml:hover{background:rgba(249,115,22,0.22);color:#fff;}
+.empty-cat{padding:32px;text-align:center;color:var(--silver);font-size:13px;background:var(--dark2);border-radius:12px;border:1px dashed rgba(255,255,255,0.08);}
+.loading-state{text-align:center;padding:48px;color:var(--silver);font-family:var(--font-m);font-size:12px;}
+footer{background:var(--dark1);border-top:1px solid rgba(255,255,255,0.06);padding:32px 48px;text-align:center;}
+footer p{font-size:12px;color:var(--silver);font-family:var(--font-m);}
+footer span{color:var(--ferrari);}
+#scroll-top{opacity:0;transition:opacity 0.3s;pointer-events:none;}
+#scroll-top.visible{opacity:1;pointer-events:auto;}
+@media(max-width:768px){
+  nav,footer{padding-left:20px;padding-right:20px;}
+  .hero,.content{padding-left:20px;padding-right:20px;}
+  .products-grid{grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:12px;}
+}
+</style>
 </head>
 <body>
 
-<!-- ══ NAV ══ -->
-<nav id="navbar">
-  <a href="index.html" class="nav-logo" style="align-items:center;gap:10px;text-decoration:none">
-    <svg viewBox="0 0 700 600" overflow="hidden" style="height:36px;width:auto"><g id="g1"><g id="g2" transform="translate(8.8235294,-11.764706)"><g id="g779" transform="translate(-40.54204,-26.760563)"><path style="fill:#000000;fill-opacity:1;stroke:#ff6600;stroke-width:2;stroke-linecap:butt;stroke-linejoin:round;stroke-miterlimit:0;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;paint-order:normal" d="m 419.34156,598.35391 h 26.74897 L 432.92181,618.107 Z" id="path776"/><path style="fill:#ff6600;fill-opacity:1;stroke:#ff6600;stroke-width:2.04052;stroke-linecap:butt;stroke-linejoin:round;stroke-miterlimit:0;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;paint-order:normal" d="m 407.14242,579.44193 h 52.86073 l -8.59524,11.07499 h -36.95954 z" id="path778"/></g></g></g></svg>
-    <span style="font-size:16px;font-weight:800;color:var(--text-light);letter-spacing:-0.5px">MarcanoTech</span>
-    <span style="font-family:var(--font-mono);font-size:9px;color:var(--ferrari);background:rgba(249,115,22,0.1);border:1px solid rgba(249,115,22,0.25);padding:2px 6px;border-radius:4px;letter-spacing:1px;margin-left:2px">v1.5</span>
+<nav>
+  <a href="index.html" style="display:flex;align-items:center;gap:10px;text-decoration:none">
+    <img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA3MDAgNjAwIiBvdmVyZmxvdz0iaGlkZGVuIj48ZwogICAgIGlkPSJnMSI+CiAgICA8ZwogICAgICAgaWQ9ImcyIgogICAgICAgdHJhbnNmb3JtPSJ0cmFuc2xhdGUoOC44MjM1Mjk0LC0xMS43NjQ3MDYpIj4KICAgICAgPGcKICAgICAgICAgaWQ9Imc3NzkiCiAgICAgICAgIHRyYW5zZm9ybT0idHJhbnNsYXRlKC00MC41NDIwNCwtMjYuNzYwNTYzKSI+CiAgICAgICAgPHBhdGgKICAgICAgICAgICBzdHlsZT0iZmlsbDojMDAwMDAwO2ZpbGwtb3BhY2l0eToxO3N0cm9rZTojZmY2NjAwO3N0cm9rZS13aWR0aDoyO3N0cm9rZS1saW5lY2FwOmJ1dHQ7c3Ryb2tlLWxpbmVqb2luOnJvdW5kO3N0cm9rZS1taXRlcmxpbWl0OjA7c3Ryb2tlLWRhc2hhcnJheTpub25lO3N0cm9rZS1kYXNob2Zmc2V0OjA7c3Ryb2tlLW9wYWNpdHk6MTtwYWludC1vcmRlcjpub3JtYWwiCiAgICAgICAgICAgZD0ibSA0MTkuMzQxNTYsNTk4LjM1MzkxIGggMjYuNzQ4OTcgTCA0MzIuOTIxODEsNjE4LjEwNyBaIgogICAgICAgICAgIGlkPSJwYXRoNzc2IiAvPgogICAgICAgIDxwYXRoCiAgICAgICAgICAgc3R5bGU9ImZpbGw6I2ZmNjYwMDtmaWxsLW9wYWNpdHk6MTtzdHJva2U6I2ZmNjYwMDtzdHJva2Utd2lkdGg6Mi4wNDA1MjtzdHJva2UtbGluZWNhcDpidXR0O3N0cm9rZS1saW5lam9pbjpyb3VuZDtzdHJva2UtbWl0ZXJsaW1pdDowO3N0cm9rZS1kYXNoYXJyYXk6bm9uZTtzdHJva2UtZGFzaG9mZnNldDowO3N0cm9rZS1vcGFjaXR5OjE7cGFpbnQtb3JkZXI6bm9ybWFsIgogICAgICAgICAgIGQ9Im0gNDA3LjE0MjQyLDU3OS40NDE5MyBoIDUyLjg2MDczIGwgLTguNTk1MjQsMTEuMDc0OTkgaCAtMzYuOTU5NTQgeiIKICAgICAgICAgICBpZD0icGF0aDc3OCIgLz4KICAgICAgICA8cmVjdAogICAgICAgICAgIHN0eWxlPSJmaWxsOiMwMDAwMDA7ZmlsbC1ydWxlOmV2ZW5vZGQ7c3Ryb2tlOiNmZjY2MDA7c3Ryb2tlLXdpZHRoOjIuMDU3NztzdHJva2UtbGluZWpvaW46cm91bmQ7c3Ryb2tlLWRhc2hhcnJheTpub25lO3N0cm9rZS1vcGFjaXR5OjEiCiAgICAgICAgICAgaWQ9InJlY3Q3NzkiCiAgICAgICAgICAgd2lkdGg9IjE3LjQyNCIKICAgICAgICAgICBoZWlnaHQ9IjI3LjM5ODk5MSIKICAgICAgICAgICB4PSI0MjQuNzQ3NSIKICAgICAgICAgICB5PSI0MzkuMTQxNDIiIC8+CiAgICAgIDwvZz4KICAgICAgPGcKICAgICAgICAgaWQ9Imc3ODAiCiAgICAgICAgIHRyYW5zZm9ybT0idHJhbnNsYXRlKC00MC44NDUwNywtMjYuNzYwNTYzKSIKICAgICAgICAgc3R5bGU9ImZpbGw6I2ZmNjYwMDtmaWxsLW9wYWNpdHk6MTtzdHJva2U6I2ZmNjYwMDtzdHJva2Utb3BhY2l0eTowLjk5NjA3OCI+CiAgICAgICAgPHBhdGgKICAgICAgICAgICBzdHlsZT0iZmlsbDojZmY2NjAwO2ZpbGwtb3BhY2l0eToxO3N0cm9rZTojZmY2NjAwO3N0cm9rZS13aWR0aDozO3N0cm9rZS1saW5lY2FwOnNxdWFyZTtzdHJva2UtbGluZWpvaW46cm91bmQ7c3Ryb2tlLW1pdGVybGltaXQ6MDtzdHJva2UtZGFzaGFycmF5Om5vbmU7c3Ryb2tlLWRhc2hvZmZzZXQ6NC41O3N0cm9rZS1vcGFjaXR5OjAuOTk2MDc4O3BhaW50LW9yZGVyOm5vcm1hbCIKICAgICAgICAgICBkPSJtIDMyOC44MDY1OSw1ODUuMTg1MTggLTM0LjU2NzksLTM3LjAzNzAzIDAuODIzMDQsLTI1MS40NDAzMyBoIDM4LjY4MzEzIGwgOTcuNTMwODYsMTAxLjIzNDU2IDEwMCwtMTAwLjgyMzA0IGggMzkuNTA2MTggdiAyNTIuMjYzMzcgbCAtMzUuODAyNDcsMzguMjcxNjEgViAzNTkuMjU5MjYgbCAtODYuNDE5NzYsODYuMDA4MjMgLTAuNDExNTIsLTExLjkzNDE2IGggLTI4LjgwNjU4IHYgMTMuOTkxNzcgbCAtOTAuMTIzNDYsLTg4LjQ3NzM3IHoiCiAgICAgICAgICAgaWQ9InBhdGg3NjIiIC8+CiAgICAgIDwvZz4KICAgIDwvZz4KICA8L2c+PC9zdmc+" style="height:36px;width:auto;flex-shrink:0;display:block" alt="MarcanoTech">
+    <img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA3MDAgMTUwIiBvdmVyZmxvdz0iaGlkZGVuIj48ZGVmcyBpZD0iZGVmczEiIC8+PGcgaWQ9ImcxIj48ZyBpZD0iZzIiIHRyYW5zZm9ybT0idHJhbnNsYXRlKDAsLTU5MC4zMjI1OCkiPjxwYXRoIGlkPSJwYXRoMTQiIHN0eWxlPSJmaWxsOiNmZjY2MDA7ZmlsbC1vcGFjaXR5OjE7c3Ryb2tlOiMwMDAwMDA7c3Ryb2tlLXdpZHRoOjEuMDY5MDY7c3Ryb2tlLW9wYWNpdHk6MSIgZD0ibSA2NTEuNDM5NDUsNjA2LjUzNTE2IGMgLTIwLjE4ODQ1LDAuMjg0ODggLTIyLjgxNTgsMC41MzIzNyAtMjYuMDgwMDcsMi40NTUwNyAtNy40ODczNSw0LjQxMDE5IC04LjA5MDQ3LDYuMjE2MzIgLTguNDcyNjYsMjUuMzc2OTYgLTAuMjc5NiwxNC4wMTcwNSAtMC4wMTU4LDE4LjA2ODgzIDEuNDE5OTIsMjEuODI4MTIgMS44MTIzNCw0Ljc0NTc0IDUuOTAxMjQsOC40NjY3NSAxMC45OTQxNCwxMC4wMDE5NiAxLjU5MjY3LDAuNDgwMDkgMTIuMjk1MSwwLjkxMjI5IDIzLjc4MzIsMC45NjI4OSAxOS42MzYxNywwLjA4NjQgMjEuMTcyMzUsLTAuMDUxMiAyNS42NDg0NCwtMi4zMTI1IDIuNjE4NzcsLTEuMzIyOTggNS44NDgwMiwtNC4wMzkyMiA3LjE3NTc4LC02LjAzNzExIDIuMjcxNjYsLTMuNDE4MzEgMi40MTQwNywtNC43MTc2MSAyLjQxNDA3LC0yMi4wMjUzOSAwLC0xNy4zMDc4MSAtMC4xNDI0MSwtMTguNjA3MDQgLTIuNDE0MDcsLTIyLjAyNTM5IC0xLjMyNzc2LC0xLjk5NzkgLTQuNTc1NjksLTQuNzM3NyAtNy4yMTY3OSwtNi4wODc4OSAtNC42MjY3MiwtMi4zNjUyNSAtNS42MjE3OSwtMi40NDE5NSAtMjcuMjUxOTYsLTIuMTM2NzIgeiIgLz48L2c+PC9nPjwvc3ZnPg==" style="height:22px;width:auto;flex-shrink:0;display:block" alt="MarcanoTech">
   </a>
-  <ul class="nav-links">
-    <li><a href="index.html#servicios">Servicios</a></li>
-    <li><a href="index.html#proceso">Proceso</a></li>
-    <li><a href="index.html#productos">Productos</a></li>
-    <li><a href="index.html#colores">Colores</a></li>
-    <li><a href="index.html#guias">Guías</a></li>
-    <li><a href="index.html#contacto" class="nav-cta">Cotizar</a></li>
-  </ul>
+  <a href="index.html#productos" class="back-btn">
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 18 9 12 15 6"/></svg>
+    Volver a Productos
+  </a>
 </nav>
 
-<!-- ══ HERO ══ -->
-<section class="cat-hero">
-  <div class="container">
-    <a href="index.html#productos" class="cat-back">
-      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="15 18 9 12 15 6"/></svg>
-      Volver al inicio
-    </a>
-    <div class="section-label">Productos</div>
-    <h1 class="hero-title">Catálogo de Productos</h1>
-    <p class="section-sub">Explorá todas las categorías disponibles. Impresión 3D, RC a escala y artículos personalizados.</p>
+<div class="hero">
+  <div class="cat-badge">Tienda · Catálogo completo</div>
+  <h1>CATÁLOGO DE<br><span>PRODUCTOS</span></h1>
+  <p>Explorá nuestra colección de productos impresos en 3D: decoración, home, oficina, RC a escala, modelismo y personalizados. Todos fabricados con filamento de alta calidad.</p>
+</div>
+
+<div class="content">
+
+  <!-- DECORACIÓN / HOME / OFICINA -->
+  <div class="cat-section" id="decoracion">
+    <div class="cat-header">
+      <div class="cat-icon" style="background:rgba(99,102,241,0.12);color:#818cf8;">🏠</div>
+      <div>
+        <div class="cat-title" style="color:#818cf8;">DECORACIÓN</div>
+        <div class="cat-subtitle">Home · Oficina · Detalles para tu espacio</div>
+      </div>
+    </div>
+    <div id="grid-decoracion" class="products-grid">
+      <div class="loading-state">Cargando productos...</div>
+    </div>
   </div>
-</section>
 
-<!-- ══ CONTENIDO ══ -->
-<main style="background:var(--bg-light);min-height:60vh">
-<div class="container">
-
-  <!-- ─── Categoría 1: Decoración / Home / Oficina ─── -->
-  <section class="cat-section">
-    <div class="cat-section-header">
-      <div class="cat-section-icon">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
-      </div>
+  <!-- RC A ESCALA / MODELISMO -->
+  <div class="cat-section" id="rc">
+    <div class="cat-header">
+      <div class="cat-icon" style="background:rgba(249,115,22,0.12);color:var(--ferrari);">🏎️</div>
       <div>
-        <div class="cat-section-title">Decoración / Home / Oficina</div>
-        <div class="cat-section-sub">Piezas funcionales y decorativas para tu hogar y espacio de trabajo</div>
+        <div class="cat-title" style="color:var(--ferrari);">RC A ESCALA</div>
+        <div class="cat-subtitle">Modelismo · Carrocerías · Piezas de precisión</div>
       </div>
     </div>
-    <div class="cat-section-divider"></div>
-
-    <div class="cat-grid">
-
-      <div class="cat-card">
-        <div class="cat-card-img">
-          <div class="cat-card-tag">Home / Oficina</div>
-          <div class="cat-card-img-placeholder">🗂️</div>
-        </div>
-        <div class="cat-card-body">
-          <div class="cat-card-name">Organizadores de escritorio</div>
-          <div class="cat-card-desc">Tres estilos disponibles: modular con compartimentos, hexagonal apilable y compacto con cajón. Impreso en PLA+ mate. Personalizables en color y tamaño.</div>
-          <div class="cat-card-footer">
-            <a href="https://www.mercadolibre.com.ar" target="_blank" class="cat-card-cta">Ver en ML</a>
-            <span class="cat-card-ml">🛒 MercadoLibre</span>
-          </div>
-        </div>
-      </div>
-
-      <div class="cat-card">
-        <div class="cat-card-img">
-          <div class="cat-card-tag">Decoración</div>
-          <div class="cat-card-img-placeholder">🏺</div>
-        </div>
-        <div class="cat-card-body">
-          <div class="cat-card-name">Jarrón geométrico</div>
-          <div class="cat-card-desc">Diseño paramétrico con geometría facetada. Disponible en tres tamaños y múltiples colores. Material PLA o PLA Silk para terminación premium.</div>
-          <div class="cat-card-footer">
-            <a href="https://www.mercadolibre.com.ar" target="_blank" class="cat-card-cta">Ver en ML</a>
-            <span class="cat-card-ml">🛒 MercadoLibre</span>
-          </div>
-        </div>
-      </div>
-
-      <div class="cat-card">
-        <div class="cat-card-img">
-          <div class="cat-card-tag">Home</div>
-          <div class="cat-card-img-placeholder">🪴</div>
-        </div>
-        <div class="cat-card-body">
-          <div class="cat-card-name">Maceteros modulares</div>
-          <div class="cat-card-desc">Sistema de maceteros apilables con base drenante. Compatible con macetas estándar. Disponibles en diferentes alturas y colores.</div>
-          <div class="cat-card-footer">
-            <a href="https://www.mercadolibre.com.ar" target="_blank" class="cat-card-cta">Ver en ML</a>
-            <span class="cat-card-ml">🛒 MercadoLibre</span>
-          </div>
-        </div>
-      </div>
-
-      <div class="cat-card">
-        <div class="cat-card-img">
-          <div class="cat-card-tag">Oficina</div>
-          <div class="cat-card-img-placeholder">📱</div>
-        </div>
-        <div class="cat-card-body">
-          <div class="cat-card-name">Soporte para celular / tablet</div>
-          <div class="cat-card-desc">Base de escritorio ajustable. Compatible con la mayoría de teléfonos y tablets. Diseño minimalista en PLA+ o PETG.</div>
-          <div class="cat-card-footer">
-            <a href="https://www.mercadolibre.com.ar" target="_blank" class="cat-card-cta">Ver en ML</a>
-            <span class="cat-card-ml">🛒 MercadoLibre</span>
-          </div>
-        </div>
-      </div>
-
-      <div class="cat-card">
-        <div class="cat-card-img">
-          <div class="cat-card-tag">Oficina</div>
-          <div class="cat-card-img-placeholder">🔧</div>
-        </div>
-        <div class="cat-card-body">
-          <div class="cat-card-name">Porta-herramientas de pared</div>
-          <div class="cat-card-desc">Sistema modular de fijación con imán o tornillo. Ranuras personalizables para herramientas, pinceles, marcadores y más.</div>
-          <div class="cat-card-footer">
-            <a href="https://www.mercadolibre.com.ar" target="_blank" class="cat-card-cta">Ver en ML</a>
-            <span class="cat-card-ml">🛒 MercadoLibre</span>
-          </div>
-        </div>
-      </div>
-
-      <div class="cat-card cat-coming-soon">
-        <div class="cat-card-img">
-          <div class="cat-card-tag">Pronto</div>
-          <div class="cat-card-img-placeholder">✨</div>
-          <div class="cat-coming-badge">Próximamente</div>
-        </div>
-        <div class="cat-card-body">
-          <div class="cat-card-name">Más productos</div>
-          <div class="cat-card-desc">Nuevos diseños de decoración y organización en desarrollo.</div>
-          <div class="cat-card-footer">
-            <span class="cat-card-cta">Próximamente</span>
-          </div>
-        </div>
-      </div>
-
+    <div id="grid-rc" class="products-grid">
+      <div class="loading-state">Cargando productos...</div>
     </div>
-  </section>
+  </div>
 
-  <!-- ─── Categoría 2: RC a Escala / Modelismo ─── -->
-  <section class="cat-section">
-    <div class="cat-section-header">
-      <div class="cat-section-icon">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="18" cy="18" r="3"/><circle cx="6" cy="18" r="3"/><path d="M18 15V6l-6-3-6 3v9"/><path d="M6 15h12"/></svg>
-      </div>
+  <!-- PERSONALIZADOS -->
+  <div class="cat-section" id="personalizado">
+    <div class="cat-header">
+      <div class="cat-icon" style="background:rgba(52,211,153,0.12);color:#34d399;">✨</div>
       <div>
-        <div class="cat-section-title">RC a Escala / Modelismo</div>
-        <div class="cat-section-sub">Carrocerías, piezas y accesorios para autos y vehículos RC</div>
+        <div class="cat-title" style="color:#34d399;">PERSONALIZADOS</div>
+        <div class="cat-subtitle">Diseños únicos · A pedido · Tu idea impresa</div>
       </div>
     </div>
-    <div class="cat-section-divider"></div>
-
-    <div class="cat-grid">
-
-      <div class="cat-card">
-        <div class="cat-card-img">
-          <div class="cat-card-tag">RC 1:10</div>
-          <div class="cat-card-img-placeholder">🏎️</div>
-        </div>
-        <div class="cat-card-body">
-          <div class="cat-card-name">Carrocería RC 1:10</div>
-          <div class="cat-card-desc">Carrocería impresa en PETG-CF de alta resistencia. Modelos: Ferrari SF90, Mercedes AMG y más. Chasis modular compatible con electrónica brushless estándar.</div>
-          <div class="cat-card-footer">
-            <a href="https://www.mercadolibre.com.ar" target="_blank" class="cat-card-cta">Ver en ML</a>
-            <span class="cat-card-ml">🛒 MercadoLibre</span>
-          </div>
-        </div>
-      </div>
-
-      <div class="cat-card">
-        <div class="cat-card-img">
-          <div class="cat-card-tag">RC 1:18</div>
-          <div class="cat-card-img-placeholder">🚗</div>
-        </div>
-        <div class="cat-card-body">
-          <div class="cat-card-name">Carrocería RC 1:18</div>
-          <div class="cat-card-desc">Carrocería escala 1:18 en PLA-CF o PETG. Alta fidelidad de detalle. Compatible con chasis de la escala. Disponible en varios modelos.</div>
-          <div class="cat-card-footer">
-            <a href="https://www.mercadolibre.com.ar" target="_blank" class="cat-card-cta">Ver en ML</a>
-            <span class="cat-card-ml">🛒 MercadoLibre</span>
-          </div>
-        </div>
-      </div>
-
-      <div class="cat-card">
-        <div class="cat-card-img">
-          <div class="cat-card-tag">Accesorios RC</div>
-          <div class="cat-card-img-placeholder">⚙️</div>
-        </div>
-        <div class="cat-card-body">
-          <div class="cat-card-name">Piezas y repuestos RC</div>
-          <div class="cat-card-desc">Soportes de servo, porta-baterías, tapas de chasis, alerón trasero y otros componentes. Impresos en PETG o PLA-CF según requerimiento.</div>
-          <div class="cat-card-footer">
-            <a href="https://www.mercadolibre.com.ar" target="_blank" class="cat-card-cta">Ver en ML</a>
-            <span class="cat-card-ml">🛒 MercadoLibre</span>
-          </div>
-        </div>
-      </div>
-
-      <div class="cat-card">
-        <div class="cat-card-img">
-          <div class="cat-card-tag">Modelismo</div>
-          <div class="cat-card-img-placeholder">✈️</div>
-        </div>
-        <div class="cat-card-body">
-          <div class="cat-card-name">Modelos estáticos a escala</div>
-          <div class="cat-card-desc">Vehículos, aeronaves y figuras a escala para colección y exposición. Alta resolución de detalle. Pintados o en color natural del filamento.</div>
-          <div class="cat-card-footer">
-            <a href="https://www.mercadolibre.com.ar" target="_blank" class="cat-card-cta">Ver en ML</a>
-            <span class="cat-card-ml">🛒 MercadoLibre</span>
-          </div>
-        </div>
-      </div>
-
-      <div class="cat-card cat-coming-soon">
-        <div class="cat-card-img">
-          <div class="cat-card-tag">Pronto</div>
-          <div class="cat-card-img-placeholder">🛻</div>
-          <div class="cat-coming-badge">Próximamente</div>
-        </div>
-        <div class="cat-card-body">
-          <div class="cat-card-name">Carrocería RC 1:8</div>
-          <div class="cat-card-desc">Escala 1:8 para pistas de alta velocidad. En desarrollo.</div>
-          <div class="cat-card-footer">
-            <span class="cat-card-cta">Próximamente</span>
-          </div>
-        </div>
-      </div>
-
-      <div class="cat-card cat-coming-soon">
-        <div class="cat-card-img">
-          <div class="cat-card-tag">Pronto</div>
-          <div class="cat-card-img-placeholder">🚁</div>
-          <div class="cat-coming-badge">Próximamente</div>
-        </div>
-        <div class="cat-card-body">
-          <div class="cat-card-name">Piezas para drones</div>
-          <div class="cat-card-desc">Frames, soportes y accesorios para drones FPV y multirotores.</div>
-          <div class="cat-card-footer">
-            <span class="cat-card-cta">Próximamente</span>
-          </div>
-        </div>
-      </div>
-
+    <div id="grid-personalizado" class="products-grid">
+      <div class="loading-state">Cargando productos...</div>
     </div>
-  </section>
-
-  <!-- ─── Categoría 3: Personalizados ─── -->
-  <section class="cat-section">
-    <div class="cat-section-header">
-      <div class="cat-section-icon">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>
-      </div>
-      <div>
-        <div class="cat-section-title">Personalizados</div>
-        <div class="cat-section-sub">Piezas diseñadas a medida, regalos y proyectos únicos</div>
-      </div>
-    </div>
-    <div class="cat-section-divider"></div>
-
-    <div class="cat-personalizado-note">
-      <strong>¿Tenés una idea en mente?</strong> Los productos personalizados se fabrican a pedido. Cotizá por WhatsApp o completando el formulario de contacto. Envío a todo el país.
-    </div>
-
-    <div class="cat-grid">
-
-      <div class="cat-card">
-        <div class="cat-card-img">
-          <div class="cat-card-tag">Personalizado</div>
-          <div class="cat-card-img-placeholder">🏷️</div>
-        </div>
-        <div class="cat-card-body">
-          <div class="cat-card-name">Llaveros y regalos empresariales</div>
-          <div class="cat-card-desc">Llaveros, pins y souvenirs con logo de empresa o diseño personalizado. Producción en serie. Ideal para eventos, promociones y regalos corporativos.</div>
-          <div class="cat-card-footer">
-            <a href="index.html#contacto" class="cat-card-cta">Cotizar</a>
-            <span class="cat-card-ml">✉️ Contacto</span>
-          </div>
-        </div>
-      </div>
-
-      <div class="cat-card">
-        <div class="cat-card-img">
-          <div class="cat-card-tag">Personalizado</div>
-          <div class="cat-card-img-placeholder">🎁</div>
-        </div>
-        <div class="cat-card-body">
-          <div class="cat-card-name">Regalos únicos</div>
-          <div class="cat-card-desc">Figuras personalizadas, miniaturas, placas conmemorativas y más. Diseño a partir de tu idea o imagen. Empaque especial disponible.</div>
-          <div class="cat-card-footer">
-            <a href="index.html#contacto" class="cat-card-cta">Cotizar</a>
-            <span class="cat-card-ml">✉️ Contacto</span>
-          </div>
-        </div>
-      </div>
-
-      <div class="cat-card">
-        <div class="cat-card-img">
-          <div class="cat-card-tag">Personalizado</div>
-          <div class="cat-card-img-placeholder">🧩</div>
-        </div>
-        <div class="cat-card-body">
-          <div class="cat-card-name">Piezas técnicas a medida</div>
-          <div class="cat-card-desc">Componentes funcionales para prototipos, reemplazos y proyectos industriales. Material según aplicación: PLA, PETG, ABS, ASA, TPU o fibra de carbono.</div>
-          <div class="cat-card-footer">
-            <a href="index.html#contacto" class="cat-card-cta">Cotizar</a>
-            <span class="cat-card-ml">✉️ Contacto</span>
-          </div>
-        </div>
-      </div>
-
-      <div class="cat-card">
-        <div class="cat-card-img">
-          <div class="cat-card-tag">Personalizado</div>
-          <div class="cat-card-img-placeholder">🏆</div>
-        </div>
-        <div class="cat-card-body">
-          <div class="cat-card-name">Trofeos y reconocimientos</div>
-          <div class="cat-card-desc">Trofeos, medallas y placas impresas en 3D con diseño personalizado. Ideales para competencias, deportes y reconocimientos institucionales.</div>
-          <div class="cat-card-footer">
-            <a href="index.html#contacto" class="cat-card-cta">Cotizar</a>
-            <span class="cat-card-ml">✉️ Contacto</span>
-          </div>
-        </div>
-      </div>
-
-      <div class="cat-card">
-        <div class="cat-card-img">
-          <div class="cat-card-tag">Personalizado</div>
-          <div class="cat-card-img-placeholder">🔩</div>
-        </div>
-        <div class="cat-card-body">
-          <div class="cat-card-name">Accesorios y adaptadores</div>
-          <div class="cat-card-desc">Soportes, adaptadores, tapas, carcasas y cualquier pieza que necesites fabricar. Enviá la medida o el modelo 3D y lo producimos.</div>
-          <div class="cat-card-footer">
-            <a href="index.html#contacto" class="cat-card-cta">Cotizar</a>
-            <span class="cat-card-ml">✉️ Contacto</span>
-          </div>
-        </div>
-      </div>
-
-      <div class="cat-card">
-        <div class="cat-card-img">
-          <div class="cat-card-tag">Personalizado</div>
-          <div class="cat-card-img-placeholder">🎨</div>
-        </div>
-        <div class="cat-card-body">
-          <div class="cat-card-name">Diseño + impresión</div>
-          <div class="cat-card-desc">No tenés el archivo 3D? Te ayudamos a diseñarlo. Servicio de modelado 3D + impresión. Desde boceto o referencia hasta pieza terminada.</div>
-          <div class="cat-card-footer">
-            <a href="index.html#contacto" class="cat-card-cta">Cotizar</a>
-            <span class="cat-card-ml">✉️ Contacto</span>
-          </div>
-        </div>
-      </div>
-
-    </div>
-  </section>
+  </div>
 
 </div>
-</main>
 
-<!-- ══ FOOTER ══ -->
 <footer>
-  <div class="footer-inner">
-    <div>
-      <div class="footer-line"></div>
-      <div style="display:flex;justify-content:space-between;align-items:flex-end;flex-wrap:wrap;gap:16px">
-        <ul style="list-style:none;display:flex;gap:20px;flex-wrap:wrap">
-          <li><a href="index.html#servicios" style="color:var(--text-muted);font-size:13px;text-decoration:none">Servicios</a></li>
-          <li><a href="index.html#productos" style="color:var(--text-muted);font-size:13px;text-decoration:none">Productos</a></li>
-          <li><a href="index.html#guias" style="color:var(--text-muted);font-size:13px;text-decoration:none">Guías</a></li>
-          <li><a href="index.html#contacto" style="color:var(--text-muted);font-size:13px;text-decoration:none">Contacto</a></li>
-        </ul>
-        <div class="footer-copy">© 2026 MarcanoTech · Buenos Aires · <span style="color:var(--ferrari)">v1.5</span></div>
-      </div>
-    </div>
-  </div>
+  <p>© 2026 <span>MarcanoTech</span> · Impresión 3D de alta calidad · v1.6</p>
 </footer>
 
+<button id="scroll-top" onclick="window.scrollTo({top:0,behavior:'smooth'})"
+  style="position:fixed;bottom:28px;right:28px;width:44px;height:44px;border-radius:50%;background:var(--ferrari);border:none;color:#fff;font-size:20px;cursor:pointer;display:flex;align-items:center;justify-content:center;box-shadow:0 4px 16px rgba(249,115,22,0.4);z-index:100;">
+  ↑
+</button>
+
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-database-compat.js"></script>
+<script>
+const FIREBASE_CONFIG = {
+  apiKey:            "AIzaSyAfsAEiXCL5aSUtWsBrc3DaIYLlagU2Q6s",
+  authDomain:        "marcanotech-3d.firebaseapp.com",
+  databaseURL:       "https://marcanotech-3d-default-rtdb.firebaseio.com",
+  projectId:         "marcanotech-3d",
+  storageBucket:     "marcanotech-3d.firebasestorage.app",
+  messagingSenderId: "95407454758",
+  appId:             "1:95407454758:web:092246282f460f3b5e44e7"
+};
+
+firebase.initializeApp(FIREBASE_CONFIG);
+const db = firebase.database();
+
+const CATEGORIES = {
+  decoracion: { id: 'grid-decoracion', label: 'decoración / home' },
+  rc:         { id: 'grid-rc',         label: 'RC a escala' },
+  personalizado: { id: 'grid-personalizado', label: 'personalizados' }
+};
+
+function priceStr(p) {
+  if (!p) return null;
+  return `US$ ${parseFloat(p).toFixed(2)}`;
+}
+
+function buildCard(p) {
+  const imgs = Array.isArray(p.imagenes) && p.imagenes.length ? p.imagenes : null;
+  const firstUrl = imgs ? (imgs[0].url || imgs[0].dataUrl || '') : (p.imagen || '');
+  const imgHtml = firstUrl
+    ? `<div class="product-img"><img src="${firstUrl}" alt="${p.nombre}" loading="lazy" onerror="this.parentElement.innerHTML='<span style=font-size:48px>${p.emoji||'📦'}</span>'"></div>`
+    : `<div class="product-img" style="background:var(--dark3);display:flex;align-items:center;justify-content:center;">${p.emoji||'📦'}</div>`;
+  const price = priceStr(p.precio);
+  const mlBtn = p.linkML ? `<a href="${p.linkML}" target="_blank" rel="noopener" class="btn-ml"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>Ver en MercadoLibre</a>` : '';
+  return `<div class="product-card">
+    ${imgHtml}
+    <div class="product-body">
+      ${p.sku && p.sku !== '—' ? `<div class="product-sku">${p.sku}</div>` : ''}
+      <div class="product-name">${p.nombre}</div>
+      ${p.descripcion ? `<div class="product-desc">${p.descripcion}</div>` : ''}
+      ${price ? `<div class="product-price">${price}</div>` : ''}
+      ${mlBtn ? `<div class="product-actions">${mlBtn}</div>` : ''}
+    </div>
+  </div>`;
+}
+
+function showEmpty(gridEl, catLabel) {
+  gridEl.innerHTML = `<div class="empty-cat" style="grid-column:1/-1">Sin productos publicados en ${catLabel} por el momento.<br><span style="font-size:11px;opacity:0.6">Volvé pronto — seguimos agregando novedades.</span></div>`;
+}
+
+db.ref('marcanotech-dashboard/productos').once('value').then(snap => {
+  const raw = snap.val();
+  const all = raw && typeof raw === 'object'
+    ? (Array.isArray(raw) ? raw : Object.values(raw))
+    : [];
+
+  const published = all.filter(p => p && p.publicarWeb);
+
+  Object.entries(CATEGORIES).forEach(([key, cfg]) => {
+    const gridEl = document.getElementById(cfg.id);
+    if (!gridEl) return;
+    const items = published.filter(p => p.categoriaWeb === key);
+    if (!items.length) { showEmpty(gridEl, cfg.label); return; }
+    gridEl.innerHTML = items.map(buildCard).join('');
+  });
+}).catch(err => {
+  console.warn('Firebase load failed:', err);
+  Object.entries(CATEGORIES).forEach(([key, cfg]) => {
+    const gridEl = document.getElementById(cfg.id);
+    if (gridEl) showEmpty(gridEl, cfg.label);
+  });
+});
+
+// Scroll-top visibility
+const st = document.getElementById('scroll-top');
+window.addEventListener('scroll', () => {
+  if (window.scrollY > 400) st.classList.add('visible');
+  else st.classList.remove('visible');
+});
+</script>
 </body>
 </html>

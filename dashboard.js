@@ -199,6 +199,9 @@ let DB = {
 let _pendingWrites = {};
 let _firebaseUserReady = false; // true after onAuthStateChanged confirms login
 
+// ── PRODUCTO IMAGEN GALLERY ──────────────────────────────
+let _prodImagenes = []; // [{id, dataUrl, file}] temp store for modal session
+
 function stripImages(data){
   if(!Array.isArray(data)) return data;
   if(data.length === 0) return null;
@@ -367,19 +370,33 @@ async function persistWithStorage(key, items){
   }
   const userId = firebase.auth().currentUser ? firebase.auth().currentUser.uid : 'anon';
   const updated = await Promise.all(items.map(async item=>{
-    if(!item || !item.imagen) return item;
-    // Already a URL (not base64) → skip
-    if(item.imagen.startsWith('http')) return item;
-    // Upload base64 to Storage
-    try{
-      const path = `images/${userId}/${key}/${item.id}`;
-      const url = await uploadImageToStorage(item.imagen, path);
-      if(url){
-        // Save URL version to Firebase, keep base64 in localStorage
-        return {...item, imagen: url};
-      }
-    } catch(e){ console.warn('Image upload failed:', e); }
-    return item;
+    if(!item) return item;
+    let result = {...item};
+    // Upload single imagen field
+    if(result.imagen && !result.imagen.startsWith('http')){
+      try{
+        const path = `images/${userId}/${key}/${item.id}`;
+        const url = await uploadImageToStorage(result.imagen, path);
+        if(url) result.imagen = url;
+      } catch(e){ console.warn('Image upload failed:', e); }
+    }
+    // Upload imagenes array
+    if(Array.isArray(result.imagenes) && result.imagenes.length){
+      const uploadedImgs = await Promise.all(result.imagenes.map(async (img, idx)=>{
+        if(!img || !img.dataUrl) return img;
+        if(img.dataUrl.startsWith('http')) return img;
+        try{
+          const path = `images/${userId}/${key}/${item.id}/img_${img.id||idx}`;
+          const url = await uploadImageToStorage(img.dataUrl, path);
+          if(url) return {...img, url, dataUrl: url};
+        } catch(e){ console.warn('Gallery image upload failed:', e); }
+        return img;
+      }));
+      result.imagenes = uploadedImgs;
+      // Keep imagen in sync with first gallery image URL
+      if(uploadedImgs[0]?.url) result.imagen = uploadedImgs[0].url;
+    }
+    return result;
   }));
   // Save original (with base64) to localStorage
   saveLocal(key, items);
@@ -387,8 +404,15 @@ async function persistWithStorage(key, items){
   if(_firebaseUserReady && fbRef){
     const toSave = sanitizeForFirebase(updated.map(item=>{
       const c = Object.assign({}, item);
-      // If imagen is still base64, remove it (too large)
+      // Strip base64 data (too large for Firebase)
       if(c.imagen && c.imagen.startsWith('data:')) delete c.imagen;
+      if(Array.isArray(c.imagenes)){
+        c.imagenes = c.imagenes.map(img=>{
+          const ci = Object.assign({}, img);
+          if(ci.dataUrl && ci.dataUrl.startsWith('data:')) delete ci.dataUrl;
+          return ci;
+        });
+      }
       return c;
     }));
     fbRef.child(key).set(toSave).catch(e=>console.warn('FB write ['+key+']:', e));
@@ -2122,15 +2146,98 @@ function renderMaterialesTable(){
 }
 
 // ════════════════════════════════
+// PRODUCTOS — GALERÍA MULTI-IMAGEN
+// ════════════════════════════════
+function renderProductoGaleria(){
+  const galeria = document.getElementById('prod-galeria');
+  if(!galeria) return;
+  const countEl = document.getElementById('prod-img-count');
+  if(countEl) countEl.textContent = `${_prodImagenes.length}/5 imágenes`;
+  if(!_prodImagenes.length){
+    galeria.innerHTML = '';
+    return;
+  }
+  galeria.innerHTML = _prodImagenes.map((img, idx) => `
+    <div style="position:relative;width:80px;height:80px;flex-shrink:0">
+      <img src="${img.dataUrl}" style="width:80px;height:80px;object-fit:cover;border-radius:8px;border:2px solid ${idx===0?'var(--ferrari)':'rgba(255,255,255,0.1)'}">
+      ${idx===0?`<span style="position:absolute;bottom:2px;left:2px;font-size:9px;background:var(--ferrari);color:#fff;padding:1px 4px;border-radius:3px">Principal</span>`:''}
+      <button onclick="removeProductoImagen(${idx})" style="position:absolute;top:2px;right:2px;width:18px;height:18px;border-radius:50%;background:rgba(0,0,0,0.7);border:none;color:#fff;font-size:10px;cursor:pointer;display:flex;align-items:center;justify-content:center;line-height:1">✕</button>
+    </div>`).join('');
+  // keep legacy hidden input in sync (first image)
+  const legacyInput = document.getElementById('prod-imagen');
+  if(legacyInput) legacyInput.value = _prodImagenes[0]?.dataUrl || '';
+}
+
+function removeProductoImagen(idx){
+  _prodImagenes.splice(idx, 1);
+  renderProductoGaleria();
+}
+
+function addProductoImagenes(files){
+  const MAX = 5;
+  const ALLOWED = ['image/jpeg','image/png','image/webp'];
+  const remaining = MAX - _prodImagenes.length;
+  if(remaining <= 0){ showToast('Máximo 5 imágenes por producto','error'); return; }
+  let added = 0;
+  Array.from(files).slice(0, remaining).forEach(file => {
+    if(!ALLOWED.includes(file.type)){ showToast('Solo JPG, PNG o WEBP','error'); return; }
+    const reader = new FileReader();
+    reader.onload = e => {
+      // Resize to max 800px
+      const img = new Image();
+      img.onload = () => {
+        const MAX_DIM = 800;
+        let w = img.width, h = img.height;
+        if(w > MAX_DIM || h > MAX_DIM){
+          const ratio = Math.min(MAX_DIM/w, MAX_DIM/h);
+          w = Math.round(w*ratio); h = Math.round(h*ratio);
+        }
+        const canvas = document.createElement('canvas');
+        canvas.width = w; canvas.height = h;
+        canvas.getContext('2d').drawImage(img, 0, 0, w, h);
+        const dataUrl = canvas.toDataURL(file.type, 0.85);
+        _prodImagenes.push({ id: uid(), dataUrl });
+        renderProductoGaleria();
+      };
+      img.src = e.target.result;
+    };
+    reader.readAsDataURL(file);
+  });
+}
+
+function handleProdImgDrop(e){
+  e.preventDefault();
+  e.stopPropagation();
+  const zone = document.getElementById('prod-img-drop');
+  if(zone) zone.style.borderColor = 'rgba(255,255,255,0.15)';
+  if(e.dataTransfer?.files?.length) addProductoImagenes(e.dataTransfer.files);
+}
+
+function toggleProdWeb(){
+  const cb = document.getElementById('prod-publicar-web');
+  const bg = document.getElementById('prod-toggle-bg');
+  const dot = document.getElementById('prod-toggle-dot');
+  const label = document.getElementById('prod-web-label');
+  if(!cb) return;
+  cb.checked = !cb.checked;
+  const on = cb.checked;
+  if(bg) bg.style.background = on ? 'var(--ferrari)' : 'rgba(255,255,255,0.1)';
+  if(dot) dot.style.transform = on ? 'translateX(20px)' : 'translateX(0)';
+  if(label) label.textContent = on ? 'Publicado en web' : 'No publicado';
+}
+
+// ════════════════════════════════
 // PRODUCTOS
 // ════════════════════════════════
 function saveProducto(){
   const editId=document.getElementById('producto-edit-id').value;
+  const publicarWeb = document.getElementById('prod-publicar-web')?.checked || false;
   const obj={
     id:editId||uid(),
     nombre:document.getElementById('prod-nombre').value.trim(),
     emoji:document.getElementById('prod-emoji').value||'📦',
-    imagen:document.getElementById('prod-imagen').value||'',
+    imagen:_prodImagenes[0]?.dataUrl || document.getElementById('prod-imagen').value||'',
+    imagenes: _prodImagenes.map(i=>({id:i.id, dataUrl:i.dataUrl})),
     tiempo:document.getElementById('prod-tiempo')?.value||'',
     gramos:parseFloat(document.getElementById('prod-gramos')?.value)||0,
     layer:parseFloat(document.getElementById('prod-layer')?.value)||0,
@@ -2141,15 +2248,18 @@ function saveProducto(){
     precio:parseFloat(document.getElementById('prod-precio').value)||0,
     stock:parseInt(document.getElementById('prod-stock').value)||0,
     categoria:document.getElementById('prod-categoria').value,
-    descripcion:document.getElementById('prod-descripcion').value
+    descripcion:document.getElementById('prod-descripcion').value,
+    publicarWeb,
+    categoriaWeb: publicarWeb ? (document.getElementById('prod-categoria-web')?.value||'') : '',
+    linkML: document.getElementById('prod-link-ml')?.value.trim()||''
   };
   if(!obj.nombre){ showToast('Ingresá un nombre','error'); return; }
   if(editId){ DB.productos=DB.productos.map(p=>p.id===editId?obj:p); }
   else{ DB.productos.push(obj); logActivity(`Producto <strong>${obj.nombre}</strong> agregado al catálogo`); }
   persistWithStorage('productos', DB.productos); updateBadges(); closeModal('modal-producto');
   document.getElementById('producto-edit-id').value='';
+  _prodImagenes=[];
   clearForm(['prod-nombre','prod-sku','prod-precio','prod-stock','prod-descripcion']);
-  resetImgPreview('prod-img-preview','prod-imagen');
   renderSection(currentSection); showToast('Producto guardado ✓');
 }
 
@@ -2171,20 +2281,23 @@ function renderProductos(){
   }
   const grid=document.getElementById('productos-grid'); if(!grid) return;
   if(!DB.productos.length){
-    grid.innerHTML=`<tr><td colspan="7" style="text-align:center;padding:32px;color:var(--text3)"><div style="cursor:pointer" onclick="openModal('modal-producto')">Sin productos — <span style="color:var(--ferrari)">+ Agregar</span></div></td></tr>`;
+    grid.innerHTML=`<tr><td colspan="8" style="text-align:center;padding:32px;color:var(--text3)"><div style="cursor:pointer" onclick="openModal('modal-producto')">Sin productos — <span style="color:var(--ferrari)">+ Agregar</span></div></td></tr>`;
     return;
   }
-  const stColors2={ok:'var(--teal)',bajo:'var(--amber)',vacio:'var(--coral)'};
   grid.innerHTML = DB.productos.map(p=>{
     const stock=parseInt(p.stock||0);
     const sc = stock>5?'var(--teal)':stock>0?'var(--amber)':'var(--coral)';
     const arsStr = p.precio ? (window._dolar?`$${Math.round(parseFloat(p.precio)*window._dolar).toLocaleString('es-AR')} ARS / `:'') + `US$${parseFloat(p.precio).toFixed(2)}` : '—';
     const fabInfo = [p.tiempo?`⏱ ${p.tiempo}`:'', p.gramos?`${p.gramos}g`:''].filter(Boolean).join(' · ');
+    const imgSrc = p.imagen || (Array.isArray(p.imagenes) && p.imagenes[0]?.dataUrl) || '';
+    const webBadge = p.publicarWeb
+      ? `<span style="font-size:9px;background:rgba(249,115,22,0.15);color:var(--ferrari);border:1px solid rgba(249,115,22,0.3);border-radius:3px;padding:2px 5px">${p.categoriaWeb||'web'}</span>`
+      : `<span style="font-size:9px;color:var(--text3)">—</span>`;
     return `<tr>
       <td><span style="font-family:var(--mono);font-size:11px;color:var(--ferrari);font-weight:700">${p.sku||'—'}</span></td>
       <td>
         <div style="display:flex;align-items:center;gap:8px">
-          ${p.imagen?`<img src="${p.imagen}" style="width:32px;height:32px;object-fit:cover;border-radius:6px;flex-shrink:0">`:`<div style="width:32px;height:32px;background:var(--bg3);border-radius:6px;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:16px">${p.emoji||'📦'}</div>`}
+          ${imgSrc?`<img src="${imgSrc}" style="width:32px;height:32px;object-fit:cover;border-radius:6px;flex-shrink:0">`:`<div style="width:32px;height:32px;background:var(--bg3);border-radius:6px;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:16px">${p.emoji||'📦'}</div>`}
           <div style="min-width:0;flex:1">
             <strong style="font-size:12px;display:block">${p.nombre}</strong>
             ${p.descripcion?`<span style="font-size:10px;color:var(--text3);display:block;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:200px">${p.descripcion}</span>`:''}
@@ -2195,6 +2308,7 @@ function renderProductos(){
       <td style="font-family:var(--mono);font-size:12px;color:${sc};font-weight:700">${stock}</td>
       <td style="font-size:12px;font-family:var(--mono)">${arsStr}</td>
       <td style="font-size:11px;color:var(--text3);font-family:var(--mono)">${fabInfo||'—'}</td>
+      <td>${webBadge}</td>
       <td>
         <div style="display:flex;gap:4px">
           <button class="btn btn-ghost btn-sm" onclick="editProducto('${p.id}')">Editar</button>
@@ -2210,12 +2324,12 @@ function editProducto(id){
   const p=DB.productos.find(x=>x.id===id); if(!p) return;
   document.getElementById('producto-edit-id').value=p.id;
   document.getElementById('prod-nombre').value=p.nombre;
-  document.getElementById('prod-emoji').value=p.emoji;
-  document.getElementById('prod-sku').value=p.sku;
-  document.getElementById('prod-precio').value=p.precio;
-  document.getElementById('prod-stock').value=p.stock;
-  document.getElementById('prod-categoria').value=p.categoria;
-  document.getElementById('prod-descripcion').value=p.descripcion;
+  document.getElementById('prod-emoji').value=p.emoji||'📦';
+  document.getElementById('prod-sku').value=p.sku||'';
+  document.getElementById('prod-precio').value=p.precio||'';
+  document.getElementById('prod-stock').value=p.stock||'';
+  document.getElementById('prod-categoria').value=p.categoria||'';
+  document.getElementById('prod-descripcion').value=p.descripcion||'';
   if(document.getElementById('prod-tiempo')) document.getElementById('prod-tiempo').value=p.tiempo||'';
   if(document.getElementById('prod-gramos')) document.getElementById('prod-gramos').value=p.gramos||'';
   if(document.getElementById('prod-layer')) document.getElementById('prod-layer').value=p.layer||'';
@@ -2223,10 +2337,29 @@ function editProducto(id){
   if(document.getElementById('prod-relleno')) document.getElementById('prod-relleno').value=p.relleno||'';
   const stlSel=document.getElementById('prod-stl-ref');
   if(stlSel){ stlSel.innerHTML='<option value="">Sin STL vinculado</option>'+DB.piezas.map(pz=>`<option value="${pz.id}" ${p.stlRef===pz.id?'selected':''}>${pz.nombre}</option>`).join(''); }
-  const imgValProd = p.imagen||'';
-  document.getElementById('prod-imagen').value = imgValProd;
-  if(imgValProd){ document.getElementById('prod-img-preview').innerHTML=`<img src="${imgValProd}" style="width:100%;height:100%;object-fit:cover;border-radius:10px">`; }
-  else{ resetImgPreview('prod-img-preview','prod-imagen'); }
+  // Load imagenes array into gallery
+  _prodImagenes = Array.isArray(p.imagenes) && p.imagenes.length
+    ? p.imagenes.map(i=>({id:i.id||uid(), dataUrl:i.dataUrl||i}))
+    : (p.imagen ? [{id:uid(), dataUrl:p.imagen}] : []);
+  renderProductoGaleria();
+  const legacyInput = document.getElementById('prod-imagen');
+  if(legacyInput) legacyInput.value = p.imagen||'';
+  // Load web fields
+  const catWebSel = document.getElementById('prod-categoria-web');
+  if(catWebSel) catWebSel.value = p.categoriaWeb||'decoracion';
+  const linkMLInput = document.getElementById('prod-link-ml');
+  if(linkMLInput) linkMLInput.value = p.linkML||'';
+  // Set toggle state
+  const cb = document.getElementById('prod-publicar-web');
+  const bg = document.getElementById('prod-toggle-bg');
+  const dot = document.getElementById('prod-toggle-dot');
+  const label = document.getElementById('prod-web-label');
+  if(cb){
+    cb.checked = !!p.publicarWeb;
+    if(bg) bg.style.background = p.publicarWeb ? 'var(--ferrari)' : 'rgba(255,255,255,0.1)';
+    if(dot) dot.style.transform = p.publicarWeb ? 'translateX(20px)' : 'translateX(0)';
+    if(label) label.textContent = p.publicarWeb ? 'Publicado en web' : 'No publicado';
+  }
   openModal('modal-producto');
 }
 
