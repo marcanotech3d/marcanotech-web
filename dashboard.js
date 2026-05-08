@@ -3002,6 +3002,9 @@ function recalcularCosto(){
   const mins = parseFloat(document.getElementById('calc-minutos-nuevo')?.value)||0;
   const tiempoH = horas + mins/60;
   const insumos = parseFloat(document.getElementById('calc-insumos')?.value)||0;
+  const matAdicional = parseFloat(document.getElementById('calc-mat-adicional')?.value)||0;
+  const accesorios = parseFloat(document.getElementById('calc-accesorios')?.value)||0;
+  const componentes = parseFloat(document.getElementById('calc-componentes')?.value)||0;
   const comisionPct = parseFloat(document.getElementById('calc-comision')?.value)||0;
 
   // Material cost
@@ -3019,7 +3022,7 @@ function recalcularCosto(){
 
   // Additional costs
   const costMargenError = costoBase * (margenError/100);
-  const costInsumos = insumos;
+  const costInsumos = insumos + matAdicional + accesorios + componentes;
 
   // Diseño
   let costDiseno = 0;
@@ -3084,7 +3087,10 @@ function recalcularCosto(){
   if(adicEl) adicEl.innerHTML = `
     <div class="calc-result-row"><span class="label">Margen Error (${margenError}%)</span><span class="val">${fmt(costMargenError)}</span></div>
     <div class="calc-result-row"><span class="label">Costo Producción</span><span class="val">${fmt(costProduccion)}</span></div>
-    <div class="calc-result-row"><span class="label">Insumos (fijo)</span><span class="val">${fmt(costInsumos)}</span></div>
+    ${insumos>0?`<div class="calc-result-row"><span class="label">Insumos</span><span class="val">${fmt(insumos)}</span></div>`:''}
+    ${matAdicional>0?`<div class="calc-result-row"><span class="label">Material adicional</span><span class="val">${fmt(matAdicional)}</span></div>`:''}
+    ${accesorios>0?`<div class="calc-result-row"><span class="label">Accesorios</span><span class="val">${fmt(accesorios)}</span></div>`:''}
+    ${componentes>0?`<div class="calc-result-row"><span class="label">Componentes</span><span class="val">${fmt(componentes)}</span></div>`:''}
     <div class="calc-result-row" style="padding-top:8px;border-top:0.5px solid var(--border2);margin-top:4px"><span class="label" style="font-weight:700;color:var(--text)">Total Costos</span><span class="val" style="font-weight:700;color:var(--text)">${fmt(totalCostos)}</span></div>`;
 
   // Final price
@@ -3573,7 +3579,7 @@ function nextPresupNumero(){
 function openPresupuestoModal(editId=''){
   document.getElementById('presupuesto-edit-id').value='';
   document.getElementById('presup-modal-title').textContent='Nuevo Presupuesto';
-  clearForm(['presup-destinatario','presup-contacto','presup-negocio','presup-notas','presup-descuento','presup-validez']);
+  clearForm(['presup-destinatario','presup-contacto','presup-negocio','presup-notas','presup-descuento','presup-validez','presup-tel','presup-email']);
   document.getElementById('presup-moneda').value='USD';
   document.getElementById('presup-cliente-tipo').value='manual';
   document.getElementById('presup-cliente-manual').style.display='';
@@ -3584,6 +3590,8 @@ function openPresupuestoModal(editId=''){
   const desglosar=document.getElementById('presup-desglosar');
   if(desglosar) desglosar.checked=false;
   document.getElementById('presup-negocio').value='MarcanoTech';
+  document.getElementById('presup-tel').value=localStorage.getItem('biz_tel')||'';
+  document.getElementById('presup-email').value=localStorage.getItem('biz_email')||'';
   document.getElementById('presup-fecha').value=new Date().toISOString().split('T')[0];
   const num=nextPresupNumero();
   document.getElementById('presup-numero').value=num;
@@ -3613,11 +3621,15 @@ function savePresupuesto(estado='borrador'){
     subtotal, total, destinatario,
     contacto:document.getElementById('presup-contacto').value,
     negocio:document.getElementById('presup-negocio').value||'MarcanoTech',
+    tel:document.getElementById('presup-tel').value||'',
+    email:document.getElementById('presup-email').value||'',
     validez:document.getElementById('presup-validez').value||'',
     notas:document.getElementById('presup-notas').value,
     desglosar:document.getElementById('presup-desglosar')?.checked||false,
     dolarRate:_dolarRate||null, ts:Date.now()
   };
+  if(obj.tel) localStorage.setItem('biz_tel', obj.tel);
+  if(obj.email) localStorage.setItem('biz_email', obj.email);
   if(editId){ DB.presupuestos=DB.presupuestos.map(p=>p.id===editId?obj:p); }
   else{ DB.presupuestos.push(obj); logActivity(`Presupuesto <strong>${obj.numero}</strong> creado`); }
   persist('presupuestos'); updateBadges(); closeModal('modal-presupuesto');
@@ -3644,6 +3656,8 @@ function editPresupuesto(id){
   document.getElementById('presup-destinatario').value=p.destinatario||'';
   document.getElementById('presup-contacto').value=p.contacto||'';
   document.getElementById('presup-negocio').value=p.negocio||'MarcanoTech';
+  document.getElementById('presup-tel').value=p.tel||localStorage.getItem('biz_tel')||'';
+  document.getElementById('presup-email').value=p.email||localStorage.getItem('biz_email')||'';
   document.getElementById('presup-validez').value=p.validez||'';
   document.getElementById('presup-notas').value=p.notas||'';
   _presupItems=p.items&&p.items.length?p.items.map(i=>({...i})):[{id:uid(),desc:'',cant:1,precio:0}];
@@ -3719,16 +3733,158 @@ function renderPresupuestos(filter){
 
 function buildPresupuestoText(p){
   const items=p.items||[];
-  const lineas=items.map(i=>`  • ${i.cant}× ${i.desc}: $${((i.cant||1)*(i.precio||0)).toFixed(2)} ${p.moneda||'USD'}`).join('\n');
-  return `PRESUPUESTO ${p.numero}\n${'─'.repeat(38)}\nFecha: ${p.fecha||'—'}${p.validez?`  |  Válido: ${p.validez} días`:''}\nDE: ${p.negocio||'MarcanoTech'}\nPARA: ${p.destinatario}${p.contacto?'\n'+p.contacto:''}\n${'─'.repeat(38)}\nÍTEMS:\n${lineas}\n${'─'.repeat(38)}\n${p.descuento?`Subtotal: $${parseFloat(p.subtotal||0).toFixed(2)}\nDescuento ${p.descuento}%: -$${(parseFloat(p.subtotal||0)-parseFloat(p.total||0)).toFixed(2)}\n`:''}TOTAL: $${parseFloat(p.total||0).toFixed(2)} ${p.moneda||'USD'}${p.moneda==='USD'&&p.dolarRate?`\n≈ $${Math.round(p.total*p.dolarRate).toLocaleString('es-AR')} ARS`:''}\n${'─'.repeat(38)}\n${p.notas?'NOTAS:\n'+p.notas+'\n':''}\nMarcanoTech Workshop Dashboard`;
+  const sym=p.moneda==='ARS'?'$':'US$';
+  const sep='─'.repeat(30);
+  const lineas=items.map(i=>`  • ${i.cant||1}× ${i.desc}  →  ${sym}${((i.cant||1)*(i.precio||0)).toFixed(2)}`).join('\n');
+  const negocio=p.negocio||'MarcanoTech';
+  const contactoLinea=[p.tel,p.email].filter(Boolean).join('  |  ');
+  let txt=`🧾 *PRESUPUESTO ${p.numero}*\n`;
+  txt+=`${sep}\n`;
+  txt+=`🏪 *${negocio}*\n`;
+  if(contactoLinea) txt+=`📞 ${contactoLinea}\n`;
+  txt+=`📅 Fecha: ${p.fecha||'—'}`;
+  if(p.validez) txt+=`  ·  Válido ${p.validez} días`;
+  txt+=`\n${sep}\n`;
+  txt+=`👤 *Para:* ${p.destinatario}\n`;
+  if(p.contacto) txt+=`   ${p.contacto}\n`;
+  txt+=`${sep}\n📦 *ÍTEMS:*\n${lineas}\n${sep}\n`;
+  if(p.descuento&&parseFloat(p.descuento)>0){
+    txt+=`Subtotal: ${sym}${parseFloat(p.subtotal||0).toFixed(2)}\n`;
+    txt+=`Descuento ${p.descuento}%: -${sym}${(parseFloat(p.subtotal||0)-parseFloat(p.total||0)).toFixed(2)}\n`;
+  }
+  txt+=`💰 *TOTAL: ${sym}${parseFloat(p.total||0).toFixed(2)}*`;
+  if(p.moneda==='USD'&&p.dolarRate) txt+=`\n   ≈ ARS $${Math.round(p.total*p.dolarRate).toLocaleString('es-AR')}`;
+  if(p.notas) txt+=`\n${sep}\n📝 ${p.notas}`;
+  txt+=`\n${sep}\n_${negocio}_`;
+  return txt;
 }
 
 function exportPresupuestoPDFById(id){
   const p=DB.presupuestos.find(x=>x.id===id); if(!p) return;
-  const blob=new Blob([buildPresupuestoText(p)],{type:'text/plain;charset=utf-8'});
-  const a=document.createElement('a'); a.href=URL.createObjectURL(blob);
-  a.download=`${p.numero}_${p.destinatario.replace(/\s+/g,'_')}.txt`; a.click();
-  showToast('Resumen descargado ✓');
+  if(typeof window.jspdf === 'undefined' && typeof window.jsPDF === 'undefined'){
+    showToast('Cargando PDF... intentá de nuevo','error'); return;
+  }
+  const { jsPDF } = window.jspdf || window;
+  const PW = 80; // mm — ancho ticket
+  const M = 6;   // margen
+  const CW = PW - M*2;
+  const doc = new jsPDF({ unit:'mm', format:[PW, 297], orientation:'portrait' });
+  let y = M;
+  const lh = 4.2; // interlineado
+
+  const nextY = (n=1) => { y += lh*n; if(y > doc.internal.pageSize.height - 10){ doc.addPage([PW,297]); y = M; } };
+
+  // ── ENCABEZADO ──
+  doc.setFillColor(255, 102, 0);
+  doc.rect(0, 0, PW, 18, 'F');
+
+  doc.setFont('helvetica','bold');
+  doc.setFontSize(13);
+  doc.setTextColor(255,255,255);
+  doc.text(p.negocio||'MarcanoTech', PW/2, 8, {align:'center'});
+
+  doc.setFontSize(7);
+  doc.setFont('helvetica','normal');
+  const headerLines = [];
+  if(p.tel) headerLines.push(p.tel);
+  if(p.email) headerLines.push(p.email);
+  if(headerLines.length){
+    doc.text(headerLines.join('  |  '), PW/2, 13, {align:'center'});
+  }
+
+  y = 22;
+
+  // ── NÚMERO + FECHA ──
+  doc.setTextColor(50,50,50);
+  doc.setFont('helvetica','bold');
+  doc.setFontSize(9);
+  doc.text(p.numero||'', M, y);
+  doc.setFont('helvetica','normal');
+  doc.setFontSize(7.5);
+  doc.text(p.fecha||'', PW-M, y, {align:'right'});
+  if(p.validez){ nextY(); doc.setFontSize(7); doc.setTextColor(120,120,120); doc.text(`Válido por ${p.validez} días`, M, y); }
+
+  nextY(1.4);
+  doc.setDrawColor(220,220,220); doc.line(M, y, PW-M, y); nextY(0.8);
+
+  // ── PARA ──
+  doc.setFontSize(7); doc.setTextColor(120,120,120); doc.setFont('helvetica','normal');
+  doc.text('PARA:', M, y); nextY();
+  doc.setFontSize(8.5); doc.setTextColor(30,30,30); doc.setFont('helvetica','bold');
+  doc.text(p.destinatario||'', M, y); nextY();
+  if(p.contacto){ doc.setFont('helvetica','normal'); doc.setFontSize(7.5); doc.setTextColor(90,90,90); doc.text(p.contacto, M, y); nextY(); }
+
+  nextY(0.6);
+  doc.setDrawColor(220,220,220); doc.line(M, y, PW-M, y); nextY(0.8);
+
+  // ── ITEMS ──
+  doc.setFontSize(7); doc.setTextColor(120,120,120); doc.setFont('helvetica','normal');
+  doc.text('ÍTEMS', M, y); nextY();
+
+  const items = p.items||[];
+  items.forEach(item => {
+    const subtotal = ((item.cant||1)*(item.precio||0));
+    const sym = p.moneda==='ARS'?'$':'US$';
+    doc.setFontSize(8); doc.setTextColor(30,30,30); doc.setFont('helvetica','normal');
+    const descLines = doc.splitTextToSize(`${item.cant||1}× ${item.desc||''}`, CW-18);
+    descLines.forEach((ln,i) => { doc.text(ln, M, y); if(i===0) doc.text(`${sym}${subtotal.toFixed(2)}`, PW-M, y, {align:'right'}); nextY(); });
+  });
+
+  // Extras informativos
+  if(p.extras && p.extras.length){
+    nextY(0.3);
+    doc.setFontSize(7); doc.setTextColor(150,150,150);
+    doc.text('Extras (informativos)', M, y); nextY();
+    p.extras.forEach(ext => {
+      doc.setFontSize(7.5); doc.setTextColor(120,120,120);
+      doc.text(`· ${ext.desc||''}`, M, y); nextY();
+    });
+  }
+
+  nextY(0.4);
+  doc.setDrawColor(200,200,200); doc.line(M, y, PW-M, y); nextY(0.8);
+
+  // ── TOTALES ──
+  const sym = p.moneda==='ARS'?'$':'US$';
+  if(p.descuento && parseFloat(p.descuento)>0){
+    doc.setFontSize(8); doc.setTextColor(80,80,80); doc.setFont('helvetica','normal');
+    doc.text('Subtotal', M, y);
+    doc.text(`${sym}${parseFloat(p.subtotal||0).toFixed(2)}`, PW-M, y, {align:'right'}); nextY();
+    doc.setTextColor(220,80,50);
+    doc.text(`Descuento ${p.descuento}%`, M, y);
+    doc.text(`-${sym}${(parseFloat(p.subtotal||0)-parseFloat(p.total||0)).toFixed(2)}`, PW-M, y, {align:'right'}); nextY();
+  }
+
+  doc.setFont('helvetica','bold'); doc.setFontSize(10); doc.setTextColor(30,30,30);
+  doc.text('TOTAL', M, y);
+  doc.setTextColor(255,102,0);
+  doc.text(`${sym}${parseFloat(p.total||0).toFixed(2)}`, PW-M, y, {align:'right'});
+  nextY();
+
+  if(p.moneda==='USD' && p.dolarRate){
+    doc.setFont('helvetica','normal'); doc.setFontSize(7.5); doc.setTextColor(120,120,120);
+    doc.text(`≈ ARS $${Math.round(p.total*p.dolarRate).toLocaleString('es-AR')}`, PW-M, y, {align:'right'}); nextY();
+  }
+
+  // ── NOTAS ──
+  if(p.notas){
+    nextY(0.6);
+    doc.setDrawColor(220,220,220); doc.line(M, y, PW-M, y); nextY(0.8);
+    doc.setFontSize(7); doc.setTextColor(120,120,120); doc.setFont('helvetica','normal');
+    doc.text('NOTAS:', M, y); nextY();
+    doc.setFontSize(7.5); doc.setTextColor(60,60,60);
+    doc.splitTextToSize(p.notas, CW).forEach(ln => { doc.text(ln, M, y); nextY(); });
+  }
+
+  // ── PIE ──
+  nextY(0.8);
+  doc.setDrawColor(255,102,0); doc.line(M, y, PW-M, y); nextY(0.8);
+  doc.setFontSize(7); doc.setTextColor(150,150,150); doc.setFont('helvetica','normal');
+  doc.text('Gracias por confiar en nosotros', PW/2, y, {align:'center'}); nextY();
+  doc.text(p.negocio||'MarcanoTech', PW/2, y, {align:'center'});
+
+  doc.save(`${p.numero}_${(p.destinatario||'cliente').replace(/\s+/g,'_')}.pdf`);
+  showToast('PDF descargado ✓');
 }
 
 function exportPresupuestoPDF(){

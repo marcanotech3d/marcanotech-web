@@ -770,10 +770,13 @@ function initFirebasePortal() {
     firebaseAuth = firebase.auth();
     firebaseDB   = firebase.database();
 
+    let _firstAuthCheck = true;
     firebaseAuth.onAuthStateChanged(user => {
+      const wasFirstCheck = _firstAuthCheck;
+      _firstAuthCheck = false;
       if (user) {
         currentPortalUser = user;
-        onUserLoggedIn(user);
+        onUserLoggedIn(user, wasFirstCheck);
       } else {
         currentPortalUser = null;
         onUserLoggedOut();
@@ -785,7 +788,7 @@ function initFirebasePortal() {
 }
 
 // ── Estado de auth → UI ──
-function onUserLoggedIn(user) {
+function onUserLoggedIn(user, isPageLoad = false) {
   // Nav button → nombre + avatar
   const btn    = document.getElementById('nav-auth-btn');
   const label  = document.getElementById('nav-auth-label');
@@ -814,7 +817,7 @@ function onUserLoggedIn(user) {
       document.querySelector(hash).scrollIntoView({ behavior: 'smooth' });
       history.replaceState(null, '', window.location.pathname);
     }, 100);
-  } else {
+  } else if (!isPageLoad) {
     loadPortalData(user);
   }
 }

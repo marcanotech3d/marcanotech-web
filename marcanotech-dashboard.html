@@ -8,6 +8,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="dashboard.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 </head>
 <body>
 
@@ -555,7 +556,6 @@
     <div style="margin-bottom:20px">
       <div style="display:flex;align-items:center;gap:10px;margin-bottom:4px">
         <div style="font-size:22px;font-weight:700;color:var(--text)">Calculadora de Costos</div>
-        <div style="width:22px;height:22px;border-radius:50%;border:1.5px solid var(--text3);display:flex;align-items:center;justify-content:center;font-size:11px;color:var(--text3);cursor:help" title="Calculá el precio justo para tus impresiones 3D considerando todos los costos reales">?</div>
       </div>
       <div style="font-size:13px;color:var(--text3)">Calculá el precio justo para tus impresiones 3D</div>
     </div>
@@ -586,18 +586,6 @@
           </div>
         </div>
 
-        <!-- GASTOS FIJOS -->
-        <div class="calc-card" style="border-left:3px solid var(--blue)">
-          <div class="calc-card-title" style="color:var(--blue)">
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/></svg>
-            Gastos Fijos
-          </div>
-          <div class="form-group" style="margin-bottom:0">
-            <label class="form-label" style="display:flex;align-items:center;gap:6px">Precio kWh <span style="width:16px;height:16px;border-radius:50%;border:1px solid var(--text3);display:inline-flex;align-items:center;justify-content:center;font-size:10px;color:var(--text3);cursor:help" title="Precio por kWh de electricidad en tu moneda seleccionada">i</span></label>
-            <input class="form-input" type="number" id="calc-kwh-nuevo" placeholder="ej: 160" step="0.01" oninput="recalcularCosto()">
-          </div>
-        </div>
-
         <!-- IMPRESORA -->
         <div class="calc-card" style="border-left:3px solid var(--teal)">
           <div class="calc-card-title" style="color:var(--teal)">
@@ -611,21 +599,27 @@
           </div>
           <div class="form-row">
             <div class="form-group">
-              <label class="form-label" style="display:flex;align-items:center;gap:6px">Consumo real/hora (W) <span style="width:16px;height:16px;border-radius:50%;border:1px solid var(--text3);display:inline-flex;align-items:center;justify-content:center;font-size:10px;color:var(--text3);cursor:help" title="Vatios reales consumidos por la impresora">i</span></label>
+              <label class="form-label">Consumo real/hora (W)</label>
               <input class="form-input" type="number" id="calc-watts" placeholder="ej: 120" value="120" oninput="recalcularCosto()">
             </div>
             <div class="form-group">
-              <label class="form-label" style="display:flex;align-items:center;gap:6px">Desgaste máquina (h) <span style="width:16px;height:16px;border-radius:50%;border:1px solid var(--text3);display:inline-flex;align-items:center;justify-content:center;font-size:10px;color:var(--text3);cursor:help" title="Vida útil estimada de la impresora en horas">i</span></label>
-              <input class="form-input" type="number" id="calc-vida-util" placeholder="ej: 5000" value="5000" oninput="recalcularCosto()">
+              <label class="form-label">Precio kWh</label>
+              <input class="form-input" type="number" id="calc-kwh-nuevo" placeholder="ej: 160" step="0.01" oninput="recalcularCosto()">
             </div>
           </div>
           <div class="form-row">
             <div class="form-group">
-              <label class="form-label" style="display:flex;align-items:center;gap:6px">Precio repuestos <span style="width:16px;height:16px;border-radius:50%;border:1px solid var(--text3);display:inline-flex;align-items:center;justify-content:center;font-size:10px;color:var(--text3);cursor:help" title="Costo total estimado de mantenimiento y repuestos durante la vida útil">i</span></label>
-              <input class="form-input" type="number" id="calc-repuestos" placeholder="ej: 300000" value="300000" oninput="recalcularCosto()">
+              <label class="form-label">Desgaste máquina (h)</label>
+              <input class="form-input" type="number" id="calc-vida-util" placeholder="ej: 5000" value="5000" oninput="recalcularCosto()">
             </div>
             <div class="form-group">
-              <label class="form-label" style="display:flex;align-items:center;gap:6px">% Margen de error <span style="width:16px;height:16px;border-radius:50%;border:1px solid var(--text3);display:inline-flex;align-items:center;justify-content:center;font-size:10px;color:var(--text3);cursor:help" title="% adicional para cubrir fallas, impresiones fallidas o desperdicio">i</span></label>
+              <label class="form-label">Precio repuestos</label>
+              <input class="form-input" type="number" id="calc-repuestos" placeholder="ej: 300000" value="300000" oninput="recalcularCosto()">
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label">% Margen de error</label>
               <input class="form-input" type="number" id="calc-margen-error" placeholder="ej: 15" value="15" min="0" max="100" oninput="recalcularCosto()">
             </div>
           </div>
@@ -642,7 +636,7 @@
           <button onclick="addCalcFilamento()" style="width:100%;padding:10px;border-radius:8px;border:0.5px dashed var(--border2);background:none;color:var(--text3);font-size:13px;cursor:pointer;margin-bottom:12px;font-family:var(--font)">+ Agregar filamento</button>
           <!-- Tiempo -->
           <div style="margin-bottom:4px">
-            <label class="form-label" style="display:flex;align-items:center;gap:6px">Tiempo de impresión <span style="width:16px;height:16px;border-radius:50%;border:1px solid var(--text3);display:inline-flex;align-items:center;justify-content:center;font-size:10px;color:var(--text3);cursor:help" title="Tiempo total de impresión">i</span></label>
+            <label class="form-label">Tiempo de impresión</label>
           </div>
           <div class="form-row">
             <div class="form-group">
@@ -654,6 +648,26 @@
               <input class="form-input" type="number" id="calc-minutos-nuevo" placeholder="0" min="0" max="59" oninput="recalcularCosto()">
             </div>
           </div>
+          <!-- Costos adicionales de pieza -->
+          <div style="border-top:0.5px solid var(--border);margin-top:12px;padding-top:12px">
+            <div style="font-size:11px;font-weight:700;color:var(--text3);letter-spacing:0.5px;margin-bottom:10px">MATERIALES & COMPONENTES</div>
+            <div class="form-row">
+              <div class="form-group" style="margin-bottom:0">
+                <label class="form-label">Material adicional</label>
+                <input class="form-input" type="number" id="calc-mat-adicional" placeholder="0" value="0" step="0.01" oninput="recalcularCosto()">
+              </div>
+              <div class="form-group" style="margin-bottom:0">
+                <label class="form-label">Accesorios</label>
+                <input class="form-input" type="number" id="calc-accesorios" placeholder="0" value="0" step="0.01" oninput="recalcularCosto()">
+              </div>
+            </div>
+            <div class="form-row" style="margin-top:8px">
+              <div class="form-group" style="margin-bottom:0">
+                <label class="form-label">Componentes</label>
+                <input class="form-input" type="number" id="calc-componentes" placeholder="0" value="0" step="0.01" oninput="recalcularCosto()">
+              </div>
+            </div>
+          </div>
         </div>
 
         <!-- EXTRAS -->
@@ -661,10 +675,9 @@
           <div class="calc-card-title" style="color:var(--purple)">
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
             Extras
-            <span style="width:16px;height:16px;border-radius:50%;border:1px solid var(--text3);display:inline-flex;align-items:center;justify-content:center;font-size:10px;color:var(--text3);cursor:help;margin-left:4px" title="Costos adicionales: lija, pintura, insertos, diseño, etc.">i</span>
           </div>
           <div class="form-group">
-            <label class="form-label" style="display:flex;align-items:center;gap:6px">Insumos <span style="width:16px;height:16px;border-radius:50%;border:1px solid var(--text3);display:inline-flex;align-items:center;justify-content:center;font-size:10px;color:var(--text3);cursor:help" title="Costo de materiales extra: lija, pintura, insertos de bronce, adhesivos, etc.">i</span></label>
+            <label class="form-label">Insumos</label>
             <input class="form-input" type="number" id="calc-insumos" placeholder="0" value="0" step="0.01" oninput="recalcularCosto()">
           </div>
           <!-- Diseño y Modelado -->
@@ -672,7 +685,6 @@
             <div style="display:flex;align-items:center;gap:8px;margin-bottom:10px">
               <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--text2)" stroke-width="2"><path d="M12 19l7-7 3 3-7 7-3-3z"/><path d="M18 13l-1.5-7.5L2 2l3.5 14.5L13 18l5-5z"/><path d="M2 2l7.586 7.586"/><circle cx="11" cy="11" r="2"/></svg>
               <span style="font-size:13px;font-weight:600;color:var(--text)">Diseño y Modelado 3D</span>
-              <span style="width:16px;height:16px;border-radius:50%;border:1px solid var(--text3);display:inline-flex;align-items:center;justify-content:center;font-size:10px;color:var(--text3);cursor:help" title="Costo del diseño o modelado 3D de la pieza">i</span>
             </div>
             <div style="display:flex;gap:4px;margin-bottom:10px">
               <button class="calc-toggle-btn active" id="calc-diseno-fijo-btn" onclick="setCalcToggle('diseno','fijo')">Monto fijo</button>
@@ -694,7 +706,6 @@
             <div style="display:flex;align-items:center;gap:8px;margin-bottom:10px">
               <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--text2)" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg>
               <span style="font-size:13px;font-weight:600;color:var(--text)">Posprocesado</span>
-              <span style="width:16px;height:16px;border-radius:50%;border:1px solid var(--text3);display:inline-flex;align-items:center;justify-content:center;font-size:10px;color:var(--text3);cursor:help" title="Lijado, pintado, curado, ensamble, etc.">i</span>
             </div>
             <div style="display:flex;gap:4px;margin-bottom:10px">
               <button class="calc-toggle-btn active" id="calc-postp-fijo-btn" onclick="setCalcToggle('postp','fijo')">Monto fijo</button>
@@ -725,7 +736,7 @@
           </div>
           <!-- Multiplicador presets -->
           <div id="calc-gan-mult-wrap">
-            <label class="form-label" style="display:flex;align-items:center;gap:6px">Margen de ganancia (multiplicador) <span style="width:16px;height:16px;border-radius:50%;border:1px solid var(--text3);display:inline-flex;align-items:center;justify-content:center;font-size:10px;color:var(--text3);cursor:help" title="Multiplicás el costo base por este factor">i</span></label>
+            <label class="form-label">Margen de ganancia (multiplicador)</label>
             <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-bottom:10px">
               <button class="calc-preset-btn" onclick="setCalcMultiplicador(3)">Mayorista (x3)</button>
               <button class="calc-preset-btn" onclick="setCalcMultiplicador(4)">Minorista (x4)</button>
@@ -747,7 +758,7 @@
             Comisiones Externas
           </div>
           <div class="form-group" style="margin-bottom:0">
-            <label class="form-label" style="display:flex;align-items:center;gap:6px">Comisión externa (%) <span style="width:16px;height:16px;border-radius:50%;border:1px solid var(--text3);display:inline-flex;align-items:center;justify-content:center;font-size:10px;color:var(--text3);cursor:help" title="Porcentaje de comisión de plataformas como MercadoLibre, Instagram, etc.">i</span></label>
+            <label class="form-label">Comisión externa (%)</label>
             <input class="form-input" type="number" id="calc-comision" placeholder="ej: 18" value="0" min="0" max="100" step="0.1" oninput="recalcularCosto()">
           </div>
         </div>
@@ -1699,14 +1710,14 @@
         </div>
       </div>
       <div style="display:flex;align-items:center;gap:10px;margin-top:4px">
-        <label style="display:flex;align-items:center;gap:10px;cursor:pointer;user-select:none">
+        <div style="display:flex;align-items:center;gap:10px;cursor:pointer;user-select:none" onclick="toggleProdWeb(event)">
           <div style="position:relative;width:42px;height:22px;flex-shrink:0">
             <input type="checkbox" id="prod-publicar-web" style="opacity:0;width:0;height:0;position:absolute">
-            <div id="prod-toggle-bg" onclick="toggleProdWeb(event)" style="position:absolute;inset:0;background:var(--border2);border-radius:11px;transition:background 0.2s;cursor:pointer"></div>
+            <div id="prod-toggle-bg" style="position:absolute;inset:0;background:var(--border2);border-radius:11px;transition:background 0.2s"></div>
             <div id="prod-toggle-dot" style="position:absolute;top:3px;left:3px;width:16px;height:16px;background:#fff;border-radius:50%;transition:transform 0.2s;pointer-events:none"></div>
           </div>
           <span id="prod-web-label" style="font-size:12px;font-weight:600;color:var(--text3)">OCULTO en web</span>
-        </label>
+        </div>
       </div>
     </div>
 
@@ -2673,6 +2684,17 @@
       <div class="form-group">
         <label class="form-label">Validez (días)</label>
         <input class="form-input" type="number" id="presup-validez" placeholder="ej: 7" min="1">
+      </div>
+    </div>
+    <!-- TEL + EMAIL -->
+    <div class="form-row">
+      <div class="form-group">
+        <label class="form-label">Teléfono</label>
+        <input class="form-input" id="presup-tel" placeholder="+54 9 ...">
+      </div>
+      <div class="form-group">
+        <label class="form-label">Email</label>
+        <input class="form-input" id="presup-email" placeholder="contacto@...">
       </div>
     </div>
 
