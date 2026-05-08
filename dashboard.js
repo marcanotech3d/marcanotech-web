@@ -2910,6 +2910,7 @@ function setCalcMoneda(m){
   _calcMoneda = m;
   document.querySelectorAll('.calc-currency-btn').forEach(b=>b.classList.remove('active'));
   document.getElementById('calc-cur-'+m).classList.add('active');
+  renderCalcFilamentos();
   renderCalcAccesorios();
   renderCalcComponentes();
   recalcularCosto();
@@ -2964,8 +2965,9 @@ function removeCalcFilamento(idx){
 
 function renderCalcFilamentos(){
   const cont = document.getElementById('calc-filamentos-container'); if(!cont) return;
+  const getP = m => _calcMoneda==='ARS' ? (m.precioARS||m.precio||0) : (m.precio||0);
   const matOptions = '<option value="">Usar filamento guardado...</option>' +
-    DB.materiales.map(m=>`<option value="${m.id}" data-precio="${m.precio||0}">${m.tipo} ${m.color} — ${m.marca} ($${m.precio||0}/kg)</option>`).join('');
+    DB.materiales.map(m=>`<option value="${m.id}" data-precio="${getP(m)}">${m.tipo} ${m.color} — ${m.marca} ($${getP(m).toFixed(2)}/kg)</option>`).join('');
   cont.innerHTML = _calcFilamentos.map((f,i)=>`
     <div class="calc-filamento-row">
       <div style="font-size:11px;color:var(--text3);font-family:var(--mono);margin-bottom:8px">Filamento ${i+1}</div>
